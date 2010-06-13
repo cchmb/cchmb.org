@@ -1,0 +1,347 @@
+/*
+Theme Name: Calvary Chapel HMB (2010)
+Theme URI: http://www.cchmb.org/
+Description: TwentyTen-based theme for cchmb.org
+Version: 1.0
+Author: Will Norris
+Author URI: http://willnorris.com/
+Template: twentyten
+*/
+
+/* YUI Reset CSS 3.1.1 (build: 47) (BSD License) - http://developer.yahoo.com/yui/3/cssreset/ */
+html{color:#000;background:#FFF;}body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,textarea,p,blockquote,th,td{margin:0;padding:0;}table{border-collapse:collapse;border-spacing:0;}fieldset,img{border:0;}address,caption,cite,code,dfn,em,strong,th,var{font-style:normal;font-weight:normal;}li{list-style:none;}caption,th{text-align:left;}h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:normal;}q:before,q:after{content:'';}abbr,acronym{border:0;font-variant:normal;}sup{vertical-align:text-top;}sub{vertical-align:text-bottom;}input,textarea,select{font-family:inherit;font-size:inherit;font-weight:inherit;}input,textarea,select{*font-size:100%;}legend{color:#000;}
+
+/* YUI Fonts CSS 3.1.1 (build: 47) (BSD License) - http://developer.yahoo.com/yui/3/cssfonts/ */
+body{font:13px/1.231 arial,helvetica,clean,sans-serif;*font-size:small;*font:x-small;}select,input,button,textarea{font:99% arial,helvetica,clean,sans-serif;}table{font-size:inherit;font:100%;}pre,code,kbd,samp,tt{font-family:monospace;*font-size:108%;line-height:100%;}
+
+
+/* changed base font to 12px (instead of 13px).  New percentages for obtaining px size:
+ *
+ * 09 -  75%      16 - 133%      23 - 192%      30 - 250%      37 - 308%      44 - 367%
+ * 10 -  83%      17 - 142%      24 - 200%      31 - 258%      38 - 317%      45 - 375%
+ * 11 -  92%      18 - 150%      25 - 208%      32 - 267%      39 - 325%      46 - 383%
+ * 12 - 100%      19 - 158%      26 - 217%      33 - 275%      40 - 333%      47 - 392%
+ * 13 - 108%      20 - 167%      27 - 225%      34 - 283%      41 - 342%      48 - 400%
+ * 14 - 117%      21 - 175%      28 - 233%      35 - 292%      42 - 350%      49 - 408%
+ * 15 - 125%      22 - 183%      29 - 242%      36 - 300%      43 - 358%      50 - 417%
+ */
+
+html {
+	background: #1f3b7c url('images/background.jpg') top center no-repeat;
+}
+body {
+	background: #1f3b7c url('images/background.jpg') top center no-repeat;
+	font-family: "palatino linotype", serif;
+	padding: 20px;
+}
+
+a 				{ color: #900; text-decoration: none; }
+a:hover 		{ text-decoration: underline; }
+
+em 				{ font-style: italic; }
+strong 			{ font-weight: bold; }
+p 				{ margin-bottom: 1em; }
+hr				{ border-top: 1px solid #600; color: #600; height: 1px; }
+
+/*
+h1 		{ font-size: 150%; color: #000; margin-bottom: 0.5em; }
+h2 		{ font-size: 133%; color: #000; margin-bottom: 0.5em; }
+h3 		{ font-size: 117%; color: #000; font-weight: bold; margin-bottom: 0.5em; }
+h4 		{ font-size: 100%; color: #000; font-weight: bold; }
+*/
+
+
+#wrapper {
+	width: 918px;
+	border: 1px solid #FFF;
+	background: #f7e3af url('images/parchment.jpg') top center no-repeat;
+	margin: 0 auto;
+}
+
+#header {
+	height: 114px;
+	background: url('images/header-bar.jpg') bottom center no-repeat;
+}
+
+#masthead {
+	background: url('images/dove.png') 450px 15px no-repeat;
+}
+
+#branding > img { display: none; }
+
+#site-title {
+	margin: 0;
+}
+#site-title a {
+	display: block;
+	background: url('images/cchmb.png');
+	height: 95px;
+	width: 400px;
+	text-indent: -9999px;
+	position: relative;
+	top: 8px;
+	left: 12px;
+}
+
+#site-description {
+	display: block;
+	height: 25;
+	width: 291;
+	position: relative;
+	bottom: 45px;
+	right: 35px;
+
+	color: #772e1b;
+	font-style: italic;
+	font-size: 133%;
+	text-align: right;
+	letter-spacing: 1px;
+	font-family: "high tower text";
+	text-shadow: #FFF -2px 2px 1px;
+}
+#site-description:before, #site-description:after {
+	content: '"';
+}
+
+/*
+#site-description {
+	display: block;
+	background: url('images/bringing.png') right center no-repeat;
+	height: 25;
+	width: 291;
+	text-indent: -9999px;
+	position: relative;
+	bottom: 45px;
+	right: 25px;
+}
+*/
+
+.skip-link { display: none; }
+
+#access {
+	width: 200px;
+	float: left;
+	margin-top: 25px;
+}
+
+.page_item {
+	margin-left: 10px;
+	font-size: 116%;
+}
+.page_item > a {
+	font-family: "high tower text";
+	color: #772e1b;
+	text-decoration: none;
+	padding: 4px 10px;
+	line-height: 166%;
+}
+.page_item > a:hover {
+	text-shadow: #FFF -2px 2px 1px;
+}
+
+#container {
+	width: 715px;
+	float: right;
+}
+
+#content {
+	margin: 20px 20px 0 0;
+	min-height: 850px;
+	font-size: 116%;
+}
+
+.entry-title {
+	font-family: verdana;
+	color: #966759;
+	font-variant: small-caps;
+	font-weight: bold;
+}
+body.home .entry-title { display: none; }
+
+#featured-image {
+	float: right;
+	width: 250px;
+	margin: -50px 0 0 20px;
+	text-align: center;
+}
+hr.wave {
+	background: url('images/wave.png') center center no-repeat;
+	height: 76px;
+	border: 0;
+}
+#featured-image > img {
+	width: 200px;
+	height: auto;
+	margin: 5px 0;
+	border: 1px solid #FFF;
+}
+
+#front-page-widget-area {
+	background: url('images/wave.png') top center no-repeat;
+	float: right;
+	width: 250px;
+	margin: -10px 0 0 20px;
+	padding-top: 60px;
+}
+#front-page-widget-area > ul {
+	background: url('images/wave.png') bottom center no-repeat;
+	padding-bottom: 60px;
+}
+
+#front-page-widget-area .widget-title {
+	font-size; 133%;
+	font-variant: small-caps;
+	font-weight: bold;
+	color: #1f3b7c;
+}
+#front-page-widget-area .widget-title:after {
+	content: ':';
+}
+#front-page-widget-area .widget-container p {
+	color: #560000;
+	font-size: 85%; 
+}
+
+
+.widget_daily_reading {
+	overflow: auto;
+}
+.widget_daily_reading #daily-reading {
+	float: left;
+}
+.widget_daily_reading .whole-year {
+	display: block;
+	float: right;
+	padding-top: 70px;
+	width: 70px;
+	font-size: 85%;
+	background: url('images/bible.jpg') top center no-repeat;
+}
+
+
+/* slideshow */
+#slideshow-container {
+	background: url('images/slideshow-background.png') center center no-repeat;
+	height: 289px;
+	width: 420px;
+	margin-bottom: 1.5em;
+}
+#slideshow {
+	position: relative;
+	top: 17px;
+	width: 386px;
+	height: 254px;
+	margin: 17px;
+	margin-top: 17px;
+}
+.slideshow-toggle {
+	padding: 5px; margin-right: 2px; position: absolute; z-index: 1000; bottom: 0; left: 0;
+	font-weight: bold;
+	z-index: 2000;
+}
+.slideshow-button, .slideshow-toggle > a {
+	display: block; text-decoration: none; float: left;
+	line-height: 20px; width: 20px;
+	background: #000; color: #777;
+	-moz-border-radius: 4px; -webkit-border-radius: 4px;
+	margin-right: 2px;
+	text-align: center;
+	font-size: 10px; font-family: sans-serif;
+	opacity: 0.8;
+}
+.slideshow-selected, .slideshow-hover, .slideshow-toggle > a:hover {
+	color: #FFF;
+	opacity: 1.0;
+}
+.slideshow-title span {
+	background: #000;
+	color: #FFF;
+	display: block;
+	padding: 0 15px;
+	line-height: 166%;
+}
+
+
+
+
+.entry-content ul {
+	padding-left: 2em;
+}
+.entry-content ul li {
+	list-style: disc;
+}
+
+
+
+.widget-area {
+	width: 200px;
+	float: left;
+}
+
+.widget-container {
+	margin: 20px 0 ;
+}
+
+.widget-container .vcard {
+	color: #795705;
+	text-align: center;
+}
+
+#directions {
+	background: url('images/compass.png') 10px 10px no-repeat;
+	width: 135px;
+	margin: 10px auto 0;
+	font-size: 85%;
+}
+
+#directions > a {
+	display: block;
+
+	height: 40px;
+	padding: 15px 15px 0 70px;
+	font-weight: bold;
+	border: 1px solid #EEE;
+}
+
+.widget_scroll {
+	background: url('images/scroll.png') center center no-repeat;
+	width: 120px;
+	height: 100px;
+	margin: auto;
+}
+.widget_scroll a {
+	display: block;
+	height: 50px;
+	width: 60px;
+
+	padding: 25px 30px;
+	line-height: 175%;
+	text-align: center;
+	color: #441904;
+	font-size: 108%;
+	text-decoration: none;
+	text-shadow: #FFF 0 0 3px;
+}
+
+
+.nocomments { display: none; }
+#site-info { display: none; }
+#site-generator { display: none; }
+
+/*
+.widget-area {
+	float: left;
+	width: 120px;
+	height: 100px;
+	background: url('images/scroll.png') center center no-repeat;
+}
+*/
+
+
+#footer {
+	clear: both;
+	text-align: center;
+}
+
+
+/* */

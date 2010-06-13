@@ -1,3 +1,48 @@
+<IfModule mod_deflate.c>
+  SetOutputFilter DEFLATE
+</IfModule>
+
+<IfModule mod_expires.c>
+  ExpiresActive On
+
+  ExpiresByType text/css "access plus 32 days"
+
+  ExpiresByType text/javascript "access plus 32 days"
+  ExpiresByType application/javascript "access plus 32 days"
+  ExpiresByType application/x-javascript "access plus 32 days"
+
+  ExpiresByType image/png "access plus 32 days"
+  ExpiresByType image/gif "access plus 32 days"
+  ExpiresByType image/jpg "access plus 32 days"
+  ExpiresByType image/jpeg "access plus 32 days"
+
+  FileETag none
+</IfModule>
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  RewriteRule announcements.php /announcements [L,R]
+  RewriteRule audio_sermons.php /audio-sermons [L,R]
+  RewriteRule church_photo_page.php /photos [L,R]
+  RewriteRule church_calendar.php /calendar [L,R]
+  RewriteRule contacts.php /contacts [L,R]
+  RewriteRule gods_plan_for_salvation.php /salvation [L,R]
+  RewriteRule links.php /links [L,R]
+  RewriteRule missions.php /missions [L,R]
+  RewriteRule missions_chile.php /missions/chili [L,R]
+  RewriteRule missions_thailand.php /missions/thailand [L,R]
+  RewriteRule services_and_bible_studies.php /services [L,R]
+  RewriteRule statement_of_faith.php /statement-of-faith [L,R]
+
+  #RewriteRule 1corinthians.php
+  #RewriteRule 1john.php
+  #RewriteRule ephesians.php
+  #RewriteRule genesis.php
+  #RewriteRule john.php
+  #RewriteRule luke.php
+</IfModule>
 
 # BEGIN WordPress
 <IfModule mod_rewrite.c>
