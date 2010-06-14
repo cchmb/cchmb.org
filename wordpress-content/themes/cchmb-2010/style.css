@@ -15,15 +15,23 @@ html{color:#000;background:#FFF;}body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pr
 body{font:13px/1.231 arial,helvetica,clean,sans-serif;*font-size:small;*font:x-small;}select,input,button,textarea{font:99% arial,helvetica,clean,sans-serif;}table{font-size:inherit;font:100%;}pre,code,kbd,samp,tt{font-family:monospace;*font-size:108%;line-height:100%;}
 
 
-/* changed base font to 12px (instead of 13px).  New percentages for obtaining px size:
+/* Percentages for obtaining various pixel heights for font-size
  *
- * 09 -  75%      16 - 133%      23 - 192%      30 - 250%      37 - 308%      44 - 367%
- * 10 -  83%      17 - 142%      24 - 200%      31 - 258%      38 - 317%      45 - 375%
- * 11 -  92%      18 - 150%      25 - 208%      32 - 267%      39 - 325%      46 - 383%
- * 12 - 100%      19 - 158%      26 - 217%      33 - 275%      40 - 333%      47 - 392%
- * 13 - 108%      20 - 167%      27 - 225%      34 - 283%      41 - 342%      48 - 400%
- * 14 - 117%      21 - 175%      28 - 233%      35 - 292%      42 - 350%      49 - 408%
- * 15 - 125%      22 - 183%      29 - 242%      36 - 300%      43 - 358%      50 - 417%
+ * 09 -  69%      16 - 123.1%    23 - 174%
+ * 10 -  77%      17 - 131%      24 - 182%
+ * 11 -  85%      18 - 138.5%    25 - 189%
+ * 12 -  93%      19 - 146.5%    26 - 197%
+ * 13 - 100%      20 - 153.9%
+ * 14 - 108%      21 - 161.6%
+ * 15 - 116%      22 - 167%
+ */
+
+/* Common Colors
+ *
+ * Dark Blue - #1F3B7C
+ * Red       - #990000
+ * Dark Red  - #772E1B
+ * Lt Brown  - #F7E3AF
  */
 
 html {
@@ -31,7 +39,7 @@ html {
 }
 body {
 	background: #1f3b7c url('images/background.jpg') top center no-repeat;
-	font-family: "palatino linotype", serif;
+	font-family: "Palatino Linotype", "Palatino", "Georgia", serif;
 	padding: 20px;
 }
 
@@ -58,20 +66,17 @@ h4 		{ font-size: 100%; color: #000; font-weight: bold; }
 	margin: 0 auto;
 }
 
-#header {
-	height: 114px;
+#masthead {
 	background: url('images/header-bar.jpg') bottom center no-repeat;
 }
 
-#masthead {
+#branding { 
+	height: 114px; 
 	background: url('images/dove.png') 450px 15px no-repeat;
 }
-
 #branding > img { display: none; }
 
-#site-title {
-	margin: 0;
-}
+#site-title { margin: 0; }
 #site-title a {
 	display: block;
 	background: url('images/cchmb.png');
@@ -84,40 +89,22 @@ h4 		{ font-size: 100%; color: #000; font-weight: bold; }
 }
 
 #site-description {
-	display: block;
-	height: 25;
-	width: 291;
-	position: relative;
-	bottom: 45px;
-	right: 35px;
+	position: relative; bottom: 45px; right: 35px;
 
 	color: #772e1b;
-	font-style: italic;
-	font-size: 133%;
-	text-align: right;
 	letter-spacing: 1px;
-	font-family: "high tower text";
-	text-shadow: #FFF -2px 2px 1px;
+	text-align: right;
+	text-shadow: #FFF -1px 1px 1px; 
+	font: italic 117% 'Vollkorn',inherit;
 }
-#site-description:before, #site-description:after {
-	content: '"';
-}
+#site-description:before { content: '\201C'; }
+#site-description:after { content: '\201D'; }
 
-/*
-#site-description {
-	display: block;
-	background: url('images/bringing.png') right center no-repeat;
-	height: 25;
-	width: 291;
-	text-indent: -9999px;
-	position: relative;
-	bottom: 45px;
-	right: 25px;
-}
-*/
 
 .skip-link { display: none; }
 
+
+/* Menu */
 #access {
 	width: 200px;
 	float: left;
@@ -129,16 +116,18 @@ h4 		{ font-size: 100%; color: #000; font-weight: bold; }
 	font-size: 116%;
 }
 .page_item > a {
-	font-family: "high tower text";
+	font-family: 'Vollkorn', 'Georgia', serif;
 	color: #772e1b;
 	text-decoration: none;
 	padding: 4px 10px;
 	line-height: 166%;
 }
 .page_item > a:hover {
-	text-shadow: #FFF -2px 2px 1px;
+	text-shadow: #FFF -2px 1px 2px;
 }
 
+
+/* Main Content */
 #container {
 	width: 715px;
 	float: right;
@@ -150,29 +139,32 @@ h4 		{ font-size: 100%; color: #000; font-weight: bold; }
 	font-size: 116%;
 }
 
+
+
 .entry-title {
-	font-family: verdana;
+	font-family: 'Verdana', sans-serif;
 	color: #966759;
 	font-variant: small-caps;
 	font-weight: bold;
 }
 body.home .entry-title { display: none; }
 
+
 #featured-image {
 	float: right;
 	width: 250px;
-	margin: -50px 0 0 20px;
+	margin: -30px 0 0 20px;
 	text-align: center;
+
+	background: url('images/wave.png') top center no-repeat;
 }
-hr.wave {
-	background: url('images/wave.png') center center no-repeat;
-	height: 76px;
-	border: 0;
+#featured-image > div {
+	background: url('images/wave.png') bottom center no-repeat;
 }
-#featured-image > img {
+#featured-image > div > img {
 	width: 200px;
 	height: auto;
-	margin: 5px 0;
+	margin: 80px 0;
 	border: 1px solid #FFF;
 }
 
@@ -181,23 +173,26 @@ hr.wave {
 	float: right;
 	width: 250px;
 	margin: -10px 0 0 20px;
-	padding-top: 60px;
 }
 #front-page-widget-area > ul {
 	background: url('images/wave.png') bottom center no-repeat;
-	padding-bottom: 60px;
+	margin-top: 70px;
+	padding-bottom: 50px;
 }
 
 #front-page-widget-area .widget-title {
-	font-size; 133%;
 	font-variant: small-caps;
 	font-weight: bold;
+	font-family: 'Vollkorn', 'Georgia', serif;
+	margin-bottom: 0.3em;
 	color: #1f3b7c;
 }
 #front-page-widget-area .widget-title:after {
 	content: ':';
 }
-#front-page-widget-area .widget-container p {
+#front-page-widget-area .widget-container > p,
+#front-page-widget-area .widget-container > div
+{
 	color: #560000;
 	font-size: 85%; 
 }
@@ -210,11 +205,13 @@ hr.wave {
 	float: left;
 }
 .widget_daily_reading .whole-year {
-	display: block;
-	float: right;
+	display: block; float: right;
+	position: relative; right: 20px; bottom: 15px;
 	padding-top: 70px;
 	width: 70px;
-	font-size: 85%;
+	text-align: center;
+	font-size: 73%;
+	font-weight: bold;
 	background: url('images/bible.jpg') top center no-repeat;
 }
 
@@ -224,15 +221,13 @@ hr.wave {
 	background: url('images/slideshow-background.png') center center no-repeat;
 	height: 289px;
 	width: 420px;
+	padding-top: 1px;
 	margin-bottom: 1.5em;
 }
 #slideshow {
-	position: relative;
-	top: 17px;
-	width: 386px;
 	height: 254px;
-	margin: 17px;
-	margin-top: 17px;
+	width: 386px;
+	margin: 17px 0 0 17px;
 }
 .slideshow-toggle {
 	padding: 5px; margin-right: 2px; position: absolute; z-index: 1000; bottom: 0; left: 0;
@@ -273,8 +268,9 @@ hr.wave {
 
 
 
-.widget-area {
+#primary {
 	width: 200px;
+	clear: left;
 	float: left;
 }
 

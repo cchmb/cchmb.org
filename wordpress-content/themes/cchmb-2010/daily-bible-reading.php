@@ -6,10 +6,10 @@ function cchmb_daily_reading() {
 	$day = date('j', current_time('timestamp'));
 
 	return '<ul>
-	<li><a href="http://www.biblegateway.com/passage/?version=50&search=' . urlencode($mcheyne_reading[$month][$day]['family'][0]) . '">' . $mcheyne_reading[$month][$day]['family'][0] . ' (Family)</a></li>
-	<li><a href="http://www.biblegateway.com/passage/?version=50&search=' . urlencode($mcheyne_reading[$month][$day]['family'][1]) . '">' . $mcheyne_reading[$month][$day]['family'][1] . ' (Family)</a></li>
-	<li><a href="http://www.biblegateway.com/passage/?version=50&search=' . urlencode($mcheyne_reading[$month][$day]['secret'][0]) . '">' . $mcheyne_reading[$month][$day]['secret'][0] . ' (Secret)</a></li>
-	<li><a href="http://www.biblegateway.com/passage/?version=50&search=' . urlencode($mcheyne_reading[$month][$day]['secret'][1]) . '">' . $mcheyne_reading[$month][$day]['secret'][1] . ' (Secret)</a></li>
+	<li><a href="http://www.biblegateway.com/passage/?version=50&search=' . urlencode($mcheyne_reading[$month][$day]['family'][0]) . '">' . $mcheyne_reading[$month][$day]['family'][0] . '</a></li>
+	<li><a href="http://www.biblegateway.com/passage/?version=50&search=' . urlencode($mcheyne_reading[$month][$day]['family'][1]) . '">' . $mcheyne_reading[$month][$day]['family'][1] . '</a></li>
+	<li><a href="http://www.biblegateway.com/passage/?version=50&search=' . urlencode($mcheyne_reading[$month][$day]['secret'][0]) . '">' . $mcheyne_reading[$month][$day]['secret'][0] . '</a></li>
+	<li><a href="http://www.biblegateway.com/passage/?version=50&search=' . urlencode($mcheyne_reading[$month][$day]['secret'][1]) . '">' . $mcheyne_reading[$month][$day]['secret'][1] . '</a></li>
 </ul>';
 }
 

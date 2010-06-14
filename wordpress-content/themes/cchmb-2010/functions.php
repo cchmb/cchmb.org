@@ -4,17 +4,44 @@ include_once dirname(__FILE__) . '/daily-bible-reading.php';
 include_once dirname(__FILE__) . '/widgets.php';
 
 function cchmb_head() {
-?>
+	/*
 	<!--[if lt IE 9]>
-		<script src="http://ie7-js.googlecode.com/svn/version/2.1(beta4)/IE9.js"></script>
+		<script src="http://ie7-js.googlecode.com/svn/version/2.1(beta4)/IE9.js">IE7_PNG_SUFFIX=".png";</script>
 	<![endif]-->
+	 */
+?>
+	<link href="http://fonts.googleapis.com/css?family=OFL+Sorts+Mill+Goudy+TT:regular|Vollkorn" rel="stylesheet" type="text/css">
 <?php
 }
 add_action('wp_head', 'cchmb_head');
 
+function cchmb_fix_ie() {
+	if ( $GLOBALS['is_IE'] ) {
+		//wp_register_style();
+		
+		// Dean Edward's IE9
+		wp_register_script('ie9.js', 'http://ie7-js.googlecode.com/svn/version/2.0(beta3)/IE8.js');
+		add_action('wp_footer', 'cchmb_fix_ie_footer');
+	}
+}
+add_action('wp', 'cchmb_fix_ie', 91);
+
+
+/* hide header image */
+add_filter('twentyten_header_image_width', create_function('', 'return 0;'));
+add_filter('twentyten_header_image_height', create_function('', 'return 0;'));
+
+function cchmb_fix_ie_footer() {
+?>
+	<!--[if lt IE 9]>
+		<?php wp_print_scripts('ie9.js'); ?>
+	<![endif]-->
+<?php
+}
+
 
 function cchmb_gallery_setup() {
-	wp_enqueue_script('jquery.showcase', get_stylesheet_directory_uri() . '/js/jquery.showcase.js', array('jquery'));
+	wp_enqueue_script('jquery.showcase', get_stylesheet_directory_uri() . '/js/jquery.showcase.min.js', array('jquery'), false, true);
 }
 add_filter('wp', 'cchmb_gallery_setup');
 
@@ -50,7 +77,7 @@ function cchmb_slideshow($attr, $content = null) {
 		remove_filter('wp_get_attachment_image_attributes', 'cchmb_cleanup_slideshow_images', 10, 2);
 ?>
 		</div></div>
-		<script>
+		<script type="text/javascript">
 			jQuery(function() {
 				jQuery('#slideshow img').attr('alt', function(index, attr) {
 					var caption = jQuery(this).attr('data-caption');
@@ -63,14 +90,14 @@ function cchmb_slideshow($attr, $content = null) {
 					animation: { 
 						interval: 7000,
 						stopOnHover: true,
-						speed: 500,
+						speed: 500
 					},
 					titleBar: { 
 						autoHide: false,
 						position: 'top',
 						cssClass: 'slideshow-title',
 						css: {
-							opacity: '0.8',
+							opacity: '0.8'
 						}
 					},
 					navigator: { 
@@ -80,8 +107,8 @@ function cchmb_slideshow($attr, $content = null) {
 						item: {
 							cssClass: 'slideshow-button',
 							cssClassSelected: 'slideshow-selected',
-							cssClassHover: 'slideshow-hover',
-						},
+							cssClassHover: 'slideshow-hover'
+						}
 					}
 				});
 				var toggler = jQuery('<div></div>').addClass('slideshow-toggle');
@@ -142,11 +169,9 @@ function cchmb_get_slideshow() {
 function cchmb_add_page_image( $content ) {
 	global $post;
 	if ( is_page() && has_post_thumbnail($post->ID) ) {
-		$image_markup = '<div id="featured-image">
-			<hr class="wave" />
+		$image_markup = '<div id="featured-image"><div>
 			' . get_the_post_thumbnail( $post->ID, 'medium' ) . '
-			<hr class="wave" />
-		</div>';
+		</div></div>';
 
 		$content = $image_markup . $content;
 	}
@@ -165,4 +190,24 @@ add_filter('wp_nav_menu_args', 'cchmb_nav_menu_args');
 
 //add_filter('default_feed', create_function('', 'return "atom";'));
 
+
+function cchmb_cleanup() {
+	global $wp_scripts;
+
+
+	$comments = false;
+	if ( is_single() || is_page() || is_comments_popup() ) {
+		global $post;
+		if ( 'open' == $post->comment_status ) {
+			$comments = true;
+		}
+	}
+
+	if ( $comments ) {
+		$wp_scripts->add_data('comment-reply', 'group', 1);
+	} else {
+		wp_deregister_script('comment-reply');
+	}
+}
+add_action('wp', 'cchmb_cleanup', 90);
 ?>
