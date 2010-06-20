@@ -230,4 +230,12 @@ function cchmb_admin_widget() {
 }
 add_action('wp_footer', 'cchmb_admin_widget');
 
+function cchmb_leadership_bio($attr, $content) {
+	$user = get_user_by('login', $content);
+
+	return '<h2 class="leadership-name">' . $user->display_name . '</h2>
+	<div class="leadership-bio">' . apply_filters('the_content', $user->description) . '</div>';
+
+}
+add_shortcode('bio', 'cchmb_leadership_bio');
 ?>
