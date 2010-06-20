@@ -324,15 +324,11 @@ body.home .entry-title { display: none; }
 #site-info { display: none; }
 #site-generator { display: none; }
 
-/*
-.widget-area {
-	float: left;
-	width: 120px;
-	height: 100px;
-	background: url('images/scroll.png') center center no-repeat;
-}
-*/
 
+#admin-widget { position: absolute; top: 0; right: 0; opacity: 0; }
+#admin-widget li { float: right; margin: 0.3em 0.7em; }
+#admin-widget a { color: #FFF; }
+.logged-in #admin-widget, #admin-widget:hover { opacity: 0.8; }
 
 #footer {
 	clear: both;
