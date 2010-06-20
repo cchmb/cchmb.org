@@ -136,6 +136,11 @@ function cchmb_slideshow($attr, $content = null) {
 add_shortcode('slideshow', 'cchmb_slideshow');
 
 
+function cchmb_links() {
+}
+add_shortcode('links', 'cchmb_links');
+
+
 /**
 *  * Get our wp_nav_menu() fallback, wp_page_menu(), to show a home link.
 *   */
@@ -210,4 +215,19 @@ function cchmb_cleanup() {
 	}
 }
 add_action('wp', 'cchmb_cleanup', 90);
+
+function cchmb_admin_widget() {
+	if ( is_front_page() || is_user_logged_in() ) {
+?>
+	<div id="admin-widget">
+		<ul>
+			<?php wp_register(); ?>
+			<li><?php wp_loginout(); ?></li>
+		</ul>
+	</div>
+<?php
+	}
+}
+add_action('wp_footer', 'cchmb_admin_widget');
+
 ?>
