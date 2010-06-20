@@ -48,7 +48,7 @@ a:hover 		{ text-decoration: underline; }
 
 em 				{ font-style: italic; }
 strong 			{ font-weight: bold; }
-p 				{ margin-bottom: 1em; }
+p 				{ margin-bottom: 1.5em; }
 hr				{ border-top: 1px solid #600; color: #600; height: 1px; }
 
 /*
@@ -105,24 +105,24 @@ h4 		{ font-size: 100%; color: #000; font-weight: bold; }
 
 
 /* Menu */
-#access {
+.menu-header {
 	width: 200px;
 	float: left;
 	margin-top: 25px;
 }
 
-.page_item {
+.menu-item {
 	margin-left: 10px;
 	font-size: 116%;
 }
-.page_item > a {
+.menu-item > a {
 	font-family: 'Vollkorn', 'Georgia', serif;
 	color: #772e1b;
 	text-decoration: none;
 	padding: 4px 10px;
 	line-height: 166%;
 }
-.page_item > a:hover {
+.menu-item > a:hover {
 	text-shadow: #FFF -2px 1px 2px;
 }
 
@@ -134,11 +134,10 @@ h4 		{ font-size: 100%; color: #000; font-weight: bold; }
 }
 
 #content {
-	margin: 20px 20px 0 0;
+	margin: 25px 20px 0 0;
 	min-height: 850px;
 	font-size: 116%;
 }
-
 
 
 .entry-title {
@@ -146,6 +145,8 @@ h4 		{ font-size: 100%; color: #000; font-weight: bold; }
 	color: #966759;
 	font-variant: small-caps;
 	font-weight: bold;
+	margin-bottom: 20px;
+	font-size: 116%;
 }
 body.home .entry-title { display: none; }
 
@@ -153,19 +154,14 @@ body.home .entry-title { display: none; }
 #featured-image {
 	float: right;
 	width: 250px;
-	margin: -30px 0 0 20px;
+	margin: -35px 0 20px 20px;
 	text-align: center;
-
-	background: url('images/wave.png') top center no-repeat;
 }
 #featured-image > div {
-	background: url('images/wave.png') bottom center no-repeat;
 }
 #featured-image > div > img {
-	width: 200px;
+	width: 229px;
 	height: auto;
-	margin: 80px 0;
-	border: 1px solid #FFF;
 }
 
 #front-page-widget-area {
