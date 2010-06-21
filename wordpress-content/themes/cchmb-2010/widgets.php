@@ -18,6 +18,7 @@ function cchmb_widgets_init() {
 
 	register_widget('Widget_Scroll');
 	register_widget('Widget_Daily_Reading');
+	register_widget('Widget_Sermons');
 }
 add_action( 'widgets_init', 'cchmb_widgets_init' );
 
@@ -127,6 +128,63 @@ class Widget_Daily_Reading extends WP_Widget {
 			echo '<a class="whole-year" href="' . $link . '">Download Whole Year</a>';
 		}
 		echo $after_widget;
+	}
+}
+
+class Widget_Sermons extends WP_Widget {
+	function __construct() {
+		parent::__construct(false, 'Sermons', array('description'=>'Recent Sermons'));
+	}
+
+	function form($instance) {
+		$title = esc_attr($instance['title']);
+		$number = (int) esc_attr($instance['number']);
+		if ( ! $number ) $number = 5;
+		?>
+			<p>
+				<label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title:'); ?> 
+					<input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" 
+						name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo $title; ?>" />
+				</label>
+			</p>
+			<p>
+				<label for="<?php echo $this->get_field_id('number'); ?>"><?php _e('Number of sermons to show:'); ?> 
+					<input size="3" id="<?php echo $this->get_field_id('number'); ?>" 
+						name="<?php echo $this->get_field_name('number'); ?>" type="text" value="<?php echo $number; ?>" />
+				</label>
+			</p>
+		<?php
+	}
+
+	function update($new_instance, $old_instance) {
+		$instance = $old_instance;
+		$instance['title'] = strip_tags($new_instance['title']);
+		$instance['number'] = strip_tags($new_instance['number']);
+        return $instance;
+	}
+
+	function widget($args, $instance) {
+		extract($args);
+		$title = apply_filters('widget_title', $instance['title']);
+		$number = $instance['number'];
+		if ( !$number ) $number = 5;
+
+		$r = new WP_Query(array('post_type' => 'sermon', 'showposts' => $number, 'nopaging' => 0, 'post_status' => 'publish', 'caller_get_posts' => 1)); 
+        if ($r->have_posts()) :
+?>
+        <?php echo $before_widget; ?>
+        <?php if ( $title ) echo $before_title . $title . $after_title; ?>
+        <ul> 
+        <?php  while ($r->have_posts()) : $r->the_post(); ?>
+        <li><a href="<?php the_permalink() ?>" title="<?php echo esc_attr(get_the_title() ? get_the_title() : get_the_ID()); ?>"><?php if ( get_the_title() ) the_title(); else the_ID(); ?></a></li>
+        <?php endwhile; ?>
+        </ul>
+        <?php echo $after_widget; ?>
+<?php
+        // Reset the global $the_post as this query will have stomped on it
+        wp_reset_postdata();
+
+        endif;
 	}
 }
 ?>

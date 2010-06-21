@@ -153,8 +153,8 @@ body.home .entry-title { display: none; }
 
 #featured-image {
 	float: right;
-	width: 250px;
-	margin: -35px 0 20px 20px;
+	width: 229px;
+	margin: -35px 0 10px 20px;
 	text-align: center;
 }
 #featured-image > div {
@@ -315,10 +315,32 @@ body.home .entry-title { display: none; }
 	text-shadow: #FFF 0 0 3px;
 }
 
+.leadership-bio .fn {
+	font-weight: bold;
+	font-size: 108%;
+}
+.leadership-bio .title, .leadership-bio .email {
+	font-size: 93%;
+}
+.leadership-bio .note {
+	margin-top: 0.5em;
+}
+
 
 .nocomments { display: none; }
 #site-info { display: none; }
 #site-generator { display: none; }
+
+.navigation {
+	overflow: auto;
+	margin: 1em 0;
+}
+.nav-previous {
+	float: left;
+}
+.nav-next {
+	float: right;
+}
 
 
 #admin-widget { position: absolute; top: 0; right: 0; opacity: 0; }

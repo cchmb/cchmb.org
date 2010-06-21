@@ -2,6 +2,8 @@
 
 include_once dirname(__FILE__) . '/daily-bible-reading.php';
 include_once dirname(__FILE__) . '/widgets.php';
+@include_once(dirname(__FILE__) . '/import-sermons.php');
+
 
 function cchmb_head() {
 	/*
@@ -181,6 +183,7 @@ function cchmb_add_page_image( $content ) {
 		$content = $image_markup . $content;
 	}
 
+	remove_filter('the_content', 'cchmb_add_page_image');
 	return $content;
 }
 add_filter('the_content', 'cchmb_add_page_image');
@@ -233,9 +236,43 @@ add_action('wp_footer', 'cchmb_admin_widget');
 function cchmb_leadership_bio($attr, $content) {
 	$user = get_user_by('login', $content);
 
-	return '<h2 class="leadership-name">' . $user->display_name . '</h2>
-	<div class="leadership-bio">' . apply_filters('the_content', $user->description) . '</div>';
+	if ( $user ) {
+		return '
+		<div class="vcard leadership-bio">
+			<h2 class="fn">' . $user->display_name . '</h2>
+			<div class="title">' . $user->title . '</div>
+			<div><a class="email" href="' . antispambot($user->user_email) . '">' . antispambot($user->user_email) . '</a></div>
+			<div class="note">' . apply_filters('the_content', $user->description) . '</div>
+		</div>';
+	}
 
 }
 add_shortcode('bio', 'cchmb_leadership_bio');
+
+/**
+ * Handle 'safe_email' shortcode which converts email address into spambot-safe link.
+ */
+function cchmb_safe_email($atts, $content=null) {
+    return '<a href="mailto:' . antispambot($content) . '">' . antispambot($content) . '</a>';
+}
+add_shortcode('safe_email', 'cchmb_safe_email');
+
+
+function cchmb_sermon_content($content) {
+	global $post;
+	if ( !$post || $post->post_type != 'sermon' ) return $content;
+
+	if ( $passage = get_post_meta($post->ID, 'sermon-passage', true) ) {
+		$content .= '<div class="sermon-passage">' . sermons_passage_link($passage) . '</div>';
+	}
+	if ( $audio = get_post_meta($post->ID, 'sermon-audio', true) ) {
+		$content .= '[audio: ' . $audio . ']';
+		$content .= '<a href="' . $audio . '" class="sermon-download-link">Download Audio</a>';
+	}
+
+	return $content;
+}
+add_filter('the_content', 'cchmb_sermon_content', 0);
+
+
 ?>
