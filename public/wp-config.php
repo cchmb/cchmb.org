@@ -14,10 +14,10 @@
  * @package WordPress
  */
 
-if ( file_exists( dirname(__FILE__) . '/local-config.php') ) {
-  require_once( dirname(__FILE__) . '/local-config.php' );
+if ( file_exists( dirname( dirname(__FILE__) ) . '/wp-local-config.php') ) {
+  require_once( dirname( dirname(__FILE__) ) . '/wp-local-config.php' );
 } else {
-  echo 'Unable to find configuration file: local-config.php';
+  echo 'Unable to find local WordPress configuration file.';
   die;
 }
 
