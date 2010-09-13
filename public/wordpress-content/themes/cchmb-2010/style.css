@@ -354,4 +354,28 @@ body.home .entry-title { display: none; }
 }
 
 
+ul.links {
+  margin-bottom:2em;
+  padding: 0;
+}
+ul.links li {
+  list-style: none;
+}
+
+#sermon-list {
+  float:right;
+  width: 60%;
+  height: 8em;
+  border: 1px solid #000;
+  padding: 0.5em;
+}
+#sermon-list ul {
+  height: 100%;
+  overflow: auto;
+}
+
+.gallery-item {
+  float: left;
+  margin: 1em;
+}
 /* */

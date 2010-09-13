@@ -12,6 +12,19 @@ function cchmb_head() {
 	<![endif]-->
 	 */
 ?>
+  <script>
+    jQuery(function() {
+      jQuery('#book-studies a').click(function(event) {
+        console.log(this.href);
+        jQuery.get(this.href, function(data) {
+          jQuery('#sermon-list').show().html(data);
+        });
+        event.preventDefault();
+      });
+    });
+  </script>
+<?php
+?>
 	<link href="http://fonts.googleapis.com/css?family=OFL+Sorts+Mill+Goudy+TT:regular|Vollkorn" rel="stylesheet" type="text/css">
 <?php
 }
@@ -136,11 +149,6 @@ function cchmb_slideshow($attr, $content = null) {
 	return $slideshow;
 }
 add_shortcode('slideshow', 'cchmb_slideshow');
-
-
-function cchmb_links() {
-}
-add_shortcode('links', 'cchmb_links');
 
 
 /**
@@ -275,4 +283,65 @@ function cchmb_sermon_content($content) {
 add_filter('the_content', 'cchmb_sermon_content', 0);
 
 
+function cchmb_links($attr, $content = null) {
+  $cats = split(',', $content);
+  $defaults = array(
+    'show_description' => 1,
+    'categorize' => 0,
+    'title_li' => '',
+    'echo' => 0,
+    'between' => ' &#8211; ',
+  );
+  $output = '';
+
+  add_filter('get_bookmarks', 'cchmb_get_bookmarks', 10, 2);
+  foreach ($cats as $cat) {
+    $args = wp_parse_args("category_name=$cat", $defaults);
+    $output .= '<ul class="links">' . wp_list_bookmarks($args) . '</ul>';
+  }
+  remove_filter('get_bookmarks', 'cchmb_get_bookmarks', 10, 2);
+
+  return $output;
+}
+add_shortcode('links', 'cchmb_links');
+
+function cchmb_get_bookmarks($bookmarks, $args) {
+  foreach ($bookmarks as $bookmark) {
+    $metadata = array();
+    $notes = split("\n", $bookmark->link_notes);
+    foreach ( $notes as $note ) {
+      list($k, $v) = split(':', $note, 2);
+      if ( $k && $v ) {
+        $metadata[$k] = $v;
+      }
+    }
+    $bookmark->order = $metadata['order'];
+  }
+  usort($bookmarks, create_function('$a,$b', 'return strnatcmp($a->order, $b->order);'));
+  return $bookmarks;
+}
+
+
+function cchmb_list_albums($attr, $content = null) {
+  global $post;
+
+  $albums = get_children(array(
+    'post_parent' => $post->ID,
+    'post_status' => 'publish',
+    'post_type' => 'page',
+    'order_by' => 'menu_order',
+    'order' => 'ASC',
+  ));
+
+  $output = '<ul>';
+
+  foreach ($albums as $album) {
+    $url = get_permalink($album->ID);
+    $output .= '<li><a href="' . $url . '">' . $album->post_title . '</a></li>';
+  }
+  $output .= '</ul>';
+
+  return $output;
+}
+add_shortcode('list_albums', 'cchmb_list_albums');
 ?>
