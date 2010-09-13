@@ -15,7 +15,6 @@ function cchmb_head() {
   <script>
     jQuery(function() {
       jQuery('#book-studies a').click(function(event) {
-        console.log(this.href);
         jQuery.get(this.href, function(data) {
           jQuery('#sermon-list').show().html(data);
         });
