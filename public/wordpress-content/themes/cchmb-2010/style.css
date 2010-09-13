@@ -378,4 +378,19 @@ ul.links li {
   float: left;
   margin: 1em;
 }
+
+.page-id-6 ul {
+  padding-left: 1em;
+}
+.page-id-6 ul li {
+  list-style: none;
+}
+.page-id-6 ul li.text {
+  margin-bottom: 1.5em;
+}
+
+.entry-attachment img {
+  width: 99%;
+  height: auto;
+}
 /* */
