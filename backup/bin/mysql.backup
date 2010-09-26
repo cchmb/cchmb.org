@@ -8,7 +8,7 @@ $local_config = dirname( dirname( dirname( __FILE__ ) ) ) . '/wp-local-config.ph
 require_once( $local_config );
 
 $backup_file = dirname( dirname( __FILE__ ) ) . '/database.sql';
-$mysqldump = 'mysqldump ' . DB_NAME . ' > "' . $backup_file .'"';
+$mysqldump = 'mysqldump --skip-extended-insert ' . DB_NAME . ' > "' . $backup_file .'"';
 
 system($mysqldump);
 ?>
