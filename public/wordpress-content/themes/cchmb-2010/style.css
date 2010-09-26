@@ -352,6 +352,8 @@ body.home .entry-title { display: none; }
 .logged-in #admin-widget, #admin-widget:hover { opacity: 0.8; }
 
 #footer {
+  background: url('images/footer.jpg') center bottom no-repeat;
+  height: 101px;
 	clear: both;
 	text-align: center;
 }
