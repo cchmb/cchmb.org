@@ -14,6 +14,7 @@ function cchmb_head() {
 ?>
   <script>
     jQuery(function() {
+      jQuery("#book-studies").prev().before('<div id="sermon-list" style="display:none;"></div>');
       jQuery('#book-studies a').click(function(event) {
         jQuery.get(this.href, function(data) {
           jQuery('#sermon-list').show().html(data);
