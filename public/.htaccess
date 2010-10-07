@@ -35,6 +35,8 @@
   RewriteRule missions_thailand.php /missions/thailand [L,R]
   RewriteRule services_and_bible_studies.php /services [L,R]
   RewriteRule statement_of_faith.php /statement-of-faith [L,R]
+
+  RewriteRule (audio/.*\.mp3) http://media.cchmb.org/$1 [L,R]
 </IfModule>
 
 # BEGIN WordPress
