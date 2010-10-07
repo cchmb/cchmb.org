@@ -35,13 +35,6 @@
   RewriteRule missions_thailand.php /missions/thailand [L,R]
   RewriteRule services_and_bible_studies.php /services [L,R]
   RewriteRule statement_of_faith.php /statement-of-faith [L,R]
-
-  #RewriteRule 1corinthians.php
-  #RewriteRule 1john.php
-  #RewriteRule ephesians.php
-  #RewriteRule genesis.php
-  #RewriteRule john.php
-  #RewriteRule luke.php
 </IfModule>
 
 # BEGIN WordPress
