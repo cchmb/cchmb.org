@@ -249,7 +249,7 @@ function cchmb_leadership_bio($attr, $content) {
 		<div class="vcard leadership-bio">
 			<h2 class="fn">' . $user->display_name . '</h2>
 			<div class="title">' . $user->title . '</div>
-			<div><a class="email" href="' . antispambot($user->user_email) . '">' . antispambot($user->user_email) . '</a></div>
+			<div><a class="email" href="mailto:' . antispambot($user->user_email) . '">' . antispambot($user->user_email) . '</a></div>
 			<div class="note">' . apply_filters('the_content', $user->description) . '</div>
 		</div>';
 	}
