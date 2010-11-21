@@ -184,7 +184,7 @@ body.home .entry-title { display: none; }
 	color: #1f3b7c;
 }
 #front-page-widget-area .widget-title:after {
-	content: ':';
+	/* content: ':'; */
 }
 #front-page-widget-area .widget-container > p,
 #front-page-widget-area .widget-container > div
