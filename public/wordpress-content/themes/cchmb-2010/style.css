@@ -165,15 +165,9 @@ body.home .entry-title { display: none; }
 }
 
 #front-page-widget-area {
-	background: url('images/wave.png') top center no-repeat;
 	float: right;
 	width: 250px;
 	margin: -10px 0 0 20px;
-}
-#front-page-widget-area > ul {
-	background: url('images/wave.png') bottom center no-repeat;
-	margin-top: 70px;
-	padding-bottom: 50px;
 }
 
 #front-page-widget-area .widget-title {
