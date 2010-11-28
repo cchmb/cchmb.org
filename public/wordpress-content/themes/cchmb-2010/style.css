@@ -211,6 +211,31 @@ body.home .entry-title { display: none; }
 	background: url('images/bible.jpg') top center no-repeat;
 }
 
+#main {
+  position: relative;
+}
+.widget_social_media {
+  position: absolute;
+  right: 5px;
+  top: -125px;
+}
+.widget_social_media li {
+  margin: 0 3px;
+  float: left;
+}
+.widget_social_media li > a {
+  display: block;
+  height: 22px;
+  width: 22px;
+  background: url('images/social-media.png');
+  text-indent: -9999px;
+}
+.widget_social_media li > a.youtube { background-position: 0 0; }
+.widget_social_media li > a.youtube:hover { background-position: 0 22px; }
+.widget_social_media li > a.facebook { background-position: -22px 0; }
+.widget_social_media li > a.facebook:hover { background-position: -22px 22px; }
+.widget_social_media li > a.twitter { background-position: -44px 0; }
+.widget_social_media li > a.twitter:hover { background-position: -44px 22px; }
 
 /* slideshow */
 #slideshow-container {
