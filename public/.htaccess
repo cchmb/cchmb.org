@@ -50,3 +50,5 @@ RewriteRule . /index.php [L]
 </IfModule>
 
 # END WordPress
+
+AddHandler php5-script .php
