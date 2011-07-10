@@ -40,7 +40,8 @@ html {
 body {
 	background: #1f3b7c url('images/background.jpg') top center no-repeat;
 	font-family: "Palatino Linotype", "Palatino", "Georgia", serif;
-	padding: 20px;
+	padding: 0px;
+	color: #111111;
 }
 
 a 				{ color: #900; text-decoration: none; }
@@ -61,7 +62,9 @@ h4 		{ font-size: 100%; color: #000; font-weight: bold; }
 
 #wrapper {
 	width: 918px;
-	border: 1px solid #FFF;
+	border-width: 0px 3px 0px 3px;
+	border-style: solid;
+	border-color: #FFFFFF;
 	background: #f7e3af url('images/parchment.jpg') top center no-repeat;
 	margin: 0 auto;
 }

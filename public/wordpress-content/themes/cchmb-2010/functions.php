@@ -7,8 +7,8 @@ include_once dirname(__FILE__) . '/widgets.php';
 
 function cchmb_head() {
 	/*
-	<!--[if lt IE 9]>
-		<script src="http://ie7-js.googlecode.com/svn/version/2.1(beta4)/IE9.js">IE7_PNG_SUFFIX=".png";</script>
+	<!--[if lt IE 8]>
+		<script src="http://ie7-js.googlecode.com/svn/version/2.1(beta4)/IE8.js">IE7_PNG_SUFFIX=".png";</script>
 	<![endif]-->
 	 */
 ?>
@@ -35,7 +35,7 @@ function cchmb_fix_ie() {
 		//wp_register_style();
 		
 		// Dean Edward's IE9
-		wp_register_script('ie9.js', 'http://ie7-js.googlecode.com/svn/version/2.0(beta3)/IE8.js');
+		wp_register_script('ie9.js', 'http://ie7-js.googlecode.com/svn/version/2.0(beta3)/IE9.js');
 		add_action('wp_footer', 'cchmb_fix_ie_footer');
 	}
 }
