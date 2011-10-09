@@ -227,6 +227,7 @@ function cchmb_cleanup() {
 }
 add_action('wp', 'cchmb_cleanup', 90);
 
+
 function cchmb_admin_widget() {
 	if ( is_front_page() || is_user_logged_in() ) {
 ?>
@@ -240,6 +241,7 @@ function cchmb_admin_widget() {
 	}
 }
 add_action('wp_footer', 'cchmb_admin_widget');
+
 
 function cchmb_leadership_bio($attr, $content) {
 	$user = get_user_by('login', $content);
@@ -257,6 +259,7 @@ function cchmb_leadership_bio($attr, $content) {
 }
 add_shortcode('bio', 'cchmb_leadership_bio');
 
+
 /**
  * Handle 'safe_email' shortcode which converts email address into spambot-safe link.
  */
@@ -268,15 +271,12 @@ add_shortcode('safe_email', 'cchmb_safe_email');
 
 function cchmb_sermon_content($content) {
 	global $post;
-	if ( !$post || $post->post_type != 'sermon' ) return $content;
 
-	if ( $passage = get_post_meta($post->ID, 'sermon-passage', true) ) {
-		$content .= '<div class="sermon-passage">' . sermons_passage_link($passage) . '</div>';
-	}
-	if ( $audio = get_post_meta($post->ID, 'sermon-audio', true) ) {
-		$content .= '[audio: ' . $audio . ']';
-		$content .= '<a href="' . $audio . '" class="sermon-download-link">Download Audio</a>';
-	}
+	if ( $post && $post->post_type == 'sermon' ) {
+    if ( $passage = get_post_meta($post->ID, '_sermon_passage', true) ) {
+      $content .= '<div class="sermon-passage">' . sermons_passage_link($passage) . '</div>';
+    }
+  }
 
 	return $content;
 }
@@ -304,6 +304,7 @@ function cchmb_links($attr, $content = null) {
   return $output;
 }
 add_shortcode('links', 'cchmb_links');
+
 
 function cchmb_get_bookmarks($bookmarks, $args) {
   foreach ($bookmarks as $bookmark) {
@@ -344,4 +345,4 @@ function cchmb_list_albums($attr, $content = null) {
   return $output;
 }
 add_shortcode('list_albums', 'cchmb_list_albums');
-?>
+
