@@ -1,1 +1,5 @@
+# backups
+backup/var/
+
+# wordpress
 wp-local-config.php
