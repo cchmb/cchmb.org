@@ -1,7 +1,7 @@
 html
 
-# backups
-tools/var/backups
+# mysql backups
+tools/mysql/var
 
 # wordpress
 wp-local-config.php
