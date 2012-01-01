@@ -199,13 +199,13 @@ body.home .entry-title { display: none; }
 }
 .widget_daily_reading .whole-year {
 	display: block; float: right;
-	position: relative; right: 20px; bottom: 15px;
+	position: relative; right: 0px; bottom: 15px;
 	padding-top: 70px;
-	width: 70px;
+	width: 141px;
 	text-align: center;
 	font-size: 73%;
 	font-weight: bold;
-	background: url('images/bible.jpg') top center no-repeat;
+	background: url('http://www.cchmb.org/wordpress-content/uploads/2011/11/bible1.png') top center no-repeat;
 }
 
 #main {
@@ -308,7 +308,8 @@ body.home .entry-title { display: none; }
 	background: url('images/compass.png') 10px 10px no-repeat;
 	width: 135px;
 	margin: 10px auto 0;
-	font-size: 85%;
+	font-size: 90%;
+
 }
 
 #directions > a {
