@@ -29,6 +29,9 @@ if ( defined('WP_HOME') ) {
   define('PLUGINDIR', '../wordpress-content/plugins');
 }
 
+// Google Analytics ID
+define('GOOGLE_ANALYTICS_ID', 'UA-2900610-1');
+
 // turn off post revisions
 define('WP_POST_REVISIONS', false);
 
