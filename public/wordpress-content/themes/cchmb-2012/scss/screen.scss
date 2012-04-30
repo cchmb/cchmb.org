@@ -1,0 +1,53 @@
+@import "blueprint";
+@import "blueprint/debug";
+@import "blueprint/fancy-type";
+@import "compass/typography/lists/bullets";
+@import "compass/typography/lists/inline-block-list";
+
+@import "config";
+
+// reset
+@import "blueprint/reset";
+
+// additional reset for HTML5 elements
+article, aside, canvas, details, figcaption, figure, footer, header, hgroup,
+menu, nav, section, summary, time, mark, audio, video {
+  @include blueprint-basic-reset;
+}
+
+article, aside, details, figcaption, figure, footer, header, hgroup, menu,
+nav, section {
+  display:block;
+}
+
+body {
+  @include blueprint-typography(true);
+  @include blueprint-utilities;
+  @include blueprint-interaction;
+}
+
+.skip-links { display: none; }
+
+
+// Navigation
+#nav {
+  > ul {
+    @include inline-block-list-container;
+    > li {
+      @include inline-block-list-item;
+      margin-right: 2em;
+      position: relative;
+      ul {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        z-index: 1;
+      }
+
+      &:hover ul {
+        display: block;
+      }
+    }
+  }
+}
