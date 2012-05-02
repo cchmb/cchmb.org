@@ -3,6 +3,8 @@
 @import "blueprint/fancy-type";
 @import "compass/typography/lists/bullets";
 @import "compass/typography/lists/inline-block-list";
+@import "compass/typography/text/replacement";
+
 
 @import "config";
 
@@ -26,16 +28,26 @@ body {
   @include blueprint-interaction;
 }
 
-.skip-links { display: none; }
+.skip-links,.nocomments { display: none; }
 
+#wrapper {
+  max-width: 980px;
+  margin: 1em auto;
+}
+
+#header {
+}
 
 // Navigation
 #nav {
+  float: right;
+  font-size: 120%;
+
   > ul {
     @include inline-block-list-container;
     > li {
       @include inline-block-list-item;
-      margin-right: 2em;
+      margin-left: 2em;
       position: relative;
       ul {
         display: none;
@@ -50,4 +62,22 @@ body {
       }
     }
   }
+}
+
+.site-title {
+  float: left;
+
+  > a {
+    display: block;
+    width: 350px;
+    height: 119px;
+    @include replace-text('logo.png');
+  }
+}
+.site-description {
+  display: none;
+}
+
+#main {
+  clear: both;
 }
