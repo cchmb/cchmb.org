@@ -5,30 +5,15 @@
 @import "compass/typography/lists/inline-block-list";
 @import "compass/typography/text/replacement";
 
-
 @import "config";
 
 // reset
-@import "blueprint/reset";
+@import "compass/reset";
 
-// additional reset for HTML5 elements
-article, aside, canvas, details, figcaption, figure, footer, header, hgroup,
-menu, nav, section, summary, time, mark, audio, video {
-  @include blueprint-basic-reset;
-}
+@include blueprint-typography;
+@include blueprint-interaction;
 
-article, aside, details, figcaption, figure, footer, header, hgroup, menu,
-nav, section {
-  display:block;
-}
-
-body {
-  @include blueprint-typography(true);
-  @include blueprint-utilities;
-  @include blueprint-interaction;
-}
-
-.skip-links,.nocomments { display: none; }
+.skip-links, .nocomments { display: none; }
 
 #wrapper {
   max-width: 980px;
@@ -41,24 +26,28 @@ body {
 // Navigation
 #nav {
   float: right;
-  font-size: 120%;
 
-  > ul {
-    @include inline-block-list-container;
-    > li {
-      @include inline-block-list-item;
-      margin-left: 2em;
+  ul {
+    @include horizontal-list(0);
+    overflow: visible;
+
+    li {
+      margin-left: 1.5em;
+      display: block;
       position: relative;
-      ul {
-        display: none;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        z-index: 1;
-      }
 
       &:hover ul {
-        display: block;
+        left: 0;
+      }
+    }
+
+    // layout sub-menus
+    ul {
+      position: absolute;
+      left: -9999px;
+      li {
+        margin: 0;
+        float: none;
       }
     }
   }
