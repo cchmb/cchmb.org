@@ -15,12 +15,16 @@
 
 .skip-links, .nocomments { display: none; }
 
-#wrapper {
-  max-width: 980px;
-  margin: 1em auto;
-}
+@import "layout";
 
 #header {
+  overflow: auto;
+  background: #efefef;
+
+  hgroup {
+    max-width: 980px;
+    margin: 0 auto;
+  }
 }
 
 // Navigation
@@ -70,3 +74,5 @@
 #main {
   clear: both;
 }
+
+@import "sermons";

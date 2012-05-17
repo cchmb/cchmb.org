@@ -1,0 +1,24 @@
+// rules for layout
+@import "compass/css3/transition";
+
+#wrapper {
+  // provide a subtle transition animation
+  @include transition-property("margin");
+  @include transition-duration(0.3s);
+  margin: 0.5em;
+}
+
+
+@media (min-width: 592px) {
+  #wrapper {
+    margin: 0;
+  }
+}
+
+
+@media (min-width: 770px) and (min-height: 480px) {
+}
+
+
+@media (min-width: 1024px) {
+}
