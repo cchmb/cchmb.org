@@ -33,4 +33,36 @@ function cchmb_list_pages_excludes($excludes) {
 add_filter('wp_list_pages_excludes', 'cchmb_list_pages_excludes');
 
 
+/**
+ * Return {theme_dir/css/screen.css as the stylesheet_uri.
+ */
+function cchmb_stylesheet_uri( $stylesheet_uri ) {
+  $stylesheet_dir_uri = get_stylesheet_directory_uri();
+  $stylesheet_uri = $stylesheet_dir_uri . '/css/screen.css';
+  return $stylesheet_uri;
+}
+add_filter('stylesheet_uri', 'cchmb_stylesheet_uri');
 
+
+/**
+ * Setup scripts added by the theme.
+ */
+function cchmb_scripts() {
+  wp_enqueue_script( 'small-menu', get_stylesheet_directory_uri() . '/js/small-menu.js', array( 'jquery' ), '20120517', true );
+}
+add_action( 'wp_enqueue_scripts', 'cchmb_scripts' );
+
+
+/**
+ * Add content to the page's <head> element.
+ */
+function cchmb_head() {
+  echo '<meta name="viewport" content="width=device-width, initial-scale=1">
+';
+}
+add_action( 'wp_head', 'cchmb_head' );
+
+function cchmb_comments_closed($comments) {
+  return '';
+}
+add_filter( 'pdx_comments_closed', 'cchmb_comments_closed' );

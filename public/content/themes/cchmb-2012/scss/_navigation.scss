@@ -1,0 +1,73 @@
+@import "compass/typography/text/replacement";
+
+#nav {
+  > .menu-toggle {
+    cursor: pointer;
+    @include replace-text('menu-toggle.png');
+    background-size: 25px 25px;
+    background-position: right;
+  }
+
+  &.main-small-nav {
+    .menu {
+      display: none;
+      margin-right: 0;
+    }
+
+    ul {
+      @include no-bullets;
+    }
+    > ul {
+      border: 1px solid #e6e6e6;
+      padding: 0;
+    }
+    li {
+      border-bottom: 1px solid #eee;
+    }
+    li:last-child {
+      border-bottom: 0;
+    }
+    a {
+      display: block;
+      padding: .5em .8em;
+      text-decoration: none;
+      color: #333;
+    }
+    a:hover {
+      background-color: #f8f8f8;
+    }
+    .nav-current {
+      font-weight: bold;
+    }
+  }
+
+  // Navigation
+  &.main-nav {
+    float: right;
+
+    ul {
+      @include horizontal-list(0);
+      overflow: visible;
+
+      li {
+        margin-left: 1.5em;
+        display: block;
+        position: relative;
+
+        &:hover ul {
+          left: 0;
+        }
+      }
+
+      // layout sub-menus
+      ul {
+        position: absolute;
+        left: -9999px;
+        li {
+          margin: 0;
+          float: none;
+        }
+      }
+    }
+  }
+}

@@ -13,60 +13,20 @@
 @include blueprint-typography;
 @include blueprint-interaction;
 
-.skip-links, .nocomments { display: none; }
+.assistive-text, .nocomments { 
+  @include squish-text;
+}
 
 @import "layout";
+@import "navigation";
 
 #header {
-  overflow: auto;
-  background: #efefef;
 
   hgroup {
-    max-width: 980px;
     margin: 0 auto;
   }
 }
 
-// Navigation
-#nav {
-  float: right;
-
-  ul {
-    @include horizontal-list(0);
-    overflow: visible;
-
-    li {
-      margin-left: 1.5em;
-      display: block;
-      position: relative;
-
-      &:hover ul {
-        left: 0;
-      }
-    }
-
-    // layout sub-menus
-    ul {
-      position: absolute;
-      left: -9999px;
-      li {
-        margin: 0;
-        float: none;
-      }
-    }
-  }
-}
-
-.site-title {
-  float: left;
-
-  > a {
-    display: block;
-    width: 350px;
-    height: 119px;
-    @include replace-text('logo.png');
-  }
-}
 .site-description {
   display: none;
 }
