@@ -7,3 +7,6 @@
 [submodule "public/content/plugins/sermons"]
 	path = public/content/plugins/sermons
 	url = https://github.com/willnorris/wordpress-sermons.git
+[submodule "public/content/plugins/opengraph"]
+	path = public/content/plugins/opengraph
+	url = https://willnorris@github.com/willnorris/wordpress-opengraph.git
