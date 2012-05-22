@@ -37,6 +37,10 @@
   RewriteRule statement_of_faith.php /statement-of-faith [L,R=permanent]
 
   RewriteRule (audio/.*\.mp3) http://media.cchmb.org/$1 [L,R=permanent]
+
+  # Many WordPress plugins still assume the location of wp-content
+  RewriteRule ^wordpress/wp-content/(.*)$  content/$1 [R=301,L]
+  RewriteRule ^wordpress-content/(.*)$  content/$1 [R=301,L]
 </IfModule>
 
 # BEGIN WordPress
