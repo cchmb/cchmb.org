@@ -4,12 +4,13 @@
 <?php while ( have_posts() ) : the_post(); ?>
 <?php 
   $audio_url = get_post_meta($post->ID, '_sermon_audio', true);
-  $youtube_id = get_post_meta($post->ID, '_sermon_youtube_id', true);
+  $youtube_iframe_url = get_sermon_youtube_url( $post, 'iframe');
+  $youtube_url = get_sermon_youtube_url( $post );
 ?>
   <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
-    <?php if ( $youtube_id ) : ?>
+    <?php if ( $youtube_iframe_url ) : ?>
       <div class="sermon-video">
-        <iframe width="700" height="386" src="http://www.youtube.com/embed/<?php echo $youtube_id; ?>" frameborder="0" allowfullscreen></iframe>
+        <iframe width="700" height="386" src="<?php echo $youtube_iframe_url; ?>" frameborder="0" allowfullscreen></iframe>
       </div>
     <?php endif; ?>
     <?php get_template_module('entry/title'); ?>
@@ -31,8 +32,8 @@
 
       <section id="media">
         <ul>
-          <?php if ( $youtube_id ) : ?>
-            <li><a href="http://youtu.be/<?php echo $youtube_id; ?>">Watch on YouTube</a></li>
+          <?php if ( $youtube_url ) : ?>
+            <li><a href="<?php echo $youtube_url; ?>">Watch on YouTube</a></li>
           <?php endif; ?>
           <?php if ( $audio_url ) : ?>
             <li><a href="<?php echo $audio_url; ?>">Audio MP3</a></li>
