@@ -1,3 +1,4 @@
+@import "compass/css3/box-shadow";
 @import "compass/typography/text/replacement";
 
 #nav {
@@ -6,6 +7,19 @@
     @include replace-text('menu-toggle.png');
     background-size: 25px 25px;
     background-position: right;
+  }
+
+  a {
+    text-decoration: none;
+    color: #333;
+
+    &:hover {
+      background: #eee;
+    }
+  }
+
+  li:hover {
+    background: #eee;
   }
 
   &.main-small-nav {
@@ -30,8 +44,6 @@
     a {
       display: block;
       padding: .5em .8em;
-      text-decoration: none;
-      color: #333;
     }
     a:hover {
       background-color: #f8f8f8;
@@ -43,29 +55,40 @@
 
   // Navigation
   &.main-nav {
-    float: right;
+    height: 2.5em;
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    margin: 1em 0;
+    
+    a {
+      line-height: 2.5em;
+      padding: 0.6em 0.9em;
+    }
 
     ul {
       @include horizontal-list(0);
       overflow: visible;
 
-      li {
-        margin-left: 1.5em;
-        display: block;
-        position: relative;
-
-        &:hover ul {
-          left: 0;
-        }
-      }
-
       // layout sub-menus
       ul {
+        @include box-shadow(#999 1px 1px 5px);
+        background: #fff;
+        border: 1px solid #ccc;
         position: absolute;
         left: -9999px;
         li {
           margin: 0;
           float: none;
+        }
+      }
+
+      li {
+        margin-right: 1.5em;
+        display: block;
+        position: relative;
+
+        &:hover ul {
+          left: 0;
         }
       }
     }
