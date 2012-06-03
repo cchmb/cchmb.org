@@ -62,7 +62,21 @@ function cchmb_head() {
 }
 add_action( 'wp_head', 'cchmb_head' );
 
+
+/**
+ * Be silent if comments are closed.
+ */
 function cchmb_comments_closed($comments) {
   return '';
 }
 add_filter( 'pdx_comments_closed', 'cchmb_comments_closed' );
+
+
+/**
+ * Register javascript.
+ */
+function cchmb_js() {
+  wp_enqueue_script('jquery-tools', 'http://cdn.jquerytools.org/1.2.7/full/jquery.tools.min.js', 
+    false, null, true);
+}
+add_action('wp', 'cchmb_js');
