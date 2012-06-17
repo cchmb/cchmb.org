@@ -11,3 +11,4 @@ public/wordpress-content/wp-cache-config.php
 public/sitemap.xml
 
 .sass-cache
+.svn
