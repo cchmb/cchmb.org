@@ -37,7 +37,9 @@ body {
   }
 }
 
-
+#content {
+  overflow: auto;
+}
 
 
 @media (min-width: 592px) {
