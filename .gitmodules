@@ -16,3 +16,6 @@
 [submodule "public/content/themes/twentytwelve"]
 	path = public/content/themes/twentytwelve
 	url = git://github.com/thethemefoundry/twentytwelve.git
+[submodule "public/content/mu-plugins/analytics"]
+	path = public/content/mu-plugins/analytics
+	url = git://github.com/willnorris/wordpress-analytics.git
