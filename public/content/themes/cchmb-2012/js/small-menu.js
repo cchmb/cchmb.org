@@ -12,7 +12,7 @@ jQuery( document ).ready( function( $ ) {
 		$header.find( '#nav h1' ).removeClass( 'assistive-text' ).addClass( 'menu-toggle' );
 
 		$( '.menu-toggle' ).unbind( 'click' ).click( function() {
-			$header.find( '.menu' ).toggle();
+			$header.find( '.menu, #searchform' ).toggle();
 			$( this ).toggleClass( 'toggled-on' );
 		} );
 	};
@@ -34,7 +34,7 @@ jQuery( document ).ready( function( $ ) {
 			} else {
 				$header.find( '#nav' ).removeClass( 'main-small-nav' ).addClass( 'main-nav' );
 				$header.find( '#nav h1' ).removeClass( 'menu-toggle' ).addClass( 'assistive-text' );
-				$header.find( '.menu' ).removeAttr( 'style' );
+				$header.find( '.menu, #searchform' ).removeAttr( 'style' );
 			}
 		}, 200 );
 	} );

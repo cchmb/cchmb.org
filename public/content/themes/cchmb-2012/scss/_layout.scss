@@ -20,7 +20,7 @@ body {
   background: #fff;
   max-width: 1000px;
   margin: 0 auto;
-  padding: 1em 5em;
+  padding: 1em 2em;
   border-left: 1px solid #ddd;
   border-right: 1px solid #ddd;
 }
@@ -44,7 +44,6 @@ body {
 
 @media (min-width: 592px) {
   #wrapper {
-    //margin: 0;
   }
 
   .site-title {
@@ -54,7 +53,6 @@ body {
       @include replace-text('logo.png');
     }
   }
-
 }
 
 

@@ -1,7 +1,17 @@
 @import "compass/css3/box-shadow";
+@import "compass/css3/transition";
 @import "compass/typography/text/replacement";
 
 #nav {
+  #s {
+    width: 10em;
+    @include transition-duration(0.3s);
+
+    &:focus {
+      width: 20em;
+    }
+  }
+
   > .menu-toggle {
     cursor: pointer;
     @include replace-text('menu-toggle.png');
@@ -26,6 +36,11 @@
     .menu {
       display: none;
       margin-right: 0;
+    }
+
+    #searchform {
+      display: none;
+      margin: 0.5em;
     }
 
     ul {
@@ -56,10 +71,19 @@
   // Navigation
   &.main-nav {
     height: 2.5em;
-    border-top: 1px solid #ccc;
-    border-bottom: 1px solid #ccc;
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
     margin: 1em 0;
     
+    #searchform {
+      float: right;
+      padding: 0.4em 1em;
+
+      #searchsubmit {
+        display: none;
+      }
+    }
+
     a {
       line-height: 2.5em;
       padding: 0.6em 0.9em;
