@@ -13,10 +13,14 @@
   }
 
   > .menu-toggle {
-    cursor: pointer;
-    @include replace-text('menu-toggle.png');
-    background-size: 25px 25px;
+    @include replace-text-with-dimensions('menu-toggle.png');
     background-position: right;
+    background-size: 25px 25px;
+    cursor: pointer;
+    font-size: 100%;
+    position: absolute;
+    top: 1em;
+    right: 2em;
   }
 
   a {
@@ -32,6 +36,7 @@
     background: #eee;
   }
 
+  // small navigation
   &.main-small-nav {
     .menu {
       display: none;
@@ -68,7 +73,7 @@
     }
   }
 
-  // Navigation
+  // full-size navigation
   &.main-nav {
     height: 2.5em;
     border-top: 1px solid #ddd;
@@ -113,6 +118,10 @@
 
         &:hover ul {
           left: 0;
+        }
+
+        &:last-child {
+          margin-right: 0;
         }
       }
     }

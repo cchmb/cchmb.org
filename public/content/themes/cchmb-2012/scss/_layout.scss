@@ -29,11 +29,9 @@ body {
   margin: 0;
 
   > a {
-    display: block;
-    width: 103px;
-    height: 40px;
-    @include replace-text('logo-small.png');
-    background-width: 100%;
+    > img {
+      max-width: 75%;
+    }
   }
 }
 
@@ -42,15 +40,12 @@ body {
 }
 
 
-@media (min-width: 592px) {
+@media (min-width: 600px) {
   #wrapper {
   }
 
   .site-title {
     > a {
-      width: 350px;
-      height: 119px;
-      @include replace-text('logo.png');
     }
   }
 }
