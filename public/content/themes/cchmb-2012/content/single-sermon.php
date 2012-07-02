@@ -5,25 +5,6 @@
 <?php while ( have_posts() ) : the_post(); ?>
 
 
-<?php
-  // sidebar of other sermons in this series
-  $series = get_primary_sermon_series($post->ID);
-  $sermon_ids = get_sermon_ids_in_series( $series->term_id );
-?>
-  <div class="sermons-sidebar">
-    <h3><?php echo $series->name; ?></h3>
-    <ul>
-<?php foreach ($sermon_ids as $sermon_id): 
-      $class = $post->ID == $sermon_id ? ' class="active"' : '';
-?>
-      <li<?php echo $class; ?>>
-        <a href="<?php echo get_permalink($sermon_id); ?>"><?php echo get_the_title($sermon_id); ?></a>
-      </li>
-<?php endforeach ?>
-    </ul>
-  </div>
-
-
 <?php 
   $audio_url = get_post_meta($post->ID, '_sermon_audio', true);
   $youtube_iframe_url = get_sermon_youtube_url( $post, 'iframe');
@@ -38,13 +19,13 @@
     <?php endif; ?>
     <?php get_template_module('entry/title'); ?>
 
-    <ul id="tabs">
+    <ul id="sermon-data-tabs">
       <li><a href="#description">Description</a></li>
       <li><a href="#notes" title="For you note-takers">Notes</a></li>
       <li><a href="#media">Media</a></li>
     </ul>
 
-    <div id="panes">
+    <div id="sermon-data-panes">
       <section id="description">
         <?php get_template_module('entry/excerpt'); ?>
       </section>
@@ -66,10 +47,30 @@
     </div>
 
   </article>
+
+
+<?php
+  // sidebar of other sermons in this series
+  $series = get_primary_sermon_series($post->ID);
+  $sermon_ids = get_sermon_ids_in_series( $series->term_id );
+?>
+  <div class="sermons-sidebar">
+    <h3><?php echo $series->name; ?></h3>
+    <ul>
+<?php foreach ($sermon_ids as $sermon_id): 
+      $class = $post->ID == $sermon_id ? ' class="active"' : '';
+?>
+      <li<?php echo $class; ?>>
+        <a href="<?php echo get_permalink($sermon_id); ?>"><?php echo get_the_title($sermon_id); ?></a>
+      </li>
+<?php endforeach ?>
+    </ul>
+  </div>
+
 <?php endwhile; ?>
 
 <script>
   jQuery(function() {
-    jQuery('ul#tabs').tabs('div#panes > section', { history: true});
+    jQuery('ul#sermon-data-tabs').tabs('div#sermon-data-panes > section', { history: true});
   });
 </script>
