@@ -13,28 +13,24 @@
   <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
     <?php if ( $youtube_iframe_url ) : ?>
       <div class="sermon-video">
-        <iframe width="700" height="386" src="<?php echo $youtube_iframe_url; ?>"
-          frameborder="0" allowfullscreen></iframe>
+        <iframe src="<?php echo $youtube_iframe_url; ?>" frameborder="0"></iframe>
       </div>
     <?php endif; ?>
     <?php get_template_module('entry/title'); ?>
 
-    <ul id="sermon-data-tabs">
-      <li><a href="#description">Description</a></li>
-      <li><a href="#notes" title="For you note-takers">Notes</a></li>
-      <li><a href="#media">Media</a></li>
-    </ul>
-
-    <div id="sermon-data-panes">
+    <div id="sermon-data">
       <section id="description">
+        <h4>Description</h4>
         <?php get_template_module('entry/excerpt'); ?>
       </section>
 
       <section id="notes">
+        <h4>Notes</h4>
         <?php get_template_module('entry/content'); ?>
       </section>
 
       <section id="media">
+        <h4>Media</h4>
         <ul>
           <?php if ( $youtube_url ) : ?>
             <li><a href="<?php echo $youtube_url; ?>">Watch on YouTube</a></li>
@@ -68,9 +64,3 @@
   </div>
 
 <?php endwhile; ?>
-
-<script>
-  jQuery(function() {
-    jQuery('ul#sermon-data-tabs').tabs('div#sermon-data-panes > section', { history: true});
-  });
-</script>
