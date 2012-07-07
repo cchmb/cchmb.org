@@ -50,7 +50,7 @@ jQuery( document ).ready( function( $ ) {
 
   // Check viewport width on first load.
   if ( $( window ).width() < 600 ) {
-    smallMenu.init();
+    //smallMenu.init();
   } else {
     sermonNav.init();
   }
@@ -64,10 +64,10 @@ jQuery( document ).ready( function( $ ) {
 
     timeout = setTimeout( function() {
       if ( browserWidth < 600 ) {
-        smallMenu.init();
+        //smallMenu.init();
         sermonNav.reset();
       } else {
-        smallMenu.reset();
+        //smallMenu.reset();
         sermonNav.init();
       }
     }, 200 );

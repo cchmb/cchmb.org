@@ -1,5 +1,5 @@
       <nav id="nav" class="main-nav" role="navigation">
-        <h1 class="assistive-text"><?php _e('Menu', 'pdx'); ?></h1>
+        <h1><a href="#footer"><?php _e('Menu', 'pdx'); ?></a></h1>
 
         <form id="searchform" method="get" action="/">
           <label for="s" class="assistive-text">Search</label>
