@@ -48,7 +48,7 @@ $search-in-nav-width: 617px;
     }
 
     li {
-      @include transition-duration(0.3s);
+      @include transition(margin 0.3s);
       @include breakpoint($ideal-line-width * 1.5) {
         margin-right: 1.5em;
       }
