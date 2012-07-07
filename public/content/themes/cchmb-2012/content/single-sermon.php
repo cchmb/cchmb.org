@@ -20,17 +20,17 @@
 
     <div id="sermon-data">
       <section id="description">
-        <h4>Description</h4>
+        <h3>Description</h3>
         <?php get_template_module('entry/excerpt'); ?>
       </section>
 
       <section id="notes">
-        <h4>Notes</h4>
+        <h3>Notes</h3>
         <?php get_template_module('entry/content'); ?>
       </section>
 
       <section id="media">
-        <h4>Media</h4>
+        <h3>Media</h3>
         <ul>
           <?php if ( $youtube_url ) : ?>
             <li><a href="<?php echo $youtube_url; ?>">Watch on YouTube</a></li>
