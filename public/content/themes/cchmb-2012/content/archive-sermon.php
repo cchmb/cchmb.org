@@ -1,7 +1,7 @@
 <section id="latest">
   <h2>Latest Sermons</h2>
 <?php
-    $args = array('post_type' => 'sermon', 'posts_per_page' => 3);
+    $args = array('post_type' => 'sermon', 'posts_per_page' => 5);
     $loop = new WP_Query($args);
     while( $loop->have_posts() ) : $loop->the_post();
 ?>
