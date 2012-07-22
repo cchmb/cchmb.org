@@ -92,6 +92,7 @@ add_action('wp', 'cchmb_js');
 function cchmb_pre_get_posts( $wp_query ) {
   if ( $wp_query->is_tax('sermon_series') ) {
     $wp_query->query_vars['posts_per_page'] = -1;
+    $wp_query->query_vars['order'] = 'ASC';
   }
 }
 add_action('pre_get_posts', 'cchmb_pre_get_posts');
