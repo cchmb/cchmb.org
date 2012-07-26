@@ -96,3 +96,29 @@ function cchmb_pre_get_posts( $wp_query ) {
   }
 }
 add_action('pre_get_posts', 'cchmb_pre_get_posts');
+
+
+function cchmb_default_sermon_series_thumbnail_id( $thumbnail_id ) {
+  if ( !$thumbnail_id ) {
+    $attachments = get_posts('post_type=attachment&name=sermon-series-default');
+    if ($attachments) {
+      $thumbnail_id = $attachments[0]->ID;
+    }
+  }
+  return $thumbnail_id;
+}
+add_filter('sermon_series_thumbnail_id', 'cchmb_default_sermon_series_thumbnail_id');
+
+
+function cchmb_default_sermon_thumbnail_id( $meta_value, $object_id, $meta_key, $single ) {
+  if ( '_thumbnail_id' == $meta_key && 'sermon' == get_post_type($object_id) ) {
+    // $meta_value will always be null, so manually check if the sermon has a thumbnail
+    $metadata = get_post_meta($object_id);
+    if ( !isset($metadata['_thumbnail_id']) ) {
+      $series_id = get_primary_sermon_series($object_id);
+      $meta_value = get_sermon_series_thumbnail_id($series_id);
+    }
+  }
+  return $meta_value;
+}
+add_filter('get_post_metadata', 'cchmb_default_sermon_thumbnail_id', 10, 4);

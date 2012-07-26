@@ -18,6 +18,7 @@
         <a href="<?php the_permalink(); ?>"><?php the_post_thumbnail('medium'); ?></a><br/>
       <?php endif; ?>
       <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
+      <time datetime="<?php esc_attr_e(get_the_time('c')); ?>"><?php esc_html_e(get_the_date()); ?></time>
     </article>
   <?php endwhile; ?>
 </section>
