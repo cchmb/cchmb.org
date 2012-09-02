@@ -5,10 +5,13 @@
 @import "compass/typography/lists/inline-block-list";
 @import "compass/typography/text/replacement";
 
+@import url("http://fonts.googleapis.com/css?family=Open+Sans|Gruppo");
+
 @import "config";
 
 // reset
 @import "compass/reset";
+
 
 @include blueprint-typography;
 @include blueprint-interaction;
@@ -33,6 +36,31 @@
 
 #main {
   clear: both;
+}
+
+.entry-title {
+  font-family: "Gruppo";
+  font-size: 250%;
+  a {
+    text-decoration: none;
+  }
+}
+
+header.header-image {
+  position: relative;
+  margin-bottom: 1em;
+  .entry-title {
+    background: rgba(0,0,0,0.7);
+    bottom: 0;
+    font-weight: bold;
+    position: absolute;
+    text-align: right;
+    width: 100%;
+    a {
+      color: #FFF;
+      margin: 0 1em;
+    }
+  }
 }
 
 @import "sermons";

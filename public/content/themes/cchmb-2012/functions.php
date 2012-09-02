@@ -4,7 +4,7 @@
  * Theme setup.
  */
 function cchmb_theme_setup() {
-  add_theme_support( 'post-thumbnails', array( 'sermon' ) );
+  add_theme_support( 'post-thumbnails', array( 'page', 'post', 'sermon' ) );
 }
 add_action('after_setup_theme', 'cchmb_theme_setup');
 
