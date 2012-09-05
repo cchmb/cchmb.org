@@ -48,7 +48,7 @@ add_filter('stylesheet_uri', 'cchmb_stylesheet_uri');
  * Setup scripts added by the theme.
  */
 function cchmb_scripts() {
-  wp_enqueue_script( 'small-menu', get_stylesheet_directory_uri() . '/js/small-menu.js', array( 'jquery' ), '20120517', true );
+  wp_enqueue_script( 'cchmb.js', get_stylesheet_directory_uri() . '/js/cchmb.js', array( 'jquery' ), '20120909', true );
   wp_enqueue_style( 'google-fonts', '//fonts.googleapis.com/css?family=Open+Sans|Gruppo', null, null );
 }
 add_action( 'wp_enqueue_scripts', 'cchmb_scripts' );
