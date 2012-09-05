@@ -9,19 +9,22 @@ jQuery( document ).ready( function( $ ) {
 
   var smallMenu = {
     init: function() {
-      // nav menu for small screens
-      $header.find( '#nav' ).removeClass( 'main-nav' ).addClass( 'main-small-nav' );
-      $header.find( '#nav h1' ).removeClass( 'assistive-text' ).addClass( 'menu-toggle' );
+      $header.find( '.menu, #searchform' ).hide();
 
-      $( '.menu-toggle' ).unbind( 'click' ).click( function() {
+      // nav menu for small screens
+      $( '#menu-toggle' ).unbind( 'click' ).click( function(e) {
+        e.preventDefault();
         $header.find( '.menu, #searchform' ).toggle();
         $( this ).toggleClass( 'toggled-on' );
       } );
     },
+
     reset: function() {
-      $header.find( '#nav' ).removeClass( 'main-small-nav' ).addClass( 'main-nav' );
-      $header.find( '#nav h1' ).removeClass( 'menu-toggle' ).addClass( 'assistive-text' );
       $header.find( '.menu, #searchform' ).removeAttr( 'style' );
+    },
+
+    test: function() {
+      return $header.find('.menu > li').first().css('float') == 'none';
     }
   };
 
@@ -48,9 +51,12 @@ jQuery( document ).ready( function( $ ) {
     }
   };
 
+  if (smallMenu.test()) {
+    smallMenu.init();
+  }
+
   // Check viewport width on first load.
   if ( $( window ).width() < 600 ) {
-    //smallMenu.init();
   } else {
     sermonNav.init();
   }
@@ -63,11 +69,14 @@ jQuery( document ).ready( function( $ ) {
       clearTimeout( timeout );
 
     timeout = setTimeout( function() {
+      if (smallMenu.test()) {
+        smallMenu.init();
+      } else {
+        smallMenu.reset();
+      }
       if ( browserWidth < 600 ) {
-        //smallMenu.init();
         sermonNav.reset();
       } else {
-        //smallMenu.reset();
         sermonNav.init();
       }
     }, 200 );

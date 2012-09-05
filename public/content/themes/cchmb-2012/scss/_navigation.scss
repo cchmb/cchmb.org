@@ -1,140 +1,112 @@
 @import "compass/css3/box-shadow";
+@import "compass/css3/box-sizing";
 @import "compass/css3/transition";
 @import "compass/typography/lists/bullets";
 @import "compass/typography/lists/horizontal-list";
 @import "compass/typography/text/replacement";
 
 // minimum width for displaying the full-size menu
-$full-menu-width: 472px;
-$search-in-nav-width: 617px;
+$full-menu-width: 41em;
 
-#nav {
-  border-bottom: 1px solid #ddd;
-  border-top: 1px solid #ddd;
-  height: 2.5em;
+nav[role=navigation] {
   margin: 1em 0;
 
-  h1 {
-    display: none;
+  #menu-toggle {
+    position: absolute;
+    top: 2em;
+    right: 2em;
+  }
+
+  ul {
+    @include no-bullets;
+  }
+
+  > ul {
+    border-bottom: 1px solid #ddd;
+    margin: 0;
+    padding: 0;
+  }
+
+  li {
+    border-top: 1px solid #ddd;
   }
 
   a {
     color: #333;
+    display: block;
     line-height: 2.5em;
-    padding: 0.6em 0.9em;
+    padding: 0 0.9em;
     text-decoration: none;
-  }
 
-  a:hover, li:hover {
-    background: #eee;
-  }
-
-  ul {
-    @include horizontal-list(0);
-    overflow: visible;
-
-    // layout sub-menus
-    ul {
-      @include box-shadow(#999 1px 1px 5px);
-      background: #fff;
-      border: 1px solid #ccc;
-      position: absolute;
-      left: -9999px;
-      li {
-        margin: 0;
-        float: none;
-      }
-      z-index: 1;
-    }
-
-    li {
-      @include transition(margin 0.3s);
-      @include breakpoint($ideal-line-width * 1.5) {
-        margin-right: 1.5em;
-      }
-      display: block;
-      position: relative;
-
-      &:hover ul {
-        left: 0;
-      }
-
-      &:last-child {
-        margin-right: 0;
-      }
+    &:hover {
+      background: #eee;
     }
   }
 
   #searchform {
-    float: right;
-    padding: 0.4em 1em;
+    border-top: 1px solid #ddd;
+    line-height: 2.5em;
+    padding: 0 1em;
 
-    // hide unless there is room to show it (see below)
-    display: none;
-    @include breakpoint($search-in-nav-width) {
-      display: block;
+    // normally just setting font-size:0 is sufficient for assistive text, but
+    // it's causing slight layout issues here, so we hide it completely
+    .assistive-text, #searchsubmit {
+      display: none;
     }
 
-
     #s {
-      width: 10em;
-      @include transition-duration(0.3s);
+      font-size: 1.5em;
+      width: 100%;
+    }
+  }
+}
 
-      &:focus {
-        width: 20em;
+// once the screen is wide enough to handle it, display the nav menu horizontally
+@include breakpoint($full-menu-width) {
+  nav[role=navigation] {
+    border-bottom: 1px solid #ddd;
+    border-top: 1px solid #ddd;
+    height: 2.5em;
+
+    #menu-toggle {
+      display: none;
+    }
+
+    > ul, li {
+      border: 0;
+    }
+
+    ul {
+      @include horizontal-list(0);
+      overflow: visible;
+
+      // layout sub-menus
+      ul {
+        @include box-shadow(#999 1px 1px 5px);
+        background: #fff;
+        border: 1px solid #ddd;
+        left: -9999px;
+        position: absolute;
+        li {
+          float: none;
+          margin: 0;
+        }
+        z-index: 1;
+      }
+
+      li {
+        position: relative;
+
+        // display sub-menu on hover
+        &:hover ul {
+          left: 0;
+        }
       }
     }
 
-    #searchsubmit {
-      display: none;
+    #searchform {
+      border: 0;
+      float: right;
     }
   }
 }
-
-
-#footer-widget-area {
-  .widget_nav_menu {
-    @include no-bullets;
-  }
-
-  .widget_nav_menu, .widget_search {
-    display: none;
-  }
-
-  // show search box in footer if there isn't room in the nav bar
-  @include breakpoint(max-width $search-in-nav-width - 1) {
-    .widget_search {
-      display: block;
-    }
-  }
-}
-
-// hide footer menu if full menu is shown
-@include breakpoint(max-width $full-menu-width) {
-  #nav {
-    border: 0;
-    height: auto;
-
-    .menu, #searchform {
-      display: none;
-    }
-
-    h1 {
-      background-position: right;
-      background-size: 25px 25px;
-      cursor: pointer;
-      display: block;
-      font-size: 100%;
-      position: absolute;
-      right: 2em;
-      top: 1em;
-    }
-  }
-  #footer-widget-area {
-    .widget_nav_menu, .widget_search {
-      display: block;
-    }
-  }
-}
-
-
