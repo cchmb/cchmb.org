@@ -14,8 +14,8 @@ jQuery( document ).ready( function( $ ) {
       // nav menu for small screens
       $( '#menu-toggle' ).unbind( 'click' ).click( function(e) {
         e.preventDefault();
-        $header.find( '.menu, #searchform' ).toggle();
-        $( this ).toggleClass( 'toggled-on' );
+        $header.find( '.menu, #searchform' ).slideToggle();
+        $( this ).toggleClass( 'expanded' );
       } );
     },
 
