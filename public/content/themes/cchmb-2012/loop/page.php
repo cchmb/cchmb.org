@@ -1,9 +1,10 @@
 <?php while ( have_posts() ) : the_post(); ?>
 <?php
+  $header_attr = '';
   if ( has_post_thumbnail() ) {
-    $thumbnail = wp_get_attachment_image_src(get_post_thumbnail_id(), 'large');
-    $header_attr = ' class="header-image"';
-    $header_attr .= ' style="background:url(\'' . $thumbnail[0] . '\'); width: 100%; height: 300px;"';
+    $large = wp_get_attachment_image_src(get_post_thumbnail_id(), 'large');
+    $small = wp_get_attachment_image_src(get_post_thumbnail_id(), 'medium');
+    $header_attr = ' data-image-large="' . $large[0] . '" data-image-small="' . $small[0] . '"';
   }
 
 ?>

@@ -37,23 +37,39 @@
 }
 
 .entry-title {
-  font-family: "Gruppo";
+  font-family: "Gruppo", "Georgia", serif;
   font-size: 250%;
   a {
     text-decoration: none;
   }
 }
 
-header.header-image {
+header[data-image-large] {
   position: relative;
   margin-bottom: 1em;
+
+  img {
+    width: 100%;
+  }
+
   .entry-title {
     background: rgba(0,0,0,0.7);
     bottom: 0;
+    font-size: 1.5em;
     font-weight: bold;
+    line-height: 1.5;
     position: absolute;
     text-align: right;
     width: 100%;
+
+    @include breakpoint(30em) {
+      margin-bottom: 1em;
+    }
+
+    @include breakpoint(40em) {
+      font-size: 2.5em;
+    }
+
     a {
       color: #FFF;
       margin: 0 1em;

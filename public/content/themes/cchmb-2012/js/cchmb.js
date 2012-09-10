@@ -28,6 +28,35 @@ jQuery( document ).ready( function( $ ) {
     }
   };
 
+
+  /**
+   * Attempt at responsive media for the entry header image.  For smaller
+   * screens, the small image (indicated by the 'data-image-small' attribute)
+   * is loaded.  On browser resizes, we switch out to the larger image
+   * (indicated by the 'data-image-large' attribute) if the screen is large
+   * enough.  We never switch back down to the smaller image though, since at
+   * that point, the bandwidth has already been spent to load the larger image.
+   */
+  var loadHeaderImage = function() {
+    // display header images
+    $('header[data-image-small]').each(function(index, header) {
+      var imageSize = $(window).width() < 600 ?  'image-small' : 'image-large';
+      var imageUrl = $(header).data(imageSize);
+
+      var img = $(this).find('> img');
+      if ( img.length == 0 ) {
+        img = $('<img>').prependTo(header);
+      } else if (imageSize == 'image-small') {
+        // if we've already loaded a header image, there's no use 
+        // switching it out with the smaller image at this point.
+        return;
+      }
+
+      img.attr('src', imageUrl);
+    });
+  };
+
+
   var sermonNav = {
     init: function() {
       if ( $('#sermon-data-tabs').length > 0 ) return;
@@ -51,6 +80,7 @@ jQuery( document ).ready( function( $ ) {
     }
   };
 
+
   if (smallMenu.test()) {
     smallMenu.init();
   }
@@ -60,6 +90,8 @@ jQuery( document ).ready( function( $ ) {
   } else {
     sermonNav.init();
   }
+
+  loadHeaderImage();
 
   // Check viewport width when user resizes the browser window.
   $( window ).resize( function() {
@@ -74,11 +106,15 @@ jQuery( document ).ready( function( $ ) {
       } else {
         smallMenu.reset();
       }
+
       if ( browserWidth < 600 ) {
         sermonNav.reset();
       } else {
         sermonNav.init();
       }
+
+      loadHeaderImage();
     }, 200 );
   } );
+
 } );
