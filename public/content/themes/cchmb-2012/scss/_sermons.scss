@@ -1,3 +1,4 @@
+@import "compass/css3/transition";
 @import "compass/typography/lists/bullets";
 @import "compass/typography/lists/horizontal-list";
 
@@ -112,10 +113,21 @@ body.single-sermon {
         &:hover {
           background: #eee;
         }
+
+        // slight hover transition on larger screens
+        @include breakpoint($breakpoint-medium-width) {
+          @include transition(padding 0.3s);
+          padding: 0.5em 0;
+          &:hover {
+            padding: 0.5em 0.9em;
+          }
+        }
       }
+
       .title {
         display: block;
       }
+
       time {
         font-size: 0.8em;
         color: #999;
