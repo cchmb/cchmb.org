@@ -10,6 +10,7 @@ jQuery( document ).ready( function( $ ) {
   var smallMenu = {
     init: function() {
       $header.find( '.menu, #searchform' ).hide();
+      $('#menu-toggle').removeClass( 'expanded' );
 
       // nav menu for small screens
       $( '#menu-toggle' ).unbind( 'click' ).click( function(e) {
@@ -66,37 +67,41 @@ jQuery( document ).ready( function( $ ) {
       $('#sermon-data > section').each(function(idx, section) {
         var title = $('> :header:first', section);
         if (title && section.id) {
-          $('<a>', {'href': '#' + section.id, 'text':title.text()})
-            .appendTo('<li>').appendTo(tabs);
+          var li = $('<li>').appendTo(tabs);
+          $('<a>', {'href': '#' + section.id, 'text':title.text()}).appendTo(li);
         }
         title.addClass('assistive-text');
       });
       $('#sermon-data-tabs').tabs('#sermon-data > section', { history: true});
     },
+
     reset: function() {
       $('#sermon-data-tabs').remove();
       $('#sermon-data > section').show()
         .find('> :header:first').removeClass('assistive-text');
+    },
+
+    test: function() {
+      return $( window ).width() > 600;
     }
   };
 
+
+  // initial load
 
   if (smallMenu.test()) {
     smallMenu.init();
   }
 
-  // Check viewport width on first load.
-  if ( $( window ).width() < 600 ) {
-  } else {
+  if (sermonNav.test()) {
     sermonNav.init();
   }
 
   loadHeaderImage();
 
-  // Check viewport width when user resizes the browser window.
-  $( window ).resize( function() {
-    var browserWidth = $( window ).width();
 
+  // on resize
+  $( window ).resize( function() {
     if ( false !== timeout )
       clearTimeout( timeout );
 
@@ -107,10 +112,10 @@ jQuery( document ).ready( function( $ ) {
         smallMenu.reset();
       }
 
-      if ( browserWidth < 600 ) {
-        sermonNav.reset();
-      } else {
+      if (sermonNav.test()) {
         sermonNav.init();
+      } else {
+        sermonNav.reset();
       }
 
       loadHeaderImage();

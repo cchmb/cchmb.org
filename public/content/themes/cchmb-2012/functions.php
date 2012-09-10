@@ -123,3 +123,19 @@ function cchmb_default_sermon_thumbnail_id( $meta_value, $object_id, $meta_key, 
   return $meta_value;
 }
 add_filter('get_post_metadata', 'cchmb_default_sermon_thumbnail_id', 10, 4);
+
+
+/**
+ * Duplicate of get_the_date() that takes an optional post.
+ */
+function cchmb_get_the_date($d = '', $post = null) {
+  $post = get_post($post);
+  $the_date = '';
+
+  if ( '' == $d ) 
+    $the_date .= mysql2date(get_option('date_format'), $post->post_date);
+  else 
+    $the_date .= mysql2date($d, $post->post_date);
+
+  return apply_filters('get_the_date', $the_date, $d); 
+}

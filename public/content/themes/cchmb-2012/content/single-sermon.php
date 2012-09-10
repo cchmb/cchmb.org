@@ -1,9 +1,7 @@
 <?php
   global $post;
-
 ?>
 <?php while ( have_posts() ) : the_post(); ?>
-
 
 <?php 
   $audio_url = get_post_meta($post->ID, '_sermon_audio', true);
@@ -17,20 +15,21 @@
       </div>
     <?php endif; ?>
     <?php get_template_module('entry/title'); ?>
+    <?php get_template_module('entry/meta'); ?>
 
     <div id="sermon-data">
-      <section id="description">
-        <h3>Description</h3>
+      <section id="overview">
+        <h2><?php _e('Overview', 'cchmb'); ?></h2>
         <?php get_template_module('entry/excerpt'); ?>
       </section>
 
       <section id="notes">
-        <h3>Notes</h3>
+        <h2><?php _e('Notes', 'cchmb'); ?></h2>
         <?php get_template_module('entry/content'); ?>
       </section>
 
       <section id="media">
-        <h3>Media</h3>
+        <h2><?php _e('Media', 'cchmb'); ?></h2>
         <ul>
           <?php if ( $youtube_url ) : ?>
             <li><a href="<?php echo $youtube_url; ?>">Watch on YouTube</a></li>
@@ -51,13 +50,17 @@
   $sermon_ids = get_sermon_ids_in_series( $series->term_id );
 ?>
   <div class="sermons-sidebar">
-    <h3 class="series-title"><?php echo $series->name; ?></h3>
+    <h2 class="series-title">More in the series: <?php echo $series->name; ?></h2>
     <ul>
 <?php foreach ($sermon_ids as $sermon_id): 
-      $class = $post->ID == $sermon_id ? ' class="active"' : '';
+      $class = $post->ID == $sermon_id ? ' class="current"' : '';
 ?>
       <li<?php echo $class; ?>>
-        <a href="<?php echo get_permalink($sermon_id); ?>"><?php echo get_the_title($sermon_id); ?></a>
+        <a href="<?php echo get_permalink($sermon_id); ?>">
+          <span class="title"><?php echo get_the_title($sermon_id); ?></span>
+          <time datetime="<?php esc_attr_e( get_the_time('c', $sermon_id) ); ?>"><?php
+            esc_html_e( cchmb_get_the_date('', $sermon_id) ); ?></time>
+        </a>
       </li>
 <?php endforeach ?>
     </ul>
