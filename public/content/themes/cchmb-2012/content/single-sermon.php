@@ -50,7 +50,7 @@
   $sermon_ids = get_sermon_ids_in_series( $series->term_id );
 ?>
   <div class="sermons-sidebar">
-    <h2 class="series-title">More in the series: <?php echo $series->name; ?></h2>
+    <h2 class="series-title"><?php echo $series->name; ?></h2>
     <ul>
 <?php foreach ($sermon_ids as $sermon_id): 
       $class = $post->ID == $sermon_id ? ' class="current"' : '';

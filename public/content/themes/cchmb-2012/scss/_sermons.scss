@@ -1,4 +1,5 @@
 @import "compass/css3/transition";
+@import "compass/typography/links/hover-link";
 @import "compass/typography/lists/bullets";
 @import "compass/typography/lists/horizontal-list";
 
@@ -37,6 +38,7 @@ body.single-sermon {
 
   // use intrinsic ratios to make embedded videos resize responsively
   .sermon-video {
+    margin-bottom: 1em;
     position: relative;
     padding-bottom: 56.25%; // 16 / 9
     padding-top: 30px;
@@ -91,6 +93,7 @@ body.single-sermon {
 
     > .series-title {
       font-size: 1.2em;
+      font-weight: bold;
     }
 
     ul {
@@ -105,26 +108,18 @@ body.single-sermon {
       }
 
       a {
-        color: #333;
+        @include hover-link;
+        line-height: 1em;
         display: block;
-        padding: 0.5em 0.9em;
-        text-decoration: none;
+        padding: 0.5em 0;
 
         &:hover {
-          background: #eee;
-        }
-
-        // slight hover transition on larger screens
-        @include breakpoint($breakpoint-medium-width) {
-          @include transition(padding 0.3s);
-          padding: 0.5em 0;
-          &:hover {
-            padding: 0.5em 0.9em;
-          }
+          //background: #eee;
         }
       }
 
       .title {
+        color: $link-color;
         display: block;
       }
 
