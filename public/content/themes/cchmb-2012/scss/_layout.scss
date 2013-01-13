@@ -9,15 +9,10 @@
 @import "config";
 
 body {
-  margin: 0;
-  padding: 0;
   @include background(image-url("tapestry.png"));
 }
 
 #wrapper {
-  // provide a subtle transition animation
-  //@include transition-property("margin");
-  @include transition-duration(0.3s);
   @include box-shadow(rgba(#000, 0.15) 0px 3px 5px);
 
   background: #fff;
@@ -34,9 +29,15 @@ body {
 
 .site-title {
   margin: 0;
-
+  line-height: 1;
   > a {
+    display: block;
+    margin: 0; padding: 0;
+    height: auto;
+    font-size: 1em;
+    line-height: 1;
     > img {
+      margin: 0; padding: 0;
       max-width: 75%;
     }
   }
@@ -45,3 +46,4 @@ body {
 #content {
   overflow: auto;
 }
+

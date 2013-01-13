@@ -6,15 +6,66 @@
 @import "blueprint/fancy-type";
 @import "compass/typography/lists/bullets";
 @import "compass/typography/links/hover-link";
+@import "compass/typography/links/link-colors";
 @import "compass/typography/lists/inline-block-list";
 @import "compass/typography/text/replacement";
 
 // reset
-@import "compass/reset";
+@import "normalize";
 
 
-@include blueprint-typography;
-@include blueprint-interaction;
+html {
+  // use the standard default font size of 16px
+  font-family: $base-font-family;
+  line-height: 1.5;
+}
+
+a {
+  @include link-colors($link-color);
+}
+
+
+// == Headers == //
+// values from blueprint that provide vertical rhythm
+
+#{headers()} {
+  font-family: $header-font-family;
+  a {
+    @include hover-link;
+  }
+}
+
+h1 {
+  font-size: 2em;
+  margin-bottom: 0.75em;
+}
+
+h2 {
+  font-size: 1.5em;
+  line-height: 1;
+  margin-bottom: 1.00em;
+}
+
+h3 {
+  font-size: 1.2em;
+  line-height: 1.25;
+  margin-bottom: 1.25em;
+}
+
+h4 {
+  font-size: 1em;
+  font-weight: bold;
+  margin-bottom: 1.50em;
+}
+
+h5 {
+  font-size: 1em;
+  font-weight: bold;
+}
+
+p {
+  margin-bottom: 1.5em;
+}
 
 .assistive-text, .nocomments { 
   @include squish-text;
@@ -23,37 +74,12 @@
 @import "layout";
 @import "navigation";
 
-#header {
-
-  hgroup {
-    margin: 0 auto;
-  }
-}
-
 .site-description {
   display: none;
 }
 
 #main {
   clear: both;
-}
-
-
-h2 {
-  font-size: 1.5em;
-  margin-bottom: 0;
-}
-
-#{headers()} {
-  a {
-    @include hover-link;
-  }
-}
-
-
-.entry-title {
-  font-family: $header-font;
-  font-size: 250%;
 }
 
 header[data-image-large] {
@@ -67,8 +93,6 @@ header[data-image-large] {
   .entry-title {
     background: rgba(0,0,0,0.7);
     bottom: 0;
-    font-size: 1.5em;
-    font-weight: bold;
     line-height: 1.5;
     position: absolute;
     text-align: right;
