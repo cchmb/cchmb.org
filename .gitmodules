@@ -19,3 +19,6 @@
 [submodule "public/content/mu-plugins/analytics"]
 	path = public/content/mu-plugins/analytics
 	url = git://github.com/willnorris/wordpress-analytics.git
+[submodule "public/content/plugins/markdown-on-save"]
+	path = public/content/plugins/markdown-on-save
+	url = git://github.com/markjaquith/markdown-on-save.git
