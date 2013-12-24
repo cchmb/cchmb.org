@@ -4,9 +4,6 @@
 [submodule "public/content/themes/pdx"]
 	path = public/content/themes/pdx
 	url = git://github.com/willnorris/pdx-theme.git
-[submodule "public/content/plugins/sermons"]
-	path = public/content/plugins/sermons
-	url = git://github.com/willnorris/wordpress-sermons.git
 [submodule "public/content/plugins/opengraph"]
 	path = public/content/plugins/opengraph
 	url = git://github.com/willnorris/wordpress-opengraph.git
@@ -22,3 +19,6 @@
 [submodule "public/content/plugins/markdown-on-save"]
 	path = public/content/plugins/markdown-on-save
 	url = git://github.com/markjaquith/markdown-on-save.git
+[submodule "public/content/plugins/sermon-browser-2"]
+	path = public/content/plugins/sermon-browser-2
+	url = git@github.com:willnorris/sermon-browser-2.git
