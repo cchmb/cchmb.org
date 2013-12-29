@@ -28,3 +28,6 @@
 [submodule "public/content/plugins/sermon-browser"]
 	path = public/content/plugins/sermon-browser
 	url = https://github.com/willnorris/sermon-browser.git
+[submodule "public/content/themes/outreach"]
+	path = public/content/themes/outreach
+	url = git@bitbucket.org:willnorris/outreach.git
