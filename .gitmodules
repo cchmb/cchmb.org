@@ -19,12 +19,12 @@
 [submodule "public/content/plugins/markdown-on-save"]
 	path = public/content/plugins/markdown-on-save
 	url = git://github.com/markjaquith/markdown-on-save.git
-[submodule "public/content/plugins/sermon-browser-2"]
-	path = public/content/plugins/sermon-browser-2
-	url = git@github.com:willnorris/sermon-browser-2.git
 [submodule "public/content/plugins/wp-help"]
 	path = public/content/plugins/wp-help
 	url = https://github.com/markjaquith/wp-help.git
 [submodule "public/content/themes/genesis"]
 	path = public/content/themes/genesis
 	url = git@bitbucket.org:willnorris/genesis-theme.git
+[submodule "public/content/plugins/sermon-browser"]
+	path = public/content/plugins/sermon-browser
+	url = https://github.com/willnorris/sermon-browser.git
