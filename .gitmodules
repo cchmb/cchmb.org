@@ -25,3 +25,6 @@
 [submodule "public/content/plugins/wp-help"]
 	path = public/content/plugins/wp-help
 	url = https://github.com/markjaquith/wp-help.git
+[submodule "public/content/themes/genesis"]
+	path = public/content/themes/genesis
+	url = git@bitbucket.org:willnorris/genesis-theme.git
