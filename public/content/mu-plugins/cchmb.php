@@ -5,7 +5,7 @@ add_action('admin_bar_menu', 'wp_admin_bar_shortlink_menu', 90);
 
 add_filter( 'genesis_footer_creds_text', 'cchmb_creds_text' );
 function cchmb_creds_text($text) {
-  $text     = sprintf( '[footer_copyright before="%s "]', __( 'Copyright', 'genesis' ) );
+  $text     = sprintf( '[footer_copyright after=" %s"]', 'Calvary Chapel Half Moon Bay' );
   return $text;
 }
 
