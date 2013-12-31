@@ -31,3 +31,12 @@
 [submodule "public/content/themes/outreach"]
 	path = public/content/themes/outreach
 	url = git@bitbucket.org:willnorris/outreach.git
+[submodule "public/content/plugins/regenerate-thumbnails"]
+	path = public/content/plugins/regenerate-thumbnails
+	url = https://github.com/wp-plugins/regenerate-thumbnails.git
+[submodule "public/content/plugins/simple-social-icons"]
+	path = public/content/plugins/simple-social-icons
+	url = https://github.com/wp-plugins/simple-social-icons.git
+[submodule "public/content/plugins/genesis-responsive-slider"]
+	path = public/content/plugins/genesis-responsive-slider
+	url = https://github.com/wp-plugins/genesis-responsive-slider.git
