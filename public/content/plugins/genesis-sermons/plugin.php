@@ -84,6 +84,7 @@ class CCHMB_Sermon_Series_Widget extends WP_Widget {
           'show_image'      => 0,
           'image_alignment' => '',
           'image_size'      => '',
+          'order'      => 'desc',
         );
 
         $widget_ops = array(
@@ -105,11 +106,7 @@ class CCHMB_Sermon_Series_Widget extends WP_Widget {
 
         $id = get_queried_object_id();
         $series_id = get_post_meta($id, 'series', true);
-        if ($series_id != 0) {
-            $series_title = get_the_title($series_id);
-        } else {
-            $series_title = '(no series)';
-        }
+        $series_title = $series_id == 0 ? '(no series)' : get_the_title($series_id);
 
         extract($args);
 
@@ -126,6 +123,8 @@ class CCHMB_Sermon_Series_Widget extends WP_Widget {
             'meta_key' => 'series',
             'meta_value' => $series_id,
             'posts_per_page' => -1,
+            'orderby' => 'date',
+            'order' => $instance['order'],
         ) );
 
         echo '<ul>';
@@ -143,6 +142,7 @@ class CCHMB_Sermon_Series_Widget extends WP_Widget {
 
     public function update( $new_instance, $old_instance ) {
         $new_instance['title'] = strip_tags( $new_instance['title'] );
+        $new_instance['order'] = strip_tags( $new_instance['order'] );
         return $new_instance;
     }
 
@@ -172,6 +172,15 @@ class CCHMB_Sermon_Series_Widget extends WP_Widget {
             foreach ( (array) $sizes as $name => $size )
             echo '<option value="' . esc_attr( $name ) . '" ' . selected( $name, $instance['image_size'], FALSE ) . '>' . esc_html( $name ) . ' (' . absint( $size['width'] ) . 'x' . absint( $size['height'] ) . ')</option>';
             ?>
+        </select>
+        </p>
+
+        <hr class="div" />
+        <p>
+        <label for="<?php echo $this->get_field_id( 'order' ); ?>"><?php _e( 'Sort Order', 'genesis' ); ?>:</label>
+        <select id="<?php echo $this->get_field_id( 'order' ); ?>" class="genesis-sort-order-selector" name="<?php echo $this->get_field_name( 'order' ); ?>">
+            <option value="asc" <?php selected( 'asc', $instance['order'], FALSE ) ?>><?php _e('Oldest First', 'genesis') ?></option>
+            <option value="desc" <?php selected( 'desc', $instance['order'], FALSE ) ?>><?php _e('Newest First', 'genesis') ?></option>
         </select>
         </p>
 
