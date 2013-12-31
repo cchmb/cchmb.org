@@ -40,3 +40,6 @@
 [submodule "public/content/plugins/genesis-responsive-slider"]
 	path = public/content/plugins/genesis-responsive-slider
 	url = https://github.com/wp-plugins/genesis-responsive-slider.git
+[submodule "public/content/plugins/nice-search"]
+	path = public/content/plugins/nice-search
+	url = https://github.com/wp-plugins/nice-search.git
