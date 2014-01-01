@@ -36,8 +36,11 @@ function cchmb_sermon_content($content) {
     $description = $content;
 
     foreach ($sermon->attachments->get_attachments() as $k => $attachment) {
-        if ($attachment->get_type() == "embed") {
-            $video = $attachment->get_media_player();
+        if (strstr($attachment->get_url(), 'youtube.com') !== false) {
+            parse_str( parse_url( $attachment->get_url(), PHP_URL_QUERY ) );
+            if ($v) {
+                $video = '<iframe src="//www.youtube.com/embed/'. $v .'" frameborder="0" allowfullscreen></iframe>';
+            }
         } else if (substr($attachment->get_mime_type(), 0, 5) == "audio") {
             $audio = do_shortcode('[audio src="' . $attachment->get_url() . '"]');
             $audio .= '<p class="download_link"><a href="' . $attachment->get_url() . '">Download audio file</a></p>';
