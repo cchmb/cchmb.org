@@ -24,7 +24,7 @@
 	url = https://github.com/markjaquith/wp-help.git
 [submodule "public/content/themes/genesis"]
 	path = public/content/themes/genesis
-	url = git@bitbucket.org:willnorris/genesis-theme.git
+	url = git@bitbucket.org:willnorris/genesis.git
 [submodule "public/content/plugins/sermon-browser"]
 	path = public/content/plugins/sermon-browser
 	url = https://github.com/willnorris/sermon-browser.git
