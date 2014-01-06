@@ -28,9 +28,6 @@
 [submodule "public/content/plugins/sermon-browser"]
 	path = public/content/plugins/sermon-browser
 	url = https://github.com/willnorris/sermon-browser.git
-[submodule "public/content/themes/outreach"]
-	path = public/content/themes/outreach
-	url = git@bitbucket.org:willnorris/outreach.git
 [submodule "public/content/plugins/regenerate-thumbnails"]
 	path = public/content/plugins/regenerate-thumbnails
 	url = https://github.com/wp-plugins/regenerate-thumbnails.git
@@ -43,3 +40,6 @@
 [submodule "public/content/plugins/nice-search"]
 	path = public/content/plugins/nice-search
 	url = https://github.com/wp-plugins/nice-search.git
+[submodule "public/content/themes/cc14"]
+	path = public/content/themes/cc14
+	url = git@bitbucket.org:willnorris/cc14.git
