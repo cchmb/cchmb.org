@@ -43,3 +43,6 @@
 [submodule "public/content/themes/cc14"]
 	path = public/content/themes/cc14
 	url = git@bitbucket.org:willnorris/cc14.git
+[submodule "public/content/plugins/jetpack"]
+	path = public/content/plugins/jetpack
+	url = https://github.com/wp-plugins/jetpack.git
