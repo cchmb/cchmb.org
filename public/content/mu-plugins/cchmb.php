@@ -19,9 +19,24 @@ function safe_email($atts, $content=null) {
 add_shortcode('safe_email', 'safe_email');
 
 add_filter( 'genesis_get_image', function( $output, $args, $id ) {
-  $type = get_post_type( $id );
-  if ( $output == '' && ( $type == 'mbsb_sermon' || $type == 'mbsb_series' ) ) {
-    $output = '<img src="http://placehold.it/1600x900" />';
+  if ( $output == '' ) {
+    $type = get_post_type( $id );
+    if ( $type == 'mbsb_sermon' || $type == 'mbsb_series' ) {
+      $url = 'http://placehold.it/1600x900';
+    } else if ($type == 'mbsb_preacher' ) {
+      $url = 'http://placehold.it/300x300';
+    }
+
+    if ( $url ) {
+      if ( $args['format'] == 'html' ) {
+        $output = '<img src="' . $url . '" />';
+      } else if ( $args['format'] == 'url' ) {
+        $output = $url;
+      } else {
+        $output = str_replace( home_url(), '', $url );
+      }
+    }
   }
+
   return $output;
 }, 99, 3);
