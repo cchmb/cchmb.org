@@ -46,3 +46,12 @@
 [submodule "public/content/plugins/jetpack"]
 	path = public/content/plugins/jetpack
 	url = https://github.com/wp-plugins/jetpack.git
+[submodule "public/content/plugins/manual-control"]
+	path = public/content/plugins/manual-control
+	url = https://github.com/wp-plugins/manual-control.git
+[submodule "public/content/plugins/menu-humility"]
+	path = public/content/plugins/menu-humility
+	url = https://github.com/wp-plugins/menu-humility.git
+[submodule "public/content/plugins/meteor-slides"]
+	path = public/content/plugins/meteor-slides
+	url = https://github.com/wp-plugins/meteor-slides.git
