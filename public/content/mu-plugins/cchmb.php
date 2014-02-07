@@ -20,11 +20,23 @@ add_shortcode('safe_email', 'safe_email');
 
 add_filter( 'genesis_get_image', function( $output, $args, $id ) {
   if ( $output == '' ) {
-    $type = get_post_type( $id );
-    if ( $type == 'mbsb_sermon' || $type == 'mbsb_series' ) {
-      $url = 'http://placehold.it/1600x900';
-    } else if ($type == 'mbsb_preacher' ) {
-      $url = 'http://placehold.it/300x300';
+    global $post;
+    $type = get_post_type( $post->ID );
+    switch ($type) {
+      case 'mbsb_sermon':
+        // if a sermon doesn't have an image, use the image from the series
+        $series_id = get_post_meta($post->ID, 'series', true);
+        if ( has_post_thumbnail($series_id) ) {
+          $tn_id = get_post_thumbnail_id($series_id);
+          return wp_get_attachment_image($tn_id, $args['size'], false, $args['attr']);
+        }
+        break;
+      case 'mbsb_series':
+        //$url = 'http://placehold.it/1600x900';
+        break;
+      case 'mbsb_preacher':
+        //$url = 'http://placehold.it/300x300';
+        break;
     }
 
     if ( $url ) {
