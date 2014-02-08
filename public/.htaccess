@@ -32,6 +32,7 @@
 
   # Old URLs
   RewriteRule ^rev_james_stalker            http://highlandsoffaith.org/ [L,R=permanent]
+  RewriteRule ^Bible_Reading_Calendar.pdf$  content/plugins/mcheyne-reading-plan/calendar.pdf [L,R=permanent]
 </IfModule>
 
 # BEGIN WordPress
