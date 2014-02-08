@@ -1,18 +1,12 @@
 [submodule "public/wordpress"]
 	path = public/wordpress
 	url = git://github.com/WordPress/WordPress.git
-[submodule "public/content/themes/pdx"]
-	path = public/content/themes/pdx
-	url = git://github.com/willnorris/pdx-theme.git
 [submodule "public/content/plugins/opengraph"]
 	path = public/content/plugins/opengraph
 	url = git://github.com/willnorris/wordpress-opengraph.git
 [submodule "public/content/plugins/hum"]
 	path = public/content/plugins/hum
 	url = git://github.com/willnorris/wordpress-hum.git
-[submodule "public/content/themes/twentytwelve"]
-	path = public/content/themes/twentytwelve
-	url = git://github.com/thethemefoundry/twentytwelve.git
 [submodule "public/content/mu-plugins/analytics"]
 	path = public/content/mu-plugins/analytics
 	url = git://github.com/willnorris/wordpress-analytics.git
@@ -28,15 +22,6 @@
 [submodule "public/content/plugins/sermon-browser"]
 	path = public/content/plugins/sermon-browser
 	url = https://github.com/willnorris/sermon-browser.git
-[submodule "public/content/plugins/regenerate-thumbnails"]
-	path = public/content/plugins/regenerate-thumbnails
-	url = https://github.com/wp-plugins/regenerate-thumbnails.git
-[submodule "public/content/plugins/simple-social-icons"]
-	path = public/content/plugins/simple-social-icons
-	url = https://github.com/wp-plugins/simple-social-icons.git
-[submodule "public/content/plugins/genesis-responsive-slider"]
-	path = public/content/plugins/genesis-responsive-slider
-	url = https://github.com/wp-plugins/genesis-responsive-slider.git
 [submodule "public/content/plugins/nice-search"]
 	path = public/content/plugins/nice-search
 	url = https://github.com/wp-plugins/nice-search.git
