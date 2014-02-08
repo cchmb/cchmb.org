@@ -23,24 +23,15 @@
   RewriteEngine On
   RewriteBase /
 
-  RewriteRule announcements.php /announcements [L,R=permanent]
-  RewriteRule audio_sermons.php /audio-sermons [L,R=permanent]
-  RewriteRule church_photo_page.php /photos [L,R=permanent]
-  RewriteRule church_calendar.php /calendar [L,R=permanent]
-  RewriteRule contacts.php /contacts [L,R=permanent]
-  RewriteRule gods_plan_for_salvation.php /salvation [L,R=permanent]
-  RewriteRule links.php /links [L,R=permanent]
-  RewriteRule missions.php /missions [L,R=permanent]
-  RewriteRule missions_chile.php /missions/chili [L,R=permanent]
-  RewriteRule missions_thailand.php /missions/thailand [L,R=permanent]
-  RewriteRule services_and_bible_studies.php /services [L,R=permanent]
-  RewriteRule statement_of_faith.php /statement-of-faith [L,R=permanent]
-
-  RewriteRule (audio/.*\.mp3) http://media.cchmb.org/$1 [L,R=permanent]
+  # All audio files are served from media.cchmb.org
+  RewriteRule ^(audio/.*\.mp3)$ http://media.cchmb.org/$1 [L,R=permanent]
 
   # Many WordPress plugins still assume the location of wp-content
-  RewriteRule ^wordpress/wp-content/(.*)$  content/$1 [R=301,L]
-  RewriteRule ^wordpress-content/(.*)$  content/$1 [R=301,L]
+  RewriteRule ^wordpress/wp-content/(.*)$  content/$1 [L,R=permanent]
+  RewriteRule ^wordpress-content/(.*)$  content/$1 [L,R=permanent]
+
+  # Old URLs
+  RewriteRule ^rev_james_stalker            http://highlandsoffaith.org/ [L,R=permanent]
 </IfModule>
 
 # BEGIN WordPress
@@ -52,7 +43,4 @@ RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule . /index.php [L]
 </IfModule>
-
 # END WordPress
-
-AddHandler php5-script .php
