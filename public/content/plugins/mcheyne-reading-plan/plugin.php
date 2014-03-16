@@ -42,7 +42,7 @@ class Widget_MCheyne_Reading_Plan extends WP_Widget {
       <li><?php echo $this->bible_link($plan['secret'][1]) ?></li>
     </ul>
 
-    <p class="download-link"><a href="<?php echo plugins_url('calendar.pdf', __FILE__) ?>">View Entire Plan</a></p>
+    <p class="download-link"><a href="<?php echo plugins_url('calendar.pdf', __FILE__) ?>">Bible Reading Calendar</a></p>
     <?php echo $after_widget;
   }
 
