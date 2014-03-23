@@ -9,6 +9,7 @@ wp-local-config.php
 public/content/cache
 public/content/advanced-cache.php
 public/content/wp-cache-config.php
+public/content/uploads
 public/sitemap.xml
 
 .sass-cache
