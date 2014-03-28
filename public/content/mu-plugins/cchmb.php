@@ -19,7 +19,7 @@ function safe_email($atts, $content=null) {
 add_shortcode('safe_email', 'safe_email');
 
 add_filter( 'genesis_get_image', function( $output, $args, $id ) {
-  if ( $output == '' ) {
+  if ( empty($output) ) {
     global $post;
     $type = get_post_type( $post->ID );
     switch ($type) {
@@ -28,7 +28,9 @@ add_filter( 'genesis_get_image', function( $output, $args, $id ) {
         $series_id = get_post_meta($post->ID, 'series', true);
         if ( has_post_thumbnail($series_id) ) {
           $tn_id = get_post_thumbnail_id($series_id);
-          return wp_get_attachment_image($tn_id, $args['size'], false, $args['attr']);
+
+          $html = wp_get_attachment_image($tn_id, $args['size'], false, $args['attr']);
+          list( $url ) = wp_get_attachment_image_src($tn_id, $args['size'], false, $args['attr']);
         }
         break;
       case 'mbsb_series':
@@ -39,16 +41,21 @@ add_filter( 'genesis_get_image', function( $output, $args, $id ) {
         break;
     }
 
-    if ( $url ) {
-      if ( $args['format'] == 'html' ) {
-        $output = '<img src="' . $url . '" />';
-      } else if ( $args['format'] == 'url' ) {
-        $output = $url;
-      } else {
-        $output = str_replace( home_url(), '', $url );
-      }
+    if ( 'html' === mb_strtolower($args['format']) ) {
+      $output = $html;
+    } else if ( 'url' === mb_strtolower($args['format']) ) {
+      $output = $url;
+    } else {
+      $output = str_replace( home_url(), '', $url );
     }
   }
 
   return $output;
 }, 99, 3);
+
+add_filter( 'opengraph_image', function( $image ) {
+  if ( empty($image) && is_singular() ) {
+    $image = genesis_get_image('format=url');
+  }
+  return $image;
+});
