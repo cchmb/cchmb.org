@@ -59,3 +59,27 @@ add_filter( 'opengraph_image', function( $image ) {
   }
   return $image;
 });
+
+add_filter( 'opengraph_metadata', function( $metadata ) {
+  if ( is_singular() ) {
+    global $post;
+    $type = get_post_type( $post->ID );
+    switch ($type) {
+      case 'mbsb_sermon':
+        $metadata['og:type'] = 'article';
+
+        $sermon = new mbsb_sermon($post->ID);
+
+        foreach ($sermon->attachments->get_attachments() as $k => $attachment) {
+            if (strstr($attachment->get_url(), 'youtube.com') !== false) {
+              $video = $attachment;
+            } else if (substr($attachment->get_mime_type(), 0, 5) == "audio") {
+              $metadata['og:audio'] = $attachment->get_url();
+            }
+        }
+
+        break;
+    }
+  }
+  return $metadata;
+});
