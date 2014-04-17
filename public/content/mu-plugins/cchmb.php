@@ -72,9 +72,14 @@ add_filter( 'opengraph_metadata', function( $metadata ) {
 
         foreach ($sermon->attachments->get_attachments() as $k => $attachment) {
             if (strstr($attachment->get_url(), 'youtube.com') !== false) {
-              $video = $attachment;
+              parse_str( parse_url( $attachment->get_url(), PHP_URL_QUERY ) );
+              $metadata['og:type'] = 'video';
+              $metadata['og:video'] = 'https://www.youtube.com/v/' . $v . '?autohide=1&amp;version=3';
+              $metadata['og:video:type'] = 'application/x-shockwave-flash';
+              $metadata['og:video:width'] = '640';
+              $metadata['og:video:height'] = '360';
             } else if (substr($attachment->get_mime_type(), 0, 5) == "audio") {
-              $metadata['og:audio'] = $attachment->get_url();
+              //$metadata['og:audio'] = $attachment->get_url();
             }
         }
 
