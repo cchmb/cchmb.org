@@ -88,3 +88,6 @@ add_filter( 'opengraph_metadata', function( $metadata ) {
   }
   return $metadata;
 });
+
+// Use photon image proxy on https URLs.
+add_filter('jetpack_photon_reject_https', '__return_false');
