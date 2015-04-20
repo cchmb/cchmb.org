@@ -39,4 +39,4 @@
 	url = https://github.com/wp-plugins/menu-humility.git
 [submodule "public/content/plugins/meteor-slides"]
 	path = public/content/plugins/meteor-slides
-	url = https://github.com/wp-plugins/meteor-slides.git
+	url = https://github.com/JLeuze/Meteor-Slides.git
