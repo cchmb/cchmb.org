@@ -40,3 +40,6 @@
 [submodule "public/content/plugins/meteor-slides"]
 	path = public/content/plugins/meteor-slides
 	url = https://github.com/JLeuze/Meteor-Slides.git
+[submodule "public/content/plugins/simple-social-icons"]
+	path = public/content/plugins/simple-social-icons
+	url = https://github.com/wp-plugins/simple-social-icons.git
