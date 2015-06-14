@@ -1,18 +1,18 @@
 [submodule "public/wordpress"]
 	path = public/wordpress
-	url = git://github.com/WordPress/WordPress.git
+	url = https://github.com/WordPress/WordPress.git
 [submodule "public/content/plugins/opengraph"]
 	path = public/content/plugins/opengraph
-	url = git://github.com/willnorris/wordpress-opengraph.git
+	url = https://github.com/willnorris/wordpress-opengraph.git
 [submodule "public/content/plugins/hum"]
 	path = public/content/plugins/hum
-	url = git://github.com/willnorris/wordpress-hum.git
+	url = https://github.com/willnorris/wordpress-hum.git
 [submodule "public/content/mu-plugins/analytics"]
 	path = public/content/mu-plugins/analytics
-	url = git://github.com/willnorris/wordpress-analytics.git
+	url = https://github.com/willnorris/wordpress-analytics.git
 [submodule "public/content/plugins/markdown-on-save"]
 	path = public/content/plugins/markdown-on-save
-	url = git://github.com/markjaquith/markdown-on-save.git
+	url = https://github.com/markjaquith/markdown-on-save.git
 [submodule "public/content/plugins/wp-help"]
 	path = public/content/plugins/wp-help
 	url = https://github.com/markjaquith/wp-help.git
@@ -27,7 +27,7 @@
 	url = https://github.com/wp-plugins/nice-search.git
 [submodule "public/content/themes/cc14"]
 	path = public/content/themes/cc14
-	url = git@bitbucket.org:willnorris/cc14.git
+	url = https://github.com/cchmb/cc14.git
 [submodule "public/content/plugins/jetpack"]
 	path = public/content/plugins/jetpack
 	url = https://github.com/wp-plugins/jetpack.git
