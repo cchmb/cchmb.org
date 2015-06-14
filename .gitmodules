@@ -1,48 +1,55 @@
 [submodule "public/wordpress"]
 	path = public/wordpress
 	url = https://github.com/WordPress/WordPress.git
-[submodule "public/content/plugins/opengraph"]
-	path = public/content/plugins/opengraph
-	url = https://github.com/willnorris/wordpress-opengraph.git
-[submodule "public/content/plugins/hum"]
-	path = public/content/plugins/hum
-	url = https://github.com/willnorris/wordpress-hum.git
-[submodule "public/content/mu-plugins/analytics"]
-	path = public/content/mu-plugins/analytics
-	url = https://github.com/willnorris/wordpress-analytics.git
-[submodule "public/content/plugins/markdown-on-save"]
-	path = public/content/plugins/markdown-on-save
-	url = https://github.com/markjaquith/markdown-on-save.git
-[submodule "public/content/plugins/wp-help"]
-	path = public/content/plugins/wp-help
-	url = https://github.com/markjaquith/wp-help.git
+
+[submodule "public/content/uploads"]
+	path = public/content/uploads
+	url = https://github.com/cchmb/uploads.git
+
+# WordPress Themes
 [submodule "public/content/themes/genesis"]
 	path = public/content/themes/genesis
 	url = git@bitbucket.org:willnorris/genesis.git
-[submodule "public/content/plugins/sermon-browser"]
-	path = public/content/plugins/sermon-browser
-	url = https://github.com/willnorris/sermon-browser.git
-[submodule "public/content/plugins/nice-search"]
-	path = public/content/plugins/nice-search
-	url = https://github.com/wp-plugins/nice-search.git
 [submodule "public/content/themes/cc14"]
 	path = public/content/themes/cc14
 	url = https://github.com/cchmb/cc14.git
+
+# WordPress Must-Use Plugins
+[submodule "public/content/mu-plugins/analytics"]
+	path = public/content/mu-plugins/analytics
+	url = https://github.com/willnorris/wordpress-analytics.git
+
+# WordPress Plugins
+[submodule "public/content/plugins/hum"]
+	path = public/content/plugins/hum
+	url = https://github.com/willnorris/wordpress-hum.git
 [submodule "public/content/plugins/jetpack"]
 	path = public/content/plugins/jetpack
 	url = https://github.com/wp-plugins/jetpack.git
 [submodule "public/content/plugins/manual-control"]
 	path = public/content/plugins/manual-control
 	url = https://github.com/wp-plugins/manual-control.git
+[submodule "public/content/plugins/markdown-on-save"]
+	path = public/content/plugins/markdown-on-save
+	url = https://github.com/markjaquith/markdown-on-save.git
 [submodule "public/content/plugins/menu-humility"]
 	path = public/content/plugins/menu-humility
 	url = https://github.com/wp-plugins/menu-humility.git
 [submodule "public/content/plugins/meteor-slides"]
 	path = public/content/plugins/meteor-slides
 	url = https://github.com/JLeuze/Meteor-Slides.git
+[submodule "public/content/plugins/nice-search"]
+	path = public/content/plugins/nice-search
+	url = https://github.com/wp-plugins/nice-search.git
+[submodule "public/content/plugins/opengraph"]
+	path = public/content/plugins/opengraph
+	url = https://github.com/willnorris/wordpress-opengraph.git
+[submodule "public/content/plugins/sermon-browser"]
+	path = public/content/plugins/sermon-browser
+	url = https://github.com/willnorris/sermon-browser.git
 [submodule "public/content/plugins/simple-social-icons"]
 	path = public/content/plugins/simple-social-icons
 	url = https://github.com/wp-plugins/simple-social-icons.git
-[submodule "public/content/uploads"]
-	path = public/content/uploads
-	url = https://github.com/cchmb/uploads.git
+[submodule "public/content/plugins/wp-help"]
+	path = public/content/plugins/wp-help
+	url = https://github.com/markjaquith/wp-help.git
