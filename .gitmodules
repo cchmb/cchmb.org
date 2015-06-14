@@ -43,3 +43,6 @@
 [submodule "public/content/plugins/simple-social-icons"]
 	path = public/content/plugins/simple-social-icons
 	url = https://github.com/wp-plugins/simple-social-icons.git
+[submodule "public/content/uploads"]
+	path = public/content/uploads
+	url = https://github.com/cchmb/uploads.git
