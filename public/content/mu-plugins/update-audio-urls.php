@@ -11,12 +11,12 @@ class Audio_URLs {
     add_action('admin_menu', array(__CLASS__, 'admin_menu'));
   }
 
-  function admin_menu() {
+  static function admin_menu() {
     $hookname = add_management_page('Update Audio URLs', 'Update Audio URLs', 
         'manage_options', 'audiourls', array(__CLASS__, 'admin_page'));
   }
 
-  function admin_page() {
+  static function admin_page() {
     echo '<h1>Updating Audio URLs</h1>';
 
     $sermons = get_posts(array(
