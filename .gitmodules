@@ -25,7 +25,7 @@
 	url = https://github.com/willnorris/wordpress-hum.git
 [submodule "public/content/plugins/jetpack"]
 	path = public/content/plugins/jetpack
-	url = https://github.com/wp-plugins/jetpack.git
+	url = https://github.com/automattic/jetpack.git
 [submodule "public/content/plugins/manual-control"]
 	path = public/content/plugins/manual-control
 	url = https://github.com/wp-plugins/manual-control.git
@@ -49,7 +49,7 @@
 	url = https://github.com/willnorris/sermon-browser.git
 [submodule "public/content/plugins/simple-social-icons"]
 	path = public/content/plugins/simple-social-icons
-	url = https://github.com/wp-plugins/simple-social-icons.git
+	url = https://github.com/copyblogger/simple-social-icons.git
 [submodule "public/content/plugins/wp-help"]
 	path = public/content/plugins/wp-help
 	url = https://github.com/markjaquith/wp-help.git
