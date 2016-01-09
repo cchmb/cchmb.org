@@ -89,5 +89,18 @@ add_filter( 'opengraph_metadata', function( $metadata ) {
   return $metadata;
 });
 
+// Don't let photon downsample the mm-slide2.png image.
+add_filter( 'jetpack_photon_pre_args', function( $args, $url ) {
+  $mm = "mm-slide2.png";
+  if (substr_compare($url, $mm, strlen($url)-strlen($mm), strlen($mm)) === 0) {
+    if ( is_array($args) ) {
+      $args = array_merge(array('quality'=>100), $args);
+    } else {
+      $args = 'quality=100&' . $args;
+    }
+  }
+  return $args;
+}, 20, 2);
+
 // Use photon image proxy on https URLs.
 add_filter('jetpack_photon_reject_https', '__return_false');
