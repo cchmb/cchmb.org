@@ -1,6 +1,9 @@
 html
 log
 
+etc/fullchain.pem
+etc/privkey.pem
+
 # mysql backups
 tools/mysql/var
 
