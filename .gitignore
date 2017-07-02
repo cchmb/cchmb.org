@@ -2,6 +2,7 @@ html
 log
 
 etc/fullchain.pem
+etc/htpasswd
 etc/privkey.pem
 
 # mysql backups
