@@ -54,7 +54,7 @@ add_filter( 'genesis_get_image', function( $output, $args, $id ) {
 }, 99, 3);
 
 add_filter( 'opengraph_image', function( $image ) {
-  if ( empty($image) && is_singular() ) {
+  if ( empty($image) && is_singular() && function_exists('genesis_get_image') ) {
     $image = genesis_get_image('format=url');
   }
   return $image;
