@@ -16,12 +16,6 @@
 	url = https://github.com/willnorris/wordpress-analytics.git
 
 # WordPress Plugins
-[submodule "public/content/plugins/hum"]
-	path = public/content/plugins/hum
-	url = https://github.com/willnorris/wordpress-hum.git
-[submodule "public/content/plugins/opengraph"]
-	path = public/content/plugins/opengraph
-	url = https://github.com/willnorris/wordpress-opengraph.git
 [submodule "public/content/plugins/sermon-browser"]
 	path = public/content/plugins/sermon-browser
 	url = https://github.com/willnorris/sermon-browser.git
