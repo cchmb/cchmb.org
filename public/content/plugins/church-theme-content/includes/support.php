@@ -6,9 +6,9 @@
  *
  * @package    Church_Theme_Content
  * @subpackage Functions
- * @copyright  Copyright (c) 2013 - 2016, churchthemes.com
+ * @copyright  Copyright (c) 2013 - 2017, churchthemes.com
  * @link       https://github.com/churchthemes/church-theme-content
- * @license    http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+ * @license    GPLv2 or later
  * @since      0.9
  */
 
@@ -23,7 +23,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * Get feature data
  *
  * Used for mapping features to post types, theme support and so on.
- * Al feature data returned when $feature is empty
+ * All feature data returned when $feature is empty
  *
  * @since 0.9
  * @param string $feature Feature to get data for; if none, gets data for all features
@@ -392,7 +392,7 @@ function ctc_set_visible_fields( $visible_fields, $post_type ) {
 		// Make new array out of fields theme supports
 		$visible_fields = $theme_fields;
 
-		// Add support for fields that are not from Church Theme Content
+		// Add support for fields that are not from Church Content
 		// (otherwise they would need to be in add_theme_support arguments)
 		foreach ( $original_visible_fields as $field ) {
 			if ( ! preg_match( '/^_ctc_.+$/', $field ) ) { // CTC fields are prefixed by "_ctc_"

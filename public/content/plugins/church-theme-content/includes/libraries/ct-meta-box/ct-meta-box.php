@@ -5,12 +5,12 @@
  * This class can be used by themes and plugins to generate meta boxes and custom fields.
  *
  * The CTMB_URL constant must be defined in order for JS/CSS to enqueue.
- * See Church Theme Content plugin for example usage.
+ * See Church Content plugin for example usage.
  *
  * @package   CT_Meta_Box
- * @copyright Copyright (c) 2013 - 2016, churchthemes.com
+ * @copyright Copyright (c) 2013 - 2017, churchthemes.com
  * @link      https://github.com/churchthemes/ct-meta-box
- * @license   http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+ * @license   GPLv2 or later
  */
 
 // No direct access
@@ -52,7 +52,7 @@ if ( ! class_exists( 'CT_Meta_Box' ) ) {
 		public function __construct( $meta_box ) {
 
 			// Version - used in cache busting
-			$this->version = '2.1';
+			$this->version = '2.1.1';
 
 			// Prepare config
 			$this->prepare( $meta_box );

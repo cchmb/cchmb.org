@@ -6,9 +6,9 @@
  *
  * @package    Church_Theme_Content
  * @subpackage Admin
- * @copyright  Copyright (c) 2016, churchthemes.com
+ * @copyright  Copyright (c) 2016 - 2017, churchthemes.com
  * @link       https://github.com/churchthemes/church-theme-content
- * @license    http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+ * @license    GPLv2 or later
  * @since      1.7.1
  */
 
@@ -34,7 +34,7 @@ function ctc_admin_enqueue_scripts() {
 		wp_localize_script( 'ctc-map-after-fields', 'ctc_map_after_fields_data', array( // data to use in JS
 			'get_from_address_failed'	=> __( "Address could not be converted. Check the address or enter your city then click the map to pinpoint your location.", 'church-theme-content' ),
 			'missing_address' 			=> __( 'Please enter an Address above.', 'church-theme-content' ),
-			'missing_key_message'		=> __( 'Go to Settings > Church Theme Content to set your Google Maps API Key in order to use this button.', 'church-theme-content' ),
+			'missing_key_message'		=> __( 'Go to Settings > Church Content to set your Google Maps API Key in order to use this button.', 'church-theme-content' ),
 			'has_api_key' 				=> ctc_setting( 'google_maps_api_key' ) ? true : false,
 		) );
 

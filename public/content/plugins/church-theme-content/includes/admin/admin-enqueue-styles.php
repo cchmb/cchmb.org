@@ -6,9 +6,9 @@
  *
  * @package    Church_Theme_Content
  * @subpackage Admin
- * @copyright  Copyright (c) 2014 - 2016, churchthemes.com
+ * @copyright  Copyright (c) 2014 - 2017, churchthemes.com
  * @link       https://github.com/churchthemes/church-theme-content
- * @license    http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+ * @license    GPLv2 or later
  * @since      1.2
  */
 
@@ -24,6 +24,13 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 function ctc_admin_enqueue_styles() {
 
 	global $ctc_settings;
+
+	$screen = get_current_screen();
+
+	// Dashboard
+	if ( 'dashboard' === $screen->base ) { // only on Dashboard screen
+		wp_enqueue_style( 'ctc-dashboard', CTC_URL . '/' . CTC_CSS_DIR . '/dashboard.css', false, CTC_VERSION );
+	}
 
 	// Plugin Settings
 	if ( $ctc_settings->is_settings_page() ) { // only on Plugin Settings page

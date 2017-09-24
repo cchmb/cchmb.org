@@ -5,14 +5,14 @@
  * This class generates a tabbed settings page for WordPress plugins.
  * It also provides a method for retieving settings while considering defaults.
  *
- * See Church Theme Content plugin for example usage:
+ * See Church Content plugin for example usage:
  *
  * https://github.com/churchthemes/church-theme-content
  *
  * @package   CT_Plugin_Settings
- * @copyright Copyright (c) 2013 - 2016, churchthemes.com
+ * @copyright Copyright (c) 2013 - 2017, churchthemes.com
  * @link      https://github.com/churchthemes/ct-plugin-settings
- * @license   http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+ * @license   GPLv2 or later
  */
 
 // No direct access
@@ -96,7 +96,7 @@ if ( ! class_exists( 'CT_Plugin_Settings' ) ) { // in case class used in both th
 		public function __construct( $config ) {
 
 			// Version
-			$this->version = '1.0.2';
+			$this->version = '1.0.3';
 
 			// Prepare data
 			$this->prepare_data( $config );
