@@ -25,6 +25,7 @@ cchmb.org {
   status 403 /403
 
   rewrite {
+    if {path} not_match ^\/wordpress\/wp-admin
     to {path} {path}/ /index.php?{query}
   }
 }
