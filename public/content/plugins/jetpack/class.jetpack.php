@@ -318,6 +318,11 @@ class Jetpack {
 	public $json_api_authorization_request = array();
 
 	/**
+	 * @var string Transient key used to prevent multiple simultaneous plugin upgrades
+	 */
+	public static $plugin_upgrade_lock_key = 'jetpack_upgrade_lock';
+
+	/**
 	 * Holds the singleton instance of this class
 	 * @since 2.3.3
 	 * @var Jetpack
@@ -345,6 +350,14 @@ class Jetpack {
 		if ( Jetpack::is_active() ) {
 			list( $version ) = explode( ':', Jetpack_Options::get_option( 'version' ) );
 			if ( JETPACK__VERSION != $version ) {
+				// Prevent multiple upgrades at once - only a single process should trigger
+				// an upgrade to avoid stampedes
+				if ( false !== get_transient( self::$plugin_upgrade_lock_key ) ) {
+					return;
+				}
+
+				// Set a short lock to prevent multiple instances of the upgrade
+				set_transient( self::$plugin_upgrade_lock_key, 1, 10 );
 
 				// check which active modules actually exist and remove others from active_modules list
 				$unfiltered_modules = Jetpack::get_active_modules();
@@ -387,6 +400,8 @@ class Jetpack {
 		// being initialized late during the page load. In this case we wait
 		// until the next proper admin page load with Jetpack active.
 		if ( ! did_action( 'jetpack_modules_loaded' ) ) {
+			delete_transient( self::$plugin_upgrade_lock_key );
+
 			return;
 		}
 
@@ -402,6 +417,8 @@ class Jetpack {
 		) {
 			do_action( 'jetpack_sitemaps_purge_data' );
 		}
+
+		delete_transient( self::$plugin_upgrade_lock_key );
 	}
 
 	static function activate_manage( ) {
@@ -612,6 +629,7 @@ class Jetpack {
 
 		// A filter to control all just in time messages
 		add_filter( 'jetpack_just_in_time_msgs', '__return_true', 9 );
+		add_filter( 'jetpack_just_in_time_msg_cache', '__return_true', 9);
 
 		// If enabled, point edit post and page links to Calypso instead of WP-Admin.
 		// We should make sure to only do this for front end links.
@@ -637,6 +655,11 @@ class Jetpack {
 		 * These are sync actions that we need to keep track of for jitms
 		 */
 		add_filter( 'jetpack_sync_before_send_updated_option', array( $this, 'jetpack_track_last_sync_callback' ), 99 );
+
+		// Actually push the stats on shutdown.
+		if ( ! has_action( 'shutdown', array( $this, 'push_stats' ) ) ) {
+			add_action( 'shutdown', array( $this, 'push_stats' ) );
+		}
 	}
 
 	function point_edit_links_to_calypso( $default_url, $post_id ) {
@@ -669,6 +692,17 @@ class Jetpack {
 	}
 
 	function jetpack_track_last_sync_callback( $params ) {
+		/**
+		 * Filter to turn off jitm caching
+		 *
+		 * @since 5.4.0
+		 *
+		 * @param bool false Whether to cache just in time messages
+		 */
+		if ( ! apply_filters( 'jetpack_just_in_time_msg_cache', false ) ) {
+			return $params;
+		}
+
 		if ( is_array( $params ) && isset( $params[0] ) ) {
 			$option = $params[0];
 			if ( 'active_plugins' === $option ) {
@@ -687,10 +721,10 @@ class Jetpack {
 			Jetpack_Options::update_option( 'dismissed_connection_banner', 1 );
 			wp_send_json_success();
 		}
-		
+
 		wp_die();
 	}
-	
+
 	function jetpack_admin_ajax_tracks_callback() {
 		// Check for nonce
 		if ( ! isset( $_REQUEST['tracksNonce'] ) || ! wp_verify_nonce( $_REQUEST['tracksNonce'], 'jp-tracks-ajax-nonce' ) ) {
@@ -703,7 +737,11 @@ class Jetpack {
 
 		$tracks_data = array();
 		if ( 'click' === $_REQUEST['tracksEventType'] && isset( $_REQUEST['tracksEventProp'] ) ) {
-			$tracks_data = array( 'clicked' => $_REQUEST['tracksEventProp'] );
+			if ( is_array( $_REQUEST['tracksEventProp'] ) ) {
+				$tracks_data = $_REQUEST['tracksEventProp'];
+			} else {
+				$tracks_data = array( 'clicked' => $_REQUEST['tracksEventProp'] );
+			}
 		}
 
 		JetpackTracking::record_user_event( $_REQUEST['tracksEventName'], $tracks_data );
@@ -775,7 +813,7 @@ class Jetpack {
 	/**
 	 * If there are any stats that need to be pushed, but haven't been, push them now.
 	 */
-	function __destruct() {
+	function push_stats() {
 		if ( ! empty( $this->stats ) ) {
 			$this->do_stats( 'server_side' );
 		}
@@ -1421,6 +1459,7 @@ class Jetpack {
 				'seo-tools',
 				'google-analytics',
 				'wordads',
+				'search',
 			);
 			$plan['class'] = 'business';
 		}
@@ -1642,10 +1681,15 @@ class Jetpack {
 	 * Loads the currently active modules.
 	 */
 	public static function load_modules() {
-		if ( ! self::is_active() && !self::is_development_mode() ) {
-			if ( ! is_multisite() || ! get_site_option( 'jetpack_protect_active' ) ) {
-				return;
-			}
+		if (
+			! self::is_active()
+			&& ! self::is_development_mode()
+			&& (
+				! is_multisite()
+				|| ! get_site_option( 'jetpack_protect_active' )
+			)
+		) {
+			return;
 		}
 
 		$version = Jetpack_Options::get_option( 'version' );
@@ -1722,8 +1766,7 @@ class Jetpack {
 		do_action( 'jetpack_modules_loaded' );
 
 		// Load module-specific code that is needed even when a module isn't active. Loaded here because code contained therein may need actions such as setup_theme.
-		if ( Jetpack::is_active() || Jetpack::is_development_mode() )
-			require_once( JETPACK__PLUGIN_DIR . 'modules/module-extras.php' );
+		require_once( JETPACK__PLUGIN_DIR . 'modules/module-extras.php' );
 	}
 
 	/**
@@ -2375,37 +2418,28 @@ class Jetpack {
 	public static function get_file_data( $file, $headers ) {
 		//Get just the filename from $file (i.e. exclude full path) so that a consistent hash is generated
 		$file_name = basename( $file );
-		$file_data_option = Jetpack_Options::get_option( 'file_data', array() );
-		$key              = md5( $file_name . serialize( $headers ) );
-		$refresh_cache    = is_admin() && isset( $_GET['page'] ) && 'jetpack' === substr( $_GET['page'], 0, 7 );
+
+		$cache_key = 'jetpack_file_data_' . JETPACK__VERSION;
+
+		$file_data_option = get_transient( $cache_key );
+
+		if ( false === $file_data_option ) {
+			$file_data_option = array();
+		}
+
+		$key           = md5( $file_name . serialize( $headers ) );
+		$refresh_cache = is_admin() && isset( $_GET['page'] ) && 'jetpack' === substr( $_GET['page'], 0, 7 );
 
 		// If we don't need to refresh the cache, and already have the value, short-circuit!
-		if ( ! $refresh_cache && isset( $file_data_option[ JETPACK__VERSION ][ $key ] ) ) {
-			return $file_data_option[ JETPACK__VERSION ][ $key ];
+		if ( ! $refresh_cache && isset( $file_data_option[ $key ] ) ) {
+			return $file_data_option[ $key ];
 		}
 
 		$data = get_file_data( $file, $headers );
 
-		// Strip out any old Jetpack versions that are cluttering the option.
-		//
-		// We maintain the data for the current version of Jetpack plus the previous version
-		// to prevent repeated DB hits on large sites hosted with multiple web servers
-		// on a single database (since all web servers might not be updated simultaneously)
+		$file_data_option[ $key ] = $data;
 
-		$file_data_option[ JETPACK__VERSION ][ $key ] = $data;
-
-		if ( count( $file_data_option ) > 2 ) {
-			$count = 0;
-			krsort( $file_data_option );
-			foreach ( $file_data_option as $version => $values ) {
-				$count++;
-				if ( $count > 2 && JETPACK__VERSION != $version ) {
-					unset( $file_data_option[ $version ] );
-				}
-			}
-		}
-
-		Jetpack_Options::update_option( 'file_data', $file_data_option );
+		set_transient( $cache_key, $file_data_option, 29 * DAY_IN_SECONDS );
 
 		return $data;
 	}
@@ -2884,8 +2918,61 @@ p {
 		// For firing one-off events (notices) immediately after activation
 		set_transient( 'activated_jetpack', true, .1 * MINUTE_IN_SECONDS );
 
+		update_option( 'jetpack_activation_source', self::get_activation_source( wp_get_referer() ) );
+
 		Jetpack::plugin_initialize();
 	}
+
+	public static function get_activation_source( $referer_url ) {
+
+		if ( defined( 'WP_CLI' ) && WP_CLI ) {
+			return array( 'wp-cli', null );
+		}
+
+		$referer = parse_url( $referer_url );
+
+		$source_type = 'unknown';
+		$source_query = null;
+
+		if ( ! is_array( $referer ) ) {
+			return array( $source_type, $source_query );
+		}
+
+		$plugins_path = parse_url( admin_url( 'plugins.php' ), PHP_URL_PATH );
+		$plugins_install_path = parse_url( admin_url( 'plugin-install.php' ), PHP_URL_PATH );// /wp-admin/plugin-install.php
+
+		if ( isset( $referer['query'] ) ) {
+			parse_str( $referer['query'], $query_parts );
+		} else {
+			$query_parts = array();
+		}
+
+		if ( $plugins_path === $referer['path'] ) {
+			$source_type = 'list';
+		} elseif ( $plugins_install_path === $referer['path'] ) {
+			$tab = isset( $query_parts['tab'] ) ? $query_parts['tab'] : 'featured';
+			switch( $tab ) {
+				case 'popular':
+					$source_type = 'popular';
+					break;
+				case 'recommended':
+					$source_type = 'recommended';
+					break;
+				case 'favorites':
+					$source_type = 'favorites';
+					break;
+				case 'search':
+					$source_type = 'search-' . ( isset( $query_parts['type'] ) ? $query_parts['type'] : 'term' );
+					$source_query = isset( $query_parts['s'] ) ? $query_parts['s'] : null;
+					break;
+				default:
+					$source_type = 'featured';
+			}
+		}
+
+		return array( $source_type, $source_query );
+	}
+
 	/**
 	 * Runs before bumping version numbers up to a new version
 	 * @param  string $version    Version:timestamp
@@ -3836,7 +3923,7 @@ p {
 				JetpackTracking::record_user_event( 'jpc_register_success', array(
 					'from' => $from
 				) );
-				
+
 				wp_redirect( $this->build_connect_url( true, $redirect, $from ) );
 				exit;
 			case 'activate' :
@@ -4253,15 +4340,21 @@ p {
 			}
 		} else {
 
-			// Checking existing token
-			$response = Jetpack_Client::wpcom_json_api_request_as_blog(
-				sprintf( '/sites/%d', $site_id ) .'?force=wpcom',
-				'1.1'
-			);
+			// Let's check the existing blog token to see if we need to re-register. We only check once per minute
+			// because otherwise this logic can get us in to a loop.
+			$last_connect_url_check = intval( Jetpack_Options::get_raw_option( 'jetpack_last_connect_url_check' ) );
+			if ( ! $last_connect_url_check || ( time() - $last_connect_url_check ) > MINUTE_IN_SECONDS ) {
+				Jetpack_Options::update_raw_option( 'jetpack_last_connect_url_check', time() );
 
-			if ( 200 !== wp_remote_retrieve_response_code( $response ) ) {
-				// Generating a register URL instead to refresh the existing token
-				return $this->build_connect_url( $raw, $redirect, $from, true );
+				$response = Jetpack_Client::wpcom_json_api_request_as_blog(
+					sprintf( '/sites/%d', $site_id ) .'?force=wpcom',
+					'1.1'
+				);
+
+				if ( 200 !== wp_remote_retrieve_response_code( $response ) ) {
+					// Generating a register URL instead to refresh the existing token
+					return $this->build_connect_url( $raw, $redirect, $from, true );
+				}
 			}
 
 			if ( defined( 'JETPACK__GLOTPRESS_LOCALES_PATH' ) && include_once JETPACK__GLOTPRESS_LOCALES_PATH ) {
@@ -4300,7 +4393,7 @@ p {
 			$auth_type = apply_filters( 'jetpack_auth_type', 'calypso' );
 
 			$tracks_identity = jetpack_tracks_get_identity( get_current_user_id() );
-			
+
 			$args = urlencode_deep(
 				array(
 					'response_type' => 'code',
@@ -4332,6 +4425,8 @@ p {
 				)
 			);
 
+			self::apply_activation_source_to_args( $args );
+
 			$url = add_query_arg( $args, Jetpack::api_url( 'authorize' ) );
 		}
 
@@ -4344,7 +4439,27 @@ p {
 			$url = add_query_arg( 'calypso_env', sanitize_key( $_GET['calypso_env'] ), $url );
 		}
 
+		if ( false !== ( $token = Jetpack_Options::get_option( 'onboarding' ) ) ) {
+			$url = add_query_arg( 'onboarding', $token, $url );
+
+			// Remove this once https://github.com/Automattic/wp-calypso/pull/17094 is merged.
+			// Uncomment for development until it's merged.
+			//$url = add_query_arg( 'calypso_env', 'development', $url );
+		}
+
 		return $raw ? $url : esc_url( $url );
+	}
+
+	public static function apply_activation_source_to_args( &$args ) {
+		list( $activation_source_name, $activation_source_keyword ) = get_option( 'jetpack_activation_source' );
+
+		if ( $activation_source_name ) {
+			$args['_as'] = urlencode( $activation_source_name );
+		}
+
+		if ( $activation_source_keyword ) {
+			$args['_ak'] = urlencode( $activation_source_keyword );
+		}
 	}
 
 	function build_reconnect_url( $raw = false ) {
@@ -4597,6 +4712,53 @@ p {
 	}
 
 	/**
+	 * Create a random secret for validating onboarding payload
+	 *
+	 * @return string Secret token
+	 */
+	public static function create_onboarding_token() {
+		if ( false === ( $token = Jetpack_Options::get_option( 'onboarding' ) ) ) {
+			$token = wp_generate_password( 32, false );
+			Jetpack_Options::update_option( 'onboarding', $token );
+		}
+
+		return $token;
+	}
+
+	/**
+	 * Remove the onboarding token
+	 *
+	 * @return bool True on success, false on failure
+	 */
+	public static function invalidate_onboarding_token() {
+		return Jetpack_Options::delete_option( 'onboarding' );
+	}
+
+	/**
+	 * Validate an onboarding token for a specific action
+	 *
+	 * @return boolean True if token/action pair is accepted, false if not
+	 */
+	public static function validate_onboarding_token_action( $token, $action ) {
+		// Compare tokens, bail if tokens do not match
+		if ( ! hash_equals( $token, Jetpack_Options::get_option( 'onboarding' ) ) ) {
+			return false;
+		}
+
+		// List of valid actions we can take
+		$valid_actions = array(
+			'/jetpack/v4/settings',
+		);
+
+		// Whitelist the action
+		if ( ! in_array( $action, $valid_actions ) ) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
 	 * Checks to see if the URL is using SSL to connect with Jetpack
 	 *
 	 * @since 2.3.3
@@ -4775,12 +4937,43 @@ p {
 	 *
 	 * @since 2.6
 	 * @return int
+	 * @deprecated
 	 **/
 	public function get_remote_query_timeout_limit() {
-	    $timeout = (int) ini_get( 'max_execution_time' );
-	    if ( ! $timeout ) // Ensure exec time set in php.ini
-				$timeout = 30;
-	    return intval( $timeout / 2 );
+		_deprecated_function( __METHOD__, 'jetpack-5.4' );
+		return Jetpack::get_max_execution_time();
+	}
+
+	/**
+	 * Builds the timeout limit for queries talking with the wpcom servers.
+	 *
+	 * Based on local php max_execution_time in php.ini
+	 *
+	 * @since 5.4
+	 * @return int
+	 **/
+	public static function get_max_execution_time() {
+		$timeout = (int) ini_get( 'max_execution_time' );
+
+		// Ensure exec time set in php.ini
+		if ( ! $timeout ) {
+			$timeout = 30;
+		}
+		return $timeout;
+	}
+
+	/**
+	 * Sets a minimum request timeout, and returns the current timeout
+	 *
+	 * @since 5.4
+	 **/
+	public static function set_min_time_limit( $min_timeout ) {
+		$timeout = self::get_max_execution_time();
+		if ( $timeout < $min_timeout ) {
+			$timeout = $min_timeout;
+			set_time_limit( $timeout );
+		}
+		return $timeout;
 	}
 
 
@@ -4847,7 +5040,9 @@ p {
 			return new Jetpack_Error( 'missing_secrets' );
 		}
 
-		$timeout = Jetpack::init()->get_remote_query_timeout_limit();
+		// better to try (and fail) to set a higher timeout than this system
+		// supports than to have register fail for more users than it should
+		$timeout = Jetpack::set_min_time_limit( 60 ) / 2;
 
 		$gmt_offset = get_option( 'gmt_offset' );
 		if ( ! $gmt_offset ) {
@@ -4882,6 +5077,9 @@ p {
 			),
 			'timeout' => $timeout,
 		);
+
+		self::apply_activation_source_to_args( $args['body'] );
+
 		$response = Jetpack_Client::_wp_remote_request( Jetpack::fix_url_for_bad_hosts( Jetpack::api_url( 'register' ) ), $args, true );
 
 		// Make sure the response is valid and does not contain any Jetpack errors
@@ -5062,6 +5260,30 @@ p {
 
 		if ( ! $this->add_nonce( $timestamp, $nonce ) ) {
 			return false;
+		}
+
+		// Let's see if this is onboarding. In such case, use user token type and the provided user id.
+		if ( isset( $this->HTTP_RAW_POST_DATA ) ) {
+			$jpo = json_decode( $this->HTTP_RAW_POST_DATA );
+			if (
+				isset( $jpo->onboarding ) &&
+				isset( $jpo->onboarding->jpUser ) && isset( $jpo->onboarding->token ) &&
+				is_email( $jpo->onboarding->jpUser ) && ctype_alnum( $jpo->onboarding->token ) &&
+				isset( $_GET['rest_route'] ) &&
+				self::validate_onboarding_token_action( $jpo->onboarding->token, $_GET['rest_route'] )
+			) {
+				$jpUser = get_user_by( 'email', $jpo->onboarding->jpUser );
+				if ( is_a( $jpUser, 'WP_User' ) ) {
+					wp_set_current_user( $jpUser->ID );
+					$user_can = is_multisite()
+						? current_user_can_for_blog( get_current_blog_id(), 'manage_options' )
+						: current_user_can( 'manage_options' );
+					if ( $user_can ) {
+						$token_type = 'user';
+						$token->external_user_id = $jpUser->ID;
+					}
+				}
+			}
 		}
 
 		$this->xmlrpc_verification = array(
@@ -5825,6 +6047,9 @@ p {
 	/**
 	 * Checks whether the sync_error_idc option is valid or not, and if not, will do cleanup.
 	 *
+	 * @since 4.4.0
+	 * @since 5.4.0 Do not call get_sync_error_idc_option() unless site is in IDC
+	 *
 	 * @return bool
 	 */
 	public static function validate_sync_error_idc_option() {
@@ -5848,8 +6073,8 @@ p {
 
 		// Is the site opted in and does the stored sync_error_idc option match what we now generate?
 		$sync_error = Jetpack_Options::get_option( 'sync_error_idc' );
-		$local_options = self::get_sync_error_idc_option();
 		if ( $idc_allowed && $sync_error && self::sync_idc_optin() ) {
+			$local_options = self::get_sync_error_idc_option();
 			if ( $sync_error['home'] === $local_options['home'] && $sync_error['siteurl'] === $local_options['siteurl'] ) {
 				$is_valid = true;
 			}
@@ -5897,31 +6122,37 @@ p {
 	 * Gets the value that is to be saved in the jetpack_sync_error_idc option.
 	 *
 	 * @since 4.4.0
+	 * @since 5.4.0 Add transient since home/siteurl retrieved directly from DB
 	 *
 	 * @param array $response
 	 * @return array Array of the local urls, wpcom urls, and error code
 	 */
 	public static function get_sync_error_idc_option( $response = array() ) {
-		require_once JETPACK__PLUGIN_DIR . 'sync/class.jetpack-sync-functions.php';
-		$local_options = array(
-			'home'    => Jetpack_Sync_Functions::home_url(),
-			'siteurl' => Jetpack_Sync_Functions::site_url(),
-		);
+		$returned_values = get_transient( 'jetpack_idc_option' );
+		if ( false === $returned_values ) {
+			require_once JETPACK__PLUGIN_DIR . 'sync/class.jetpack-sync-functions.php';
+			$local_options = array(
+				'home'    => Jetpack_Sync_Functions::home_url(),
+				'siteurl' => Jetpack_Sync_Functions::site_url(),
+			);
 
-		$options = array_merge( $local_options, $response );
+			$options = array_merge( $local_options, $response );
 
-		$returned_values = array();
-		foreach( $options as $key => $option ) {
-			if ( 'error_code' === $key ) {
-				$returned_values[ $key ] = $option;
-				continue;
+			$returned_values = array();
+			foreach( $options as $key => $option ) {
+				if ( 'error_code' === $key ) {
+					$returned_values[ $key ] = $option;
+					continue;
+				}
+
+				if ( is_wp_error( $normalized_url = self::normalize_url_protocol_agnostic( $option ) ) ) {
+					continue;
+				}
+
+				$returned_values[ $key ] = $normalized_url;
 			}
 
-			if ( is_wp_error( $normalized_url = self::normalize_url_protocol_agnostic( $option ) ) ) {
-				continue;
-			}
-
-			$returned_values[ $key ] = $normalized_url;
+			set_transient( 'jetpack_idc_option', $returned_values, MINUTE_IN_SECONDS );
 		}
 
 		return $returned_values;
@@ -6391,74 +6622,12 @@ p {
 	 *
 	 * It is used in class.jetpack-cli.php to reset options
 	 *
+	 * @since 5.4.0 Logic moved to Jetpack_Options class. Method left in Jetpack class for backwards compat.
+	 *
 	 * @return array of options to delete.
 	 */
 	public static function get_jetpack_options_for_reset() {
-		$jetpack_options            = Jetpack_Options::get_option_names();
-		$jetpack_options_non_compat = Jetpack_Options::get_option_names( 'non_compact' );
-		$jetpack_options_private    = Jetpack_Options::get_option_names( 'private' );
-
-		$all_jp_options = array_merge( $jetpack_options, $jetpack_options_non_compat, $jetpack_options_private );
-
-		// A manual build of the wp options
-		$wp_options = array(
-			'sharing-options',
-			'disabled_likes',
-			'disabled_reblogs',
-			'jetpack_comments_likes_enabled',
-			'wp_mobile_excerpt',
-			'wp_mobile_featured_images',
-			'wp_mobile_app_promos',
-			'stats_options',
-			'stats_dashboard_widget',
-			'safecss_preview_rev',
-			'safecss_rev',
-			'safecss_revision_migrated',
-			'nova_menu_order',
-			'jetpack_portfolio',
-			'jetpack_portfolio_posts_per_page',
-			'jetpack_testimonial',
-			'jetpack_testimonial_posts_per_page',
-			'wp_mobile_custom_css',
-			'sharedaddy_disable_resources',
-			'sharing-options',
-			'sharing-services',
-			'site_icon_temp_data',
-			'featured-content',
-			'site_logo',
-			'jetpack_dismissed_notices',
-		);
-
-		// Flag some Jetpack options as unsafe
-		$unsafe_options = array(
-			'id',                           // (int)    The Client ID/WP.com Blog ID of this site.
-			'master_user',                  // (int)    The local User ID of the user who connected this site to jetpack.wordpress.com.
-			'version',                      // (string) Used during upgrade procedure to auto-activate new modules. version:time
-			'jumpstart',                    // (string) A flag for whether or not to show the Jump Start.  Accepts: new_connection, jumpstart_activated, jetpack_action_taken, jumpstart_dismissed.
-
-			// non_compact
-			'activated',
-
-			// private
-			'register',
-			'blog_token',                  // (string) The Client Secret/Blog Token of this site.
-			'user_token',                  // (string) The User Token of this site. (deprecated)
-			'user_tokens'
-		);
-
-		// Remove the unsafe Jetpack options
-		foreach ( $unsafe_options as $unsafe_option ) {
-			if ( false !== ( $key = array_search( $unsafe_option, $all_jp_options ) ) ) {
-				unset( $all_jp_options[ $key ] );
-			}
-		}
-
-		$options = array(
-			'jp_options' => $all_jp_options,
-			'wp_options' => $wp_options
-		);
-
-		return $options;
+		return Jetpack_Options::get_options_for_reset();
 	}
 
 	/**
@@ -6533,13 +6702,12 @@ p {
 	public function wp_dashboard_setup() {
 		if ( self::is_active() ) {
 			add_action( 'jetpack_dashboard_widget', array( __CLASS__, 'dashboard_widget_footer' ), 999 );
-			$widget_title = __( 'Site Stats', 'jetpack' );
 		}
 
 		if ( has_action( 'jetpack_dashboard_widget' ) ) {
 			wp_add_dashboard_widget(
 				'jetpack_summary_widget',
-				$widget_title,
+				esc_html__( 'Site Stats', 'jetpack' ),
 				array( __CLASS__, 'dashboard_widget' )
 			);
 			wp_enqueue_style( 'jetpack-dashboard-widget', plugins_url( 'css/dashboard-widget.css', JETPACK__PLUGIN_FILE ), array(), JETPACK__VERSION );
