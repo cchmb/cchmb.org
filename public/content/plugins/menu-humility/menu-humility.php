@@ -2,7 +2,7 @@
 /*
 Plugin Name: Menu Humility
 Description: Prevents plugins from injecting themselves as top level menus before your content menus. Shoves them to the end. I'm looking at you, Automattic
-Version: 0.3
+Version: 0.3.1
 License: GPL version 2 or any later version
 Author: Mark Jaquith
 Author URI: http://coveredwebservices.com/

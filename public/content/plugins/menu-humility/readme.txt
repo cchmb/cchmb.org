@@ -1,10 +1,9 @@
 === Menu Humility ===
 Contributors: markjaquith
-Donate link: http://txfx.net/wordpress-plugins/donate
+Donate link: https://txfx.net/wordpress-plugins/donate
 Tags: menus, admin, reorder, annoyance
 Requires at least: 3.1
-Tested up to: 3.8
-Stable tag: 0.3
+Tested up to: 4.9.5
 
 Don't you hate it when plugins add top level menus between "Dashboard" and "Posts"? This shoves those to the end.
 
@@ -27,6 +26,9 @@ Yes.
 Then you should contact me so I can whitelist your menu item. Also, bless you, my child.
 
 == Changelog ==
+
+= 0.3.1 =
+* Bump
 
 = 0.3 =
 * Don't shove WP Help menu to the end, as it is there by the user's choice
