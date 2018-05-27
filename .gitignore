@@ -1,6 +1,9 @@
 html
 log
 
+etc/fullchain.pem
+etc/htpasswd
+etc/privkey.pem
 etc/auth.caddy
 
 # mysql backups
