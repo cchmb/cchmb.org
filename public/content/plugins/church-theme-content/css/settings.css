@@ -3,7 +3,28 @@
  */
 
 /*******************************************
- * ADD-ON LICENSES
+ * TEXT
+ *******************************************/
+
+.ctc-nonbold {
+	font-weight: normal;
+}
+
+.ctc-pro-setting-inactive-message-inline {
+	display: inline-block;
+	margin: 6px 0 0 0;
+	padding: 10px 12px;
+	background-color: #fff;
+	border: 1px solid #ddd;
+	font-size: 0.95em;
+}
+
+.ctps-section .description code {
+	font-style: normal;
+}
+
+/*******************************************
+ * LICENSES
  *******************************************/
 
 /* License Key Field */
@@ -42,6 +63,85 @@
 /* License Buttons */
 
 .ctc-license-button,
-input[name^=ctc_settings] {
+.ctps-section-licenses input[name^=ctc_settings] {
 	margin-right: 8px !important;
 }
+
+/*******************************************
+ * SERMONS
+ *******************************************/
+
+.ctps-section .description code b {
+	color: #000;
+}
+
+/* Make singular and plural fields closer */
+
+tr.ctps-field-sermon_word_singular th,
+tr.ctps-field-sermon_word_singular td {
+	padding-bottom: 0;
+}
+
+tr.ctps-field-sermon_word_plural th,
+tr.ctps-field-sermon_word_plural td {
+	padding-top: 7px;
+}
+
+/* Make sermon taxonomy URL slug fields closer */
+
+tr.ctps-field-sermon_topic_url_slug > *, /* all but last */
+tr.ctps-field-sermon_series_url_slug > *,
+tr.ctps-field-sermon_book_url_slug > *,
+tr.ctps-field-sermon_speaker_url_slug > * {
+	padding-bottom: 0;
+}
+
+tr.ctps-field-sermon_series_url_slug > *, /* all but first */
+tr.ctps-field-sermon_book_url_slug > *,
+tr.ctps-field-sermon_speaker_url_slug > *,
+tr.ctps-field-sermon_tag_url_slug > * {
+	padding-top: 14px;
+}
+
+/*******************************************
+ * PODCAST
+ *******************************************/
+
+#ctc-settings-podcast-feed-buttons {
+	margin-top: 8px;
+	margin-bottom: 5px;
+}
+
+#ctc-settings-podcast-feed-link {
+	padding-right: 4px;
+}
+
+#ctc-podcast-url-copied {
+	display: none;
+	font-size: 0.9em;
+	color: #666;
+	white-space: nowrap;
+}
+
+/* Make filtering select fields closer */
+
+tr.ctps-field-podcast_topic th,
+tr.ctps-field-podcast_topic td {
+	padding-bottom: 0;
+}
+
+tr.ctps-field-podcast_book th,
+tr.ctps-field-podcast_book td,
+tr.ctps-field-podcast_series th,
+tr.ctps-field-podcast_series td,
+tr.ctps-field-podcast_speaker th,
+tr.ctps-field-podcast_speaker td {
+	padding-top: 7px;
+	padding-bottom: 0;
+}
+
+tr.ctps-field-podcast_tag th,
+tr.ctps-field-podcast_tag td {
+	padding-top: 7px;
+}
+

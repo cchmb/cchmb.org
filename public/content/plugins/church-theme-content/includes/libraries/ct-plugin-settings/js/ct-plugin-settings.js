@@ -61,7 +61,125 @@ jQuery( document ).ready( function( $ ) {
 
 		}
 
-	} )
+	} );
+
+	// Open media uploader on button click.
+	$( 'body' ).on( 'click', '.ctps-upload-file', function( event ) {
+
+		var frame;
+
+		// Stop click to URL
+		event.preventDefault();
+
+		// Input element
+		$input_element = $( this ).prev( 'input' );
+
+		// Only if button not disabled.
+		if ( ! $( this ).hasClass( 'button-disabled' ) ) {
+
+			// Media frame
+			frame = wp.media( {
+				title : $( this ).attr( 'data-ctps-upload-title' ),
+				library : { type : $( this ).attr( 'data-ctps-upload-type' ) },
+				multiple : false
+			} );
+
+			// Open media frame
+			frame.open();
+
+			// Set attachment URL on click of button
+			// (don't do on 'close' so user can cancel)
+			frame.on( 'select', function() {
+
+				var attachments, attachment;
+
+				// Get attachment data
+				attachments = frame.state().get( 'selection' ).toJSON();
+				attachment = attachments[0];
+
+				// An attachment is selected
+				if ( typeof attachment != 'undefined' ) {
+
+					// Set attachment URL on input
+					if ( attachment.url ) {
+
+						$input_element.val( attachment.url ); // input is directly before button
+
+						// Trigger change in case field is set to show an image preview.
+						$input_element.trigger( 'keyup' );
+
+					}
+
+				}
+
+			} );
+
+		}
+
+	} );
+
+	// Show image when upload field changed.
+	var $image_upload_elements = $( 'input[data-ctps-upload-show-image].ctps-upload' );
+	$image_upload_elements.each( function() {
+
+		// Detect URL change.
+		$( this ).on( 'change, keyup', function() {
+
+			var $input = $( this );
+
+			// Get image width.
+			var image_width = $input.data( 'ctps-upload-show-image' );
+
+			// Have width.
+			if ( image_width ) {
+
+				// Get image URL.
+				var image_url = $input.val().trim();
+
+				// Have image URL.
+				if ( image_url ) {
+
+					// Get container to add image to end of.
+					var $container = $( $input ).parent( '.ctps-section' );
+
+					// Get existing image, if any.
+					var image_preview_url = $( '.ctps-upload-image', $container ).attr( 'src' );
+
+					// Same image not already present.
+					if ( image_url !== image_preview_url ) {
+
+						// Remove any existing preview image.
+						$( '.ctps-upload-image', $container ).remove();
+
+						// Add image element.
+						$container.append( '<img class="ctps-upload-image" style="width: ' + image_width + 'px; display: none;">' );
+
+						// Add src to image and fade in.
+						$( '.ctps-upload-image', $container )
+							.attr( 'src', image_url )
+							.fadeIn( 'fast' );
+
+					}
+
+				}
+
+				// No image URL.
+				else {
+					// Remove any existing preview image.
+					$( '.ctps-upload-image', $container ).remove();
+				}
+			}
+
+		} );
+
+
+	} ).trigger( 'keyup' ); // trigger on first load.
+
+	// Prevent clicks on disabled buttons.
+	$( '#ctps-form a.button-disabled' ).on( 'click', function( e ) {
+		e.preventDefault();
+	} );
+
 
 } );
 

@@ -6,7 +6,7 @@
  *
  * @package    Church_Theme_Content
  * @subpackage Admin
- * @copyright  Copyright (c) 2017, churchthemes.com
+ * @copyright  Copyright (c) 2017, ChurchThemes.com
  * @link       https://github.com/churchthemes/church-theme-content
  * @license    GPLv2 or later
  * @since      1.8
@@ -81,3 +81,26 @@ function ctc_glance_add_post_types( $items ) {
 }
 
 add_filter( 'dashboard_glance_items', 'ctc_glance_add_post_types', 10, 1 );
+
+/*************************************************
+ * NEWS
+ *************************************************/
+
+/**
+ * Show ChurchThemes.com feed items in News widget.
+ *
+ * @since 2.0
+ */
+function ctc_dashboard_news() {
+
+	// Must be enabled in settings.
+	if ( ctc_setting( 'dashboard_news' ) ) {
+
+		// Create an instance.
+		new CTC_Dashboard_News();
+
+	}
+
+}
+
+add_filter( 'admin_init', 'ctc_dashboard_news' );

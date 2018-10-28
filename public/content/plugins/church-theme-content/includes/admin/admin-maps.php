@@ -4,7 +4,7 @@
  *
  * @package    Church_Theme_Content
  * @subpackage Admin
- * @copyright  Copyright (c) 2016 - 2017, churchthemes.com
+ * @copyright  Copyright (c) 2016 - 2017, ChurchThemes.com
  * @link       https://github.com/churchthemes/church-theme-content
  * @license    GPLv2 or later
  * @since      1.7
@@ -148,8 +148,8 @@ function ctc_gmaps_api_key_show_notice() {
 	// Get current screen
 	$screen = get_current_screen();
 
-	// Only on Add/Edit Location or Event
-	if ( ! ( $screen->base == 'post' && in_array( $screen->post_type, array( 'ctc_event', 'ctc_location' ) ) ) ) {
+	// Only on List or Add/Edit Location or Event
+	if ( ! ( in_array( $screen->base, array( 'edit', 'post' ) ) && in_array( $screen->post_type, array( 'ctc_event', 'ctc_location' ) ) ) ) {
 		$show = false;
 	}
 
@@ -158,8 +158,9 @@ function ctc_gmaps_api_key_show_notice() {
 		return;
 	}
 
-	// Only if latitude and longitude fields supported
-	if ( ! ctc_has_lat_lng_fields() ) {
+	// Only if latitude and longitude fields supported.
+	// Skip this test on list of events/locations, since ctc_has_lat_lng_fields() checks that screen is add/edit.
+	if ( 'edit' !== $screen->base && ! ctc_has_lat_lng_fields() ) {
 		return;
 	}
 
@@ -209,7 +210,7 @@ function ctc_gmaps_api_key_notice() {
 						),
 					)
 				),
-				admin_url( 'options-general.php?page=' . CTC_DIR )
+				admin_url( 'options-general.php?page=' . CTC_DIR . '#locations' )
 			);
 			?>
 		</p>
@@ -350,20 +351,23 @@ function ctc_map_after_fields( $object ) {
 			<p class="description">
 
 				<?php
-				echo wp_kses(
-					sprintf(
+				printf(
+					wp_kses(
 						/* translators: %1$s is URL for plugin settings */
-						__( 'Set your <a href="%1$s" target="_blank">Google Maps API Key</a> to show a map preview here.', 'church-theme-content' ),
-						admin_url( 'options-general.php?page=' . CTC_DIR )
+						__( '<strong>Important:</strong> You must set your Google Maps API Key in <a href="%1$s" target="_blank">Church Content Settings</a> for maps to work.', 'church-theme-content' ),
+						array(
+							'strong' => array(),
+							'a' => array(
+								'href' => array(),
+								'target' => array(),
+							),
+						)
 					),
-					array(
-						'a' => array(
-							'href' => array(),
-							'target' => array(),
-						),
-					)
+					admin_url( 'options-general.php?page=' . CTC_DIR . '#locations' )
 				);
 				?>
+
+
 
 			</p>
 
@@ -410,5 +414,3 @@ function ctc_coordinate_field( $data ) {
 	return $input;
 
 }
-
-add_action( 'admin_init', 'ctc_hide_theme_support_notice' ); // before admin_notices

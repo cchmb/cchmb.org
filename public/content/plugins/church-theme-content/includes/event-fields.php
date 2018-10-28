@@ -2,11 +2,11 @@
 /**
  * Event Fields
  *
- * Global event field functions (ie. functions necessary outside of admin area)
+ * Global event field functions (ie. functions necessary outside of admin area).
  *
  * @package    Church_Theme_Content
  * @subpackage Functions
- * @copyright  Copyright (c) 2013 - 2017, churchthemes.com
+ * @copyright  Copyright (c) 2013 - 2017, ChurchThemes.com
  * @link       https://github.com/churchthemes/church-theme-content
  * @license    GPLv2 or later
  * @since      1.2
@@ -27,7 +27,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * If no date, value will be 0000-00-00 00:00:00
  * If no time, value will be 2014-10-28 00:00:00
  *
- * This is run after an event is saved and after an event recurs.
+ * This is run after an event is saved and after an event recurs (note that schedule.php runs on front-end).
  *
  * @since 1.2
  * @param int $post_id Post ID

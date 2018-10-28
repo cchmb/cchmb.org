@@ -6,7 +6,7 @@
  *
  * @package    Church_Theme_Content
  * @subpackage Admin
- * @copyright  Copyright (c) 2013 - 2014, churchthemes.com
+ * @copyright  Copyright (c) 2013 - 2018, ChurchThemes.com
  * @link       https://github.com/churchthemes/church-theme-content
  * @license    GPLv2 or later
  * @since      1.0.1
@@ -14,6 +14,60 @@
 
 // No direct access
 if ( ! defined( 'ABSPATH' ) ) exit;
+
+/*************************************************
+ * BEFORE IMPORT
+ *************************************************/
+
+/**
+ * Prevent import if theme not active.
+ *
+ * This is to prevent any CT Framework recurring events grandfathering
+ * from happening by activating the plugin, importing, then activating the theme
+ * which would then grandfather based on sample content. Theme should be active
+ * to make gradfathering decision first, before importing sample content.
+ *
+ * @since 2.0
+ */
+function ctc_prevent_import() {
+
+	// Current theme does not support Church Content plugin.
+	if ( ! current_theme_supports( 'church-theme-content' ) ) {
+
+		?>
+
+		<div class="notice notice-warning" style="margin-top: 20px">
+			<p>
+				<?php
+				printf(
+					wp_kses(
+						/* translators: %1$s is plugin name, %2$s is URL to plugin information */
+						__( 'Please activate a theme compatible with the %1$s plugin before importing content. <a href="%2$s" target="_blank">More Information</a>', 'church-theme-content' ),
+						array(
+							'b' => array(),
+							'a' => array(
+								'href' => array(),
+								'target' => array(),
+							)
+						)
+					),
+					CTC_NAME,
+					'https://wordpress.org/plugins/church-theme-content/'
+				);
+				?>
+			</p>
+		</div>
+
+		<?php
+
+		// Stop import.
+		exit;
+
+	}
+
+}
+
+add_action( 'import_start', 'ctc_prevent_import' );
 
 /*************************************************
  * AFTER IMPORT
@@ -33,8 +87,9 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  */
 function ctc_after_import() {
 
-	// Set defaults for event fields that did not always exist
-	ctc_set_events_defaults();
+	// Set defaults for event fields that did not always exist.
+	// This will also cause Pro plugin's corrections to be made.
+	ctc_correct_all_events();
 
 }
 
@@ -49,7 +104,12 @@ add_action( 'import_end', 'ctc_after_import' ); // WordPress Importer plugin hoo
  */
 function ctc_import_recur_events() {
 
-	ctc_update_recurring_event_dates();
+	// Force update even if recurrence not supported.
+	// This is to keep sample content imports up to date when Pro not installed.
+	$force = true;
+
+	// Move recurring event dates forward.
+	ctc_update_recurring_event_dates( $force );
 
 }
 

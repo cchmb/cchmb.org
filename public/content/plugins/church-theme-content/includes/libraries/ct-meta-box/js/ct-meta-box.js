@@ -67,13 +67,137 @@ jQuery( document ).ready( function( $ ) {
 	} );
 
 	/**************************************
-	 * DATE
+	 * DATEPICKER
 	 **************************************/
 
-	// Show week day to the right of date input
-	// Do this on page load and when date is changed
-	ctmb_date_changed(); // on page load
-	$( '.ctmb-date select, .ctmb-date input' ).bind( 'change keyup', ctmb_date_changed );
+	// Loop elements to use Air Datepicker on.
+	$( '.ctmb-date' ).each( function() {
+
+		// Field container.
+		var $field_container = $( this ).parents( '.ctmb-field' );
+
+		// Localization.
+		$.fn.datepicker.language['dynamic'] = ctmb.datepicker_language;
+
+		// Allow multiple?
+		var multiple = $( this ).data( 'date-multiple' ) ? true : false;
+
+		// Activate Air Datepicker.
+		var $datepicker = $( this ).datepicker( {
+
+			// Options.
+			inline: true,
+			dateFormat: 'yyyy-mm-dd',
+			language: 'dynamic',
+			multipleDates: multiple,
+			multipleDatesSeparator: ',',
+
+			// Date selected.
+			onSelect: function( fd, d, picker ) { // date(s) were changed.
+
+				// Trigger change event in hidden input so other scripts can do things on change.
+				$( '#' + $( picker.el ).attr( 'id' ) ).change();
+
+				// Continue only if AJAX not disabled such as when pre-selecting dates in picker on first load.
+				if ( ! localize_dates_ajax_disabled ) {
+
+					// Get localized dates via AJAX.
+					$.post( ctmb.ajax_url, {
+						'action': 'localize_dates_ajax',
+						'nonce' : ctmb.localize_dates_nonce,
+						'dates':  fd,
+					}, function( dates_formatted ) {
+
+						// Show date(s) formatted.
+						$( '#' + $( picker.el ).attr( 'id' ) + '-formatted' )
+							.hide()
+							.html( dates_formatted ) // add formatted dates to element for user-friendly display.
+							.show();
+
+						// How many dates showing?
+						// Show button after if 0 or 1; below if 2+.
+						var count = ( dates_formatted.match( /ctmb-localized-date/g ) || [] ).length;
+						if ( count < 2 ) {
+							$( '.ctmb-date-container', $field_container )
+								.removeClass( 'ctmb-date-button-after' ) // don't let it double up.
+								.addClass( 'ctmb-date-button-after' );
+						} else {
+							$( '.ctmb-date-container', $field_container )
+								.removeClass( 'ctmb-date-button-after' );
+						}
+
+						// Hide datepicker when not multiple.
+						if ( ! multiple ) {
+							$( '.datepicker-inline', $field_container ).hide();
+						}
+
+					} );
+
+				}
+
+	        }
+
+		} ).data( 'datepicker' );
+
+		// Pre-select initial dates from first load (make calendar reflect input).
+		var initial_dates = $( this ).val();
+		if ( initial_dates.length ) {
+
+			// Convert comma-separated list into array.
+			initial_dates = initial_dates.split( ',' );
+
+			// Array to add date objects to.
+			var initial_date_objects = [];
+
+			// Loop dates to add objects to array.
+			$.each( initial_dates, function( index, date ) {
+					initial_date_objects.push( new Date( date.replace( /-/g, '\/' ) ) ); // Replace - with / (e.g. 2017-01-01 to 2017/01/01) to prevent his issue: https://stackoverflow.com/a/31732581
+			} );
+
+			// Temporarily disable localize_dates_ajax to avoid problems / extra resource usage.
+			var localize_dates_ajax_disabled = true;
+
+			// Set the date in the calendar (also re-populates the input).
+			$datepicker.selectDate( initial_date_objects );
+
+			// Re-enable localize_dates_ajax.
+			localize_dates_ajax_disabled = false;
+
+		}
+
+		// Make button show picker.
+		$( $field_container ).on( 'click', '.button', function( e ) {
+
+			// Prevent click from continuing.
+			e.preventDefault();
+
+			// Open if calendar not already open.
+			if ( ! $( '.datepicker-inline', $field_container ).is( ':visible' ) ) {
+				$( '.datepicker-inline', $field_container ).show();
+			}
+
+			// Close if calendar is already open.
+			else {
+				$( '.datepicker-inline', $field_container ).hide();
+			}
+
+		} );
+
+		// Remove date when "X" clicked in friendly list of dates.
+		$( $field_container ).on( 'click', '.ctmb-remove-date', function( e ) {
+
+			// Prevent click from continuing.
+			e.preventDefault();
+
+			// Get date X clicked for.
+			var date = $( this ).data( 'ctmb-date' );
+
+			// Remove date.
+			$datepicker.removeDate( new Date( date.replace( /-/g, '\/' ) ) ); // Replace - with / (e.g. 2017-01-01 to 2017/01/01) to prevent his issue: https://stackoverflow.com/a/31732581
+
+		} );
+
+	} );
 
 	/**************************************
 	 * TIMEPICKER
@@ -85,6 +209,16 @@ jQuery( document ).ready( function( $ ) {
 		noneOption: true,
 		timeFormat: ctmb.time_format, // from 12- or 24-hour format (always saved as 24-hour)
 		minTime: '06:00' // works for all formats
+	} );
+
+	/**************************************
+	 * READONLY
+	 **************************************/
+
+	// Prevent checkbox/radio changes on readonly inputs.
+	// readonly attribute itself does not stop changes to checkbox states.
+	$( '.ctmb-field input[type=checkbox][readonly], .ctmb-field input[type=radio][readonly]' ).click( function( e ) {
+		return false;
 	} );
 
 } );
@@ -199,53 +333,4 @@ function ctmb_page_template_field_visibility( field, page_templates ) {
 		$field_container.hide();
 	}
 
-}
-
-// Show week day to the right of date input
-// Do this on page load and when date is changed
-function ctmb_date_changed() {
-
-	// Loop date fields
-	jQuery( '.ctmb-date' ).each( function() {
-
-		var value_container, date_year, date_month, date_day, date, valid_date, day_of_week_num, day_of_week;
-
-		// Only if after_input is not already used for custom text
-		value_container = jQuery( this ).parent( '.ctmb-value' );
-		if ( ! jQuery( '.ctmb-after-input:not( .ctmb-day-of-week )', value_container ).length ) {
-
-			// Get month, day, year
-			date_month = jQuery( '.ctmb-date-month', this ).val();
-			date_year = jQuery( '.ctmb-date-year', this ).val();
-			date_day = jQuery( '.ctmb-date-day', this ).val();
-
-			// Valid date
-			if ( ctmb_checkdate( date_month, date_day, date_year ) ) {
-
-				// Get day of week
-				date = new Date( date_year, date_month - 1, date_day ); // Months are 0 - 11
-				day_of_week_num = date.getDay();
-				day_of_week = ctmb.week_days[ day_of_week_num ];
-
-				// Show or update day of week after input
-				jQuery( '.ctmb-day-of-week', value_container ).remove(); // remove before add, to update
-				jQuery( this ).after( ' <span class="ctmb-after-input ctmb-day-of-week">' + day_of_week + '</span>' );
-
-			} else { // invalid, show nothing after input
-				jQuery( '.ctmb-day-of-week', value_container ).remove();
-			}
-
-		}
-
-	} );
-
-}
-
-// Check for valid date
-// From http://phpjs.org/functions/checkdate/ (MIT License)
-// original by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
-// improved by: Pyerre
-// improved by: Theriault
-function ctmb_checkdate( m, d, y ) {
-	return m > 0 && m < 13 && y > 0 && y < 32768 && d > 0 && d <= ( new Date( y, m, 0 ) ).getDate();
 }

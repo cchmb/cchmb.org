@@ -4,7 +4,7 @@
  *
  * @package    Church_Theme_Content
  * @subpackage Admin
- * @copyright  Copyright (c) 2013 - 2017, churchthemes.com
+ * @copyright  Copyright (c) 2013 - 2017, ChurchThemes.com
  * @link       https://github.com/churchthemes/church-theme-content
  * @license    GPLv2 or later
  * @since      0.9
@@ -37,6 +37,11 @@ function ctc_get_theme_support_notice() {
 		// Show only on relavent pages as not to overwhelm admin
 		$screen = get_current_screen();
 		if ( ! in_array( $screen->base, array( 'themes', 'plugins' ) ) && ! preg_match( '/^ctc_.+/', $screen->post_type ) ) {
+			return;
+		}
+
+		// Show except on discontinued Risen theme (in that case we show migration notice).
+		if ( ctc_migrate_risen_show() ) {
 			return;
 		}
 

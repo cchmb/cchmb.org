@@ -6,7 +6,7 @@
  *
  * @package    Church_Theme_Content
  * @subpackage Functions
- * @copyright  Copyright (c) 2013 - 2017, churchthemes.com
+ * @copyright  Copyright (c) 2013 - 2017, ChurchThemes.com
  * @link       https://github.com/churchthemes/church-theme-content
  * @license    GPLv2 or later
  * @since      0.9
@@ -220,7 +220,7 @@ function ctc_get_theme_support_by_post_type( $post_type, $argument = null ) {
  * Check if feature is supported
  *
  * @since 0.9
- * @param string $featurew Feature to check support for
+ * @param string $feature Feature to check support for
  * @return bool True if supported by theme
  */
 function ctc_feature_supported( $feature ) {

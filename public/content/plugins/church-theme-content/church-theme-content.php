@@ -3,15 +3,15 @@
  * Plugin Name: Church Content
  * Plugin URI: https://churchthemes.com/plugins/church-content/
  * Description: Provides an interface for managing sermons, events, people and locations. A <strong>compatible theme is required</strong> for presenting content from these church-centric post types in a tightly-integrated manner.
- * Version: 1.8
- * Author: churchthemes.com
+ * Version: 2.1
+ * Author: ChurchThemes.com
  * Author URI: https://churchthemes.com
  * License: GPLv2 or later
  * Text Domain: church-theme-content
  * Domain Path: /languages
  *
  * @package   Church_Theme_Content
- * @copyright Copyright (c) 2013 - 2017, churchthemes.com
+ * @copyright Copyright (c) 2013 - 2018, ChurchThemes.com
  * @link      https://github.com/churchthemes/church-theme-content
  * @license   GPLv2 or later
  */
@@ -66,6 +66,13 @@ class Church_Theme_Content {
 
 		// Load includes.
 		add_action( 'plugins_loaded', array( $this, 'load_includes' ), 1 );
+
+		// Trigger flushing of rewrite rules on plugin activation.
+		// This must be done early (not on plugins_loaded or init).
+		register_activation_hook( __FILE__, array( &$this, 'trigger_flush_rewrite_rules' ) );
+
+		// Check if rewrite rules should be flushed.
+		add_action( 'init', array( $this, 'ctc_check_flush_rewrite_rules' ), 1 );
 
 	}
 
@@ -185,30 +192,30 @@ class Church_Theme_Content {
 			// Frontend or admin
 			'always' => array(
 
-				// Functions
+				// Functions.
 				CTC_INC_DIR . '/add-ons.php',
 				CTC_INC_DIR . '/event-fields.php',
 				CTC_INC_DIR . '/helpers.php',
 				CTC_INC_DIR . '/mime-types.php',
+				CTC_INC_DIR . '/podcast.php',
 				CTC_INC_DIR . '/post-types.php',
 				CTC_INC_DIR . '/schedule.php',
 				CTC_INC_DIR . '/settings.php',
 				CTC_INC_DIR . '/support.php',
 				CTC_INC_DIR . '/taxonomies.php',
 
-				// Classes
-				CTC_CLASS_DIR . '/ct-recurrence.php',
+				// Libraries.
+				CTC_LIB_DIR . '/ct-plugin-settings/ct-plugin-settings.php', // see CTPS_URL constant defined above.
+				CTC_LIB_DIR . '/ct-recurrence/ct-recurrence-load.php', // don't load ct-recurrence.php directly.
 
-				// Libraries
-				CTC_LIB_DIR . '/ct-plugin-settings/ct-plugin-settings.php', // see CTPS_URL constant defined above
+				// Classes.
 
 			),
 
-			// Admin only
+			// Admin only.
 			'admin' => array(
 
 				// Functions
-				CTC_ADMIN_DIR . '/activation.php',
 				CTC_ADMIN_DIR . '/admin-add-ons.php',
 				CTC_ADMIN_DIR . '/admin-enqueue-scripts.php',
 				CTC_ADMIN_DIR . '/admin-enqueue-styles.php',
@@ -223,11 +230,17 @@ class Church_Theme_Content {
 				CTC_ADMIN_DIR . '/admin-support.php',
 				CTC_ADMIN_DIR . '/dashboard.php',
 				CTC_ADMIN_DIR . '/edd-license.php',
+				CTC_ADMIN_DIR . '/editor.php',
 				CTC_ADMIN_DIR . '/import.php',
+				CTC_ADMIN_DIR . '/migrate-risen.php',
+				CTC_ADMIN_DIR . '/notices.php',
 				CTC_ADMIN_DIR . '/upgrade.php',
 
-				// Libraries
+				// Libraries.
 				CTC_LIB_DIR . '/ct-meta-box/ct-meta-box.php', // see CTMB_URL constant defined above
+
+				// Classes.
+				CTC_CLASS_DIR . '/CTC_Dashboard_News.php', // see CTMB_URL constant defined above
 
 			),
 
@@ -303,7 +316,43 @@ class Church_Theme_Content {
 
 	}
 
+	/**
+	 * Trigger flushing of rewrite rules.
+	 *
+	 * Doing this on activation makes post type rewrite slugs take effect.
+	 *
+	 * @since 1.0
+	 * @access public
+	 */
+	public static function trigger_flush_rewrite_rules() {
+
+		// Tell to flush rules after post types registered.
+		update_option( 'ctc_flush_rewrite_rules', '1' );
+
+	}
+
+	/**
+	 * Check if rewrite rules should be flushed.
+	 *
+	 * This checks if ctc_flush_rewrite_rules option has been set earlier
+	 * so that the rewrite rules can be flushed later.
+	 */
+	public function ctc_check_flush_rewrite_rules() {
+
+		// Check if option was set.
+		if ( get_option( 'ctc_flush_rewrite_rules' ) ) {
+
+			// Flush rewrite rules.
+			flush_rewrite_rules();
+
+			// Delete option so this doesn't run again.
+			delete_option( 'ctc_flush_rewrite_rules' );
+
+		}
+
+	}
+
 }
 
-// Instantiate the main class
+// Instantiate the main class.
 new Church_Theme_Content();
