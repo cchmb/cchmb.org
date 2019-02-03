@@ -1,11 +1,13 @@
 <?php
 /**
- * Migrate from Risen Theme
+ * Migrate from Sermon Browser 2 Plugin.
+ *
+ * Based on Risen theme migration from ChurchThemes.
  *
  * @package    Church_Theme_Content
  * @subpackage Admin
- * @copyright  Copyright (c) 2018, ChurchThemes.com
- * @link       https://github.com/churchthemes/church-theme-content
+ * @copyright  Copyright (c) 2018, ChurchThemes.com, Will Norris
+ * @link       https://github.com/cchmb/cchmb.org
  * @license    GPLv2 or later
  * @since      2.1
  */
@@ -24,44 +26,39 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @since 2.1
  */
-function ctc_migrate_risen_page() {
-
-	// Risen must be active.
-	if ( ! ctc_migrate_risen_show() ) {
-		return;
-	}
+function ctcx_migrate_sb2_page() {
 
 	// Add page.
 	$page_hook = add_management_page(
-		esc_html__( 'Risen Theme to Church Content Plugin', 'church-theme-content' ), // Page title.
-		esc_html__( 'Risen to Church Content', 'church-theme-content' ), // Menu title.
+		esc_html__( 'Sermon Browser 2 to Church Content Plugin', 'church-theme-content' ), // Page title.
+		esc_html__( 'Sermon Browser to Church Content', 'church-theme-content' ), // Menu title.
 		'switch_themes', // Capability (can manage Appearance > Widgets).
-		'ctc-migrate-risen', // Menu Slug.
-		'ctc_migrate_risen_page_content' // Callback for displaying page content.
+		'ctc-migrate-sb2', // Menu Slug.
+		'ctcx_migrate_sb2_page_content' // Callback for displaying page content.
 	);
 
 }
 
-add_action( 'admin_menu', 'ctc_migrate_risen_page' );
+add_action( 'admin_menu', 'ctcx_migrate_sb2_page' );
 
 /**
  * Page content
  *
  * @since 2.1
  */
-function ctc_migrate_risen_page_content() {
+function ctcx_migrate_sb2_page_content() {
 
 	?>
 	<div class="wrap">
 
-		<h2><?php esc_html_e( 'Risen Theme to Church Content Plugin', 'church-theme-content' ); ?></h2>
+		<h2><?php esc_html_e( 'Sermon Browser 2 to Church Content Plugin', 'church-theme-content' ); ?></h2>
 
 		<?php
 
 		// Show results if have them.
-		if ( ctc_migrate_risen_have_results() ) {
+		if ( ctcx_migrate_sb2_have_results() ) {
 
-			ctc_migrate_risen_show_results();
+			ctcx_migrate_sb2_show_results();
 
 			// Don't show content below.
 			return;
@@ -76,10 +73,8 @@ function ctc_migrate_risen_page_content() {
 
 			echo wp_kses(
 				sprintf(
-					__( 'Click "Make Compatible" to make <b>sermons</b>, <b>events</b>, <b>locations</b> and <b>staff</b> in the Risen theme compatible with the <a href="%1$s" target="_blank">Church Content plugin</a> so that you can switch to a newer theme from <a href="%2$s" target="_blank">ChurchThemes.com</a>. Read the <a href="%3$s" target="_blank">Switching from Risen</a> guide for full details before proceeding.', 'church-theme-content' ),
-					ctc_ctcom_url( 'church-content', array( 'utm_campaign' => 'migrate-risen' ) ),
-					ctc_ctcom_url( 'home', array( 'utm_campaign' => 'migrate-risen' ) ),
-					ctc_ctcom_url( 'migrate-risen' )
+					__( 'Click "Make Compatible" to make <b>sermons</b>, <b>series</b>, and <b>staff</b> in the Sermon Browser 2 plugin compatible with the <a href="%1$s" target="_blank">Church Content plugin</a>.', 'church-theme-content' ),
+					ctc_ctcom_url( 'church-content', array( 'utm_campaign' => 'migrate-sb2' ) )
 				),
 				array(
 					'b' => array(),
@@ -100,7 +95,7 @@ function ctc_migrate_risen_page_content() {
 
 			echo wp_kses(
 				sprintf(
-					__( 'This will not modify your content used by Risen. Instead, it will modify a copy of the content to be compatible with the Church Content plugin. This is a safeguard to ensure you can switch back to Risen. In any case, <a href="%1$s" target="_blank">make a full website backup</a> before running this tool and switching themes to be extra safe.', 'church-theme-content' ),
+					__( 'This will not modify your content used by Sermon Browser. Instead, it will modify a copy of the content to be compatible with the Church Content plugin. This is a safeguard to ensure you can switch back to Sermon Browser. In any case, <a href="%1$s" target="_blank">make a full website backup</a> before running this tool and switching themes to be extra safe.', 'church-theme-content' ),
 					ctc_ctcom_url( 'migrate-risen-backup' )
 				),
 				array(
@@ -119,7 +114,7 @@ function ctc_migrate_risen_page_content() {
 
 		<form method="post">
 
-			<?php wp_nonce_field( 'ctc_migrate_risen', 'ctc_migrate_risen_nonce' ); ?>
+			<?php wp_nonce_field( 'ctcx_migrate_sb2', 'ctcx_migrate_sb2_nonce' ); ?>
 
 			<?php
 
@@ -155,9 +150,9 @@ function ctc_migrate_risen_page_content() {
 
 		</form>
 
-		<?php if ( ! empty( $ctc_migrate_risen_results ) ) : ?>
-			<p id="ctc-migrate-risen-results">
-				<?php echo wp_kses_post( $ctc_migrate_risen_results ); ?>
+		<?php if ( ! empty( $ctcx_migrate_sb2_results ) ) : ?>
+			<p id="ctc-migrate-sb2-results">
+				<?php echo wp_kses_post( $ctcx_migrate_sb2_results ); ?>
 			</p>
 			<br/>
 		<?php endif; ?>
@@ -172,14 +167,14 @@ function ctc_migrate_risen_page_content() {
  * Have results to show?
  *
  * @since 2.1
- * @global string $ctc_migrate_risen_results
+ * @global string $ctcx_migrate_sb2_results
  * @return bool True if have import results to show
  */
-function ctc_migrate_risen_have_results() {
+function ctcx_migrate_sb2_have_results() {
 
-	global $ctc_migrate_risen_results;
+	global $ctcx_migrate_sb2_results;
 
-	if ( ! empty( $ctc_migrate_risen_results ) ) {
+	if ( ! empty( $ctcx_migrate_sb2_results ) ) {
 		return true;
 	}
 
@@ -193,11 +188,11 @@ function ctc_migrate_risen_have_results() {
  * This is shown in place of page's regular content.
  *
  * @since 2.1
- * @global string $ctc_migrate_risen_results
+ * @global string $ctcx_migrate_sb2_results
  */
-function ctc_migrate_risen_show_results() {
+function ctcx_migrate_sb2_show_results() {
 
-	global $ctc_migrate_risen_results;
+	global $ctcx_migrate_sb2_results;
 
 	?>
 
@@ -209,10 +204,10 @@ function ctc_migrate_risen_show_results() {
 
 		echo wp_kses(
 			sprintf(
-				__( 'Your <b>sermons</b>, <b>events</b>, <b>locations</b> and <b>staff</b> in the Risen theme have been made compatible with the <a href="%1$s" target="_blank">Church Content plugin</a>. Now you can switch to a newer theme from <a href="%2$s" target="_blank">ChurchThemes.com</a>. Read the <a href="%3$s" target="_blank">Switching from Risen</a> guide for additional instructions.', 'church-theme-content' ),
-				ctc_ctcom_url( 'church-content', array( 'utm_campaign' => 'migrate-risen' ) ),
-				ctc_ctcom_url( 'home', array( 'utm_campaign' => 'migrate-risen' ) ),
-				ctc_ctcom_url( 'migrate-risen' )
+				__( 'Your <b>sermons</b>, <b>events</b>, <b>locations</b> and <b>staff</b> in the Sermon Browser plugin have been made compatible with the <a href="%1$s" target="_blank">Church Content plugin</a>. Now you can switch to a newer theme from <a href="%2$s" target="_blank">ChurchThemes.com</a>. Read the <a href="%3$s" target="_blank">Switching from Sermon Browser</a> guide for additional instructions.', 'church-theme-content' ),
+				ctc_ctcom_url( 'church-content', array( 'utm_campaign' => 'migrate-sb2' ) ),
+				ctc_ctcom_url( 'home', array( 'utm_campaign' => 'migrate-sb2' ) ),
+				ctc_ctcom_url( 'migrate-sb2' )
 			),
 			array(
 				'b' => array(),
@@ -227,11 +222,11 @@ function ctc_migrate_risen_show_results() {
 
 	</p>
 
-	<p id="ctc-migrate-risen-results">
+	<p id="ctc-migrate-sb2-results">
 
 		<?php
 
-		$results = $ctc_migrate_risen_results;
+		$results = $ctcx_migrate_sb2_results;
 
 		echo $results;
 
@@ -252,30 +247,30 @@ function ctc_migrate_risen_show_results() {
  *
  * @since 2.1
  */
-function ctc_migrate_risen_submit() {
+function ctcx_migrate_sb2_submit() {
 
 	// Check nonce for security since form was submitted.
 	// check_admin_referer prints fail page and dies.
-	if ( ! empty( $_POST['submit'] ) && check_admin_referer( 'ctc_migrate_risen', 'ctc_migrate_risen_nonce' ) ) {
+	if ( ! empty( $_POST['submit'] ) && check_admin_referer( 'ctcx_migrate_sb2', 'ctcx_migrate_sb2_nonce' ) ) {
 
 		// Process content.
-		ctc_migrate_risen_process();
+		ctcx_migrate_sb2_process();
 
 	}
 
 }
 
-add_action( 'load-tools_page_ctc-migrate-risen', 'ctc_migrate_risen_submit' );
+add_action( 'load-tools_page_ctc-migrate-sb2', 'ctcx_migrate_sb2_submit' );
 
 /**
  * Process content conversion.
  *
  * @since 2.1
- * @global string $ctc_migrate_risen_results
+ * @global string $ctcx_migrate_sb2_results
  */
-function ctc_migrate_risen_process() {
+function ctcx_migrate_sb2_process() {
 
-	global $ctc_migrate_risen_results;
+	global $ctcx_migrate_sb2_results;
 
 	// Prevent interruption.
 	set_time_limit( 0 );
@@ -360,7 +355,7 @@ function ctc_migrate_risen_process() {
 				$results .= '<div>' . esc_html( $term->name ) . '</div>';
 
 				// Insert term if not already added to new taxonomy.
-				$term_id = ctc_migrate_risen_duplicate_post_term( $term, $post_type_data );
+				$term_id = ctcx_migrate_sb2_duplicate_post_term( $term, $post_type_data );
 
 				// Update terms map (old ID's to new).
 				if ( $term_id ) {
@@ -413,7 +408,7 @@ function ctc_migrate_risen_process() {
 		// Loop posts.
 		foreach ( $posts as $post ) {
 
-			$post_id = ctc_migrate_risen_duplicate_post( $post, $post_type_data, $terms_map );
+			$post_id = ctcx_migrate_sb2_duplicate_post( $post, $post_type_data, $terms_map );
 
 			$results .= '<div>' . esc_html( $post->post_title ) . '</div>';
 
@@ -443,16 +438,8 @@ function ctc_migrate_risen_process() {
 
 		}
 
-		// Grandfather basic event recurrence.
-		update_option( 'ctfw_grandfather_recurring_events', true ); // Tell Church Theme Framework to grandfather basic recurrence.
-		update_option( 'ctfw_grandfather_recurring_events_checked', true ); // Save option to indicate check has been run, so don't run it again.
-		$results .= '<div>' . __( 'Basic event recurrence grandfathered (Church Theme Framework)', 'church-theme-content' ) . '</div>';
-
-	// Prevent notice asking to run tool from showing again,
-	update_option( 'ctc_migrate_risen_processed', true );
-
 	// Make results available for display.
-	$ctc_migrate_risen_results = $results;
+	$ctcx_migrate_sb2_results = $results;
 
 }
 
@@ -464,7 +451,7 @@ function ctc_migrate_risen_process() {
  * @param string $post_type_data Array with data for handling duplication.
  * @return int $term_id New term's ID.
  */
-function ctc_migrate_risen_duplicate_post_term( $original_term, $post_type_data ) {
+function ctcx_migrate_sb2_duplicate_post_term( $original_term, $post_type_data ) {
 
 	$term_id = 0;
 
@@ -506,7 +493,7 @@ function ctc_migrate_risen_duplicate_post_term( $original_term, $post_type_data 
  * @param string $terms_map Array mapping original term ID to new term ID.
  * @return int $post_id New post's ID.
  */
-function ctc_migrate_risen_duplicate_post( $original_post, $post_type_data, $terms_map ) {
+function ctcx_migrate_sb2_duplicate_post( $original_post, $post_type_data, $terms_map ) {
 
 	// Original post ID.
 	$original_post_id = $original_post->ID;
@@ -519,8 +506,8 @@ function ctc_migrate_risen_duplicate_post( $original_post, $post_type_data, $ter
 	$post = $original_post;
 	$post->post_type = $post_type_data['ctc_post_type']; // use new post type.
 	$post->ID = $post_id; // update if was already added so can run this tool again safely.
-	$post->meta_input = ctc_migrate_risen_meta_input( $original_post_id, $post_type_data['fields'] ); // copy post meta.
-	$post->tax_input = isset( $post_type_data['taxonomies'] ) ? ctc_migrate_risen_tax_input( $original_post_id, $post_type_data['taxonomies'], $terms_map ) : array(); // set taxonomy terms.
+	$post->meta_input = ctcx_migrate_sb2_meta_input( $original_post_id, $post_type_data['fields'] ); // copy post meta.
+	$post->tax_input = isset( $post_type_data['taxonomies'] ) ? ctcx_migrate_sb2_tax_input( $original_post_id, $post_type_data['taxonomies'], $terms_map ) : array(); // set taxonomy terms.
 	unset( $post->guid ); // generate a new GUID.
 	$post_id = wp_insert_post( $post ); // add or update and get post ID if new.
 
@@ -554,123 +541,8 @@ function ctc_migrate_risen_duplicate_post( $original_post, $post_type_data, $ter
 }
 
 /*******************************************
- * ADMIN
- *******************************************/
-
-/**
- * Hide post type menu items
- *
- * Let Risen items show for now and not both Risen and Church Content.
- * When user finishes switch to Church Content then those will show.
- *
- * @since 2.1
- */
-function ctc_migrate_risen_hide_menu_items( $args ) {
-
-	// Hide menu items only when Risen is active.
-	if ( ctc_migrate_risen_show() ) {
-		$args['show_ui'] = false;
-		$args['show_in_nav_menus'] = false;
-	}
-
-	return $args;
-
-}
-
-add_filter( 'ctc_post_type_sermon_args', 'ctc_migrate_risen_hide_menu_items' );
-add_filter( 'ctc_post_type_event_args', 'ctc_migrate_risen_hide_menu_items' );
-add_filter( 'ctc_post_type_location_args', 'ctc_migrate_risen_hide_menu_items' );
-add_filter( 'ctc_post_type_person_args', 'ctc_migrate_risen_hide_menu_items' );
-
-
-/*******************************************
- * NOTICES
- *******************************************/
-
-/**
- * Show notice directing to migration tool.
- *
- * Risen stops showing its notice about being discontinued when Church Content plugin activated.
- * In place of that nows, show one directing user to the migration tool.
- *
- * @since 2.1
- */
-function ctc_migrate_risen_notice() {
-
-	// Risen must be active.
-	if ( ! ctc_migrate_risen_show() ) {
-		return;
-	}
-
-	// Show only on relavent pages as not to overwhelm admin (same places as Risen theme).
-	$screen = get_current_screen();
-	if ( ! ( in_array( $screen->base, array( 'dashboard', 'themes', 'plugins' ) ) || preg_match( '/^risen_.+/', $screen->post_type ) ) ) {
-		return;
-	}
-
-	// Show only if tool has not yet been run.
-	if ( get_option( 'ctc_migrate_risen_processed' ) ) {
-		return;
-	}
-
-	// Notice.
-	?>
-	<div id="risen-ctc-migrate-notice" class="notice notice-warning">
-		<p>
-			<?php
-			printf(
-				wp_kses(
-					__( 'Use the <a href="%1$s">Risen Theme to Church Content Plugin</a> migration tool to begin switching themes. <a href="%2$s" target="_blank">Learn More</a>', 'church-theme-content' ),
-					array(
-						'b' => array(),
-						'a' => array(
-							'href' => array(),
-							'target' => array(),
-						)
-					)
-				),
-				esc_url( admin_url( 'tools.php?page=ctc-migrate-risen' ) ),
-				ctc_ctcom_url( 'migrate-risen' )
-			);
-			?>
-		</p>
-	</div>
-	<?php
-
-}
-
-add_action( 'admin_notices', 'ctc_migrate_risen_notice' );
-
-/*******************************************
  * HELPERS
  *******************************************/
-
-/**
- * Show Risen to Church Content tool?
- *
- * This is true only if Risen theme is active.
- *
- * @since 2.1
- * @return bool True if Risen active.
- */
-function ctc_migrate_risen_show() {
-
-	$show = true;
-
-	// Risen theme is active.
-	if ( function_exists( 'wp_get_theme' ) ) {
-
-		$theme = wp_get_theme();
-
-		if ( 'Risen' === $theme->get( 'Name' ) || 'risen' === $theme->get( 'Template' ) ) {
-			$show = true;
-		}
-
-	}
-
-	return $show;
-
-}
 
 /**
  * Build meta_input array.
@@ -682,7 +554,7 @@ function ctc_migrate_risen_show() {
  * @param array $keys Array of keys.
  * @return array $meta_input Custom fields as array (key / value pairs).
  */
-function ctc_migrate_risen_meta_input( $post_id, $keys ) {
+function ctcx_migrate_sb2_meta_input( $post_id, $keys ) {
 
 	$meta_input = array();
 
@@ -755,7 +627,7 @@ function ctc_migrate_risen_meta_input( $post_id, $keys ) {
  * @param array $terms_map Array mapping old ID's to new ID's.
  * @return array $tax_input Array of taxonomies with term IDs.
  */
-function ctc_migrate_risen_tax_input( $original_post_id, $taxonomies, $terms_map ) {
+function ctcx_migrate_sb2_tax_input( $original_post_id, $taxonomies, $terms_map ) {
 
 	$tax_input = array();
 
