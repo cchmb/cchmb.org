@@ -74,15 +74,15 @@ function ctcx_migrate_sb2_page_content() {
 			echo wp_kses(
 				sprintf(
 					__( 'Click "Make Compatible" to make <b>sermons</b>, <b>series</b>, and <b>staff</b> in the Sermon Browser 2 plugin compatible with the <a href="%1$s" target="_blank">Church Content plugin</a>.', 'church-theme-content' ),
-					ctc_ctcom_url( 'church-content', array( 'utm_campaign' => 'migrate-sb2' ) )
+					ctc_ctcom_url( 'church-content', [ 'utm_campaign' => 'migrate-sb2' ] )
 				),
-				array(
-					'b' => array(),
-					'a' => array(
-						'href' => array(),
-						'target' => array(),
-					),
-				)
+				[
+					'b' => [],
+					'a' => [
+						'href' => [],
+						'target' => [],
+					],
+				]
 			);
 
 			?>
@@ -98,14 +98,14 @@ function ctcx_migrate_sb2_page_content() {
 					__( 'This will not modify your content used by Sermon Browser. Instead, it will modify a copy of the content to be compatible with the Church Content plugin. This is a safeguard to ensure you can switch back to Sermon Browser. In any case, <a href="%1$s" target="_blank">make a full website backup</a> before running this tool and switching themes to be extra safe.', 'church-theme-content' ),
 					ctc_ctcom_url( 'migrate-risen-backup' )
 				),
-				array(
-					'b' => array(),
-					'em' => array(),
-					'a' => array(
-						'href' => array(),
-						'target' => array(),
-					),
-				)
+				[
+					'b' => [],
+					'em' => [],
+					'a' => [
+						'href' => [],
+						'target' => [],
+					],
+				]
 			);
 
 			?>
@@ -119,9 +119,9 @@ function ctcx_migrate_sb2_page_content() {
 			<?php
 
 			// Button arguments.
-			$button_args = array(
+			$button_args = [
 				'onclick' => "var button = this; setTimeout( function() { button.disabled = true; button.value=' " . esc_attr( __( "Processing. Please wait...", 'church-theme-content' ) ) . "' }, 10 ) ;return true;",
-			);
+			];
 
 			// WordPress version is too old.
 			// wp_insert_post()'s meta_input argument requires WordPress 4.4+.
@@ -134,10 +134,10 @@ function ctcx_migrate_sb2_page_content() {
 				echo '<p><i>';
 				echo wp_kses(
 					__( '<strong>Update WordPress:</strong> Please update WordPress to the latest version before running this tool.', 'church-theme-content' ),
-					array(
-						'strong' => array(),
-						'i' => array(),
-					)
+					[
+						'strong' => [],
+						'i' => [],
+					]
 				);
 				echo '</i></p>';
 
@@ -205,17 +205,17 @@ function ctcx_migrate_sb2_show_results() {
 		echo wp_kses(
 			sprintf(
 				__( 'Your <b>sermons</b>, <b>events</b>, <b>locations</b> and <b>staff</b> in the Sermon Browser plugin have been made compatible with the <a href="%1$s" target="_blank">Church Content plugin</a>. Now you can switch to a newer theme from <a href="%2$s" target="_blank">ChurchThemes.com</a>. Read the <a href="%3$s" target="_blank">Switching from Sermon Browser</a> guide for additional instructions.', 'church-theme-content' ),
-				ctc_ctcom_url( 'church-content', array( 'utm_campaign' => 'migrate-sb2' ) ),
-				ctc_ctcom_url( 'home', array( 'utm_campaign' => 'migrate-sb2' ) ),
+				ctc_ctcom_url( 'church-content', [ 'utm_campaign' => 'migrate-sb2' ] ),
+				ctc_ctcom_url( 'home', [ 'utm_campaign' => 'migrate-sb2' ] ),
 				ctc_ctcom_url( 'migrate-sb2' )
 			),
-			array(
-				'b' => array(),
-				'a' => array(
-					'href' => array(),
-					'target' => array(),
-				),
-			)
+			[
+				'b' => [],
+				'a' => [ 
+					'href' => [],
+					'target' => [],
+				],
+			]
 		);
 
 		?>
@@ -340,7 +340,7 @@ function ctcx_migrate_sb2_process() {
 		$taxonomies = get_object_taxonomies( $post_type, 'objects' );
 
 		// Loop taxonomies.
-		$terms_map = array(); // map old ID to new ID for this post type.
+		$terms_map = []; // map old ID to new ID for this post type.
 		foreach ( $taxonomies as $taxonomy => $taxonomy_object ) {
 
 			// Get taxonomy terms.
@@ -379,9 +379,9 @@ function ctcx_migrate_sb2_process() {
 					// Set parent.
 					if ( $parent_id ) {
 
-						wp_update_term( $term_id, $post_type_data['taxonomies'][ $term->taxonomy ], array(
+						wp_update_term( $term_id, $post_type_data['taxonomies'][ $term->taxonomy ], [
 							'parent' => $parent_id,
-						) );
+						] );
 
 					}
 
@@ -392,11 +392,11 @@ function ctcx_migrate_sb2_process() {
 		}
 
 		// Get posts.
-		$posts = get_posts( array(
+		$posts = get_posts( [
 			'posts_per_page'   => -1,
 			'post_type'        => $post_type,
 			'post_status'      => 'publish',
-		) );
+		] );
 
 		// Post type data.
 		$post_type_object = get_post_type_object( $post_type );
@@ -467,10 +467,10 @@ function ctcx_migrate_sb2_duplicate_post_term( $original_term, $post_type_data )
 
 			// Duplicate as new term of new taxonomy (or update if was already converted).
 			// Won't add it already exists (but won't update either).
-			$term = wp_insert_term( $original_term->name, $new_taxonomy, array(
+			$term = wp_insert_term( $original_term->name, $new_taxonomy, [
 				'description' => $original_term->description,
 				'slug' => $original_term->slug,
-			) );
+			] );
 
 		}
 
@@ -507,7 +507,7 @@ function ctcx_migrate_sb2_duplicate_post( $original_post, $post_type_data, $term
 	$post->post_type = $post_type_data['ctc_post_type']; // use new post type.
 	$post->ID = $post_id; // update if was already added so can run this tool again safely.
 	$post->meta_input = ctcx_migrate_sb2_meta_input( $original_post_id, $post_type_data['fields'] ); // copy post meta.
-	$post->tax_input = isset( $post_type_data['taxonomies'] ) ? ctcx_migrate_sb2_tax_input( $original_post_id, $post_type_data['taxonomies'], $terms_map ) : array(); // set taxonomy terms.
+	$post->tax_input = isset( $post_type_data['taxonomies'] ) ? ctcx_migrate_sb2_tax_input( $original_post_id, $post_type_data['taxonomies'], $terms_map ) : []; // set taxonomy terms.
 	unset( $post->guid ); // generate a new GUID.
 	$post_id = wp_insert_post( $post ); // add or update and get post ID if new.
 
@@ -556,7 +556,7 @@ function ctcx_migrate_sb2_duplicate_post( $original_post, $post_type_data, $term
  */
 function ctcx_migrate_sb2_meta_input( $post_id, $keys ) {
 
-	$meta_input = array();
+	$meta_input = [];
 
 	// Upload dir.
 	$upload_dir = wp_upload_dir();
@@ -571,7 +571,7 @@ function ctcx_migrate_sb2_meta_input( $post_id, $keys ) {
 		$value = str_ireplace( '[upload_url]', $upload_dir['baseurl'], $value );
 
 		// Get email address from contacts options.
-		if ( in_array( $old_key, array( '_risen_staff_contact', '_risen_location_contact' ) ) ) {
+		if ( in_array( $old_key, [ '_risen_staff_contact', '_risen_location_contact' ] ) ) {
 
 			$found_email = false;
 
@@ -629,7 +629,7 @@ function ctcx_migrate_sb2_meta_input( $post_id, $keys ) {
  */
 function ctcx_migrate_sb2_tax_input( $original_post_id, $taxonomies, $terms_map ) {
 
-	$tax_input = array();
+	$tax_input = [];
 
 	foreach ( $taxonomies as $old_taxonomy => $new_taxonomy ) {
 
