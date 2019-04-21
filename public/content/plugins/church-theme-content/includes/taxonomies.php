@@ -4,7 +4,7 @@
  *
  * @package    Church_Theme_Content
  * @subpackage Functions
- * @copyright  Copyright (c) 2013 - 2017, ChurchThemes.com
+ * @copyright  Copyright (c) 2013 - 2019, ChurchThemes.com
  * @link       https://github.com/churchthemes/church-theme-content
  * @license    GPLv2 or later
  * @since      0.9
@@ -46,8 +46,8 @@ function ctc_taxonomy_sermon_topic_args( $unfiltered = false ) {
 			'search_items' 					=> esc_html_x( 'Search Topics', 'sermons', 'church-theme-content' ),
 			'popular_items' 				=> esc_html_x( 'Popular Topics', 'sermons', 'church-theme-content' ),
 			'all_items' 					=> esc_html_x( 'All Topics', 'sermons', 'church-theme-content' ),
-			'parent_item' 					=> null,
-			'parent_item_colon' 			=> null,
+			'parent_item' 					=> esc_html_x( 'Parent Topic', 'sermons', 'church-theme-content' ),
+			'parent_item_colon' 			=> esc_html_x( 'Parent Topic:', 'sermons', 'church-theme-content' ),
 			'edit_item' 					=> esc_html_x( 'Edit Topic', 'sermons', 'church-theme-content' ),
 			'update_item' 					=> esc_html_x( 'Update Topic', 'sermons', 'church-theme-content' ),
 			'add_new_item' 					=> esc_html_x( 'Add Topic', 'sermons', 'church-theme-content' ),
@@ -437,8 +437,8 @@ function ctc_taxonomy_event_category_args( $unfiltered = false ) {
 			'search_items' 					=> esc_html_x( 'Search Categories', 'events', 'church-theme-content' ),
 			'popular_items' 				=> esc_html_x( 'Popular Categories', 'events', 'church-theme-content' ),
 			'all_items' 					=> esc_html_x( 'All Categories', 'events', 'church-theme-content' ),
-			'parent_item' 					=> null,
-			'parent_item_colon' 			=> null,
+			'parent_item' 					=> esc_html_x( 'Parent Category', 'events', 'church-theme-content' ),
+			'parent_item_colon' 			=> esc_html_x( 'Parent Category:', 'events', 'church-theme-content' ),
 			'edit_item' 					=> esc_html_x( 'Edit Event Category', 'events', 'church-theme-content' ),
 			'update_item' 					=> esc_html_x( 'Update Event Category', 'events', 'church-theme-content' ),
 			'add_new_item' 					=> esc_html_x( 'Add Category', 'events', 'church-theme-content' ),
@@ -484,6 +484,8 @@ function ctc_register_taxonomy_event_category() {
 		$args
 	);
 
+
+
 }
 
 add_action( 'init', 'ctc_register_taxonomy_event_category' );
@@ -509,8 +511,8 @@ function ctc_taxonomy_person_group_args( $unfiltered = false ) {
 			'search_items' 					=> esc_html_x( 'Search Groups', 'people', 'church-theme-content' ),
 			'popular_items' 				=> esc_html_x( 'Popular Groups', 'people', 'church-theme-content' ),
 			'all_items' 					=> esc_html_x( 'All Groups', 'people', 'church-theme-content' ),
-			'parent_item' 					=> null,
-			'parent_item_colon' 			=> null,
+			'parent_item' 					=> esc_html_x( 'Parent Group', 'people', 'church-theme-content' ),
+			'parent_item_colon' 			=> esc_html_x( 'Parent Group:', 'people', 'church-theme-content' ),
 			'edit_item' 					=> esc_html_x( 'Edit Group', 'people', 'church-theme-content' ),
 			'update_item' 					=> esc_html_x( 'Update Group', 'people', 'church-theme-content' ),
 			'add_new_item' 					=> esc_html_x( 'Add Group', 'people', 'church-theme-content' ),
@@ -559,6 +561,146 @@ function ctc_register_taxonomy_person_group() {
 }
 
 add_action( 'init', 'ctc_register_taxonomy_person_group' );
+
+/**********************************
+ * TAXONOMY TERM FIELDS
+ **********************************/
+
+/**
+ * Taxonomies to hide Parent field for in editors and term screens.
+ *
+ * @since 2.1.2
+ * @return array Taxonomy names
+ */
+function ctc_taxonomies_no_parent() {
+
+	$taxonomies = array(
+    	'ctc_sermon_series',
+    	'ctc_sermon_book',
+    	'ctc_sermon_speaker',
+    );
+
+    return apply_filters( 'ctc_taxonomies_no_parent', $taxonomies );
+
+}
+
+/**
+ * Hide 'Parent' taxonomy term selector on Add/Edit term screens.
+ *
+ * We want hierachical-style selector, but without parent option.
+ * Alternative is tag-style (hierarchical false), but that is unfriendly.
+ *
+ * Hide only if no parent already selected. Otherwise, user cannot remove parent.
+ *
+ * Only for series, book and speaker (topic can have parent).
+ *
+ * @since 2.1.2
+ */
+function ctc_taxonomy_hide_parent() {
+
+    $screen = get_current_screen();
+
+    // Specific taxonomies (Topic can have parent).
+    if ( ! in_array( $screen->taxonomy, ctc_taxonomies_no_parent() ) ) {
+    	return;
+    }
+
+    ?>
+
+    <style type="text/css">
+
+    /* Hide by default */
+    .term-parent-wrap {
+    	display: none;
+    }
+
+	</style>
+
+    <script type="text/javascript">
+
+    jQuery( document ).ready( function( $ ) {
+
+    	// Get select element and selected value.
+    	var $select = $( '.term-parent-wrap' );
+    	var selected_value = $( 'option:selected', $select ).val();
+
+    	// Show Parent only if already has option selected.
+    	if ( selected_value.length && selected_value !== '-1' ) {
+			$select.show();
+		}
+
+    } );
+
+    </script>
+
+    <?php
+
+}
+
+add_action( 'admin_head-edit-tags.php', 'ctc_taxonomy_hide_parent' ); // list and add term.
+add_action( 'admin_head-term.php', 'ctc_taxonomy_hide_parent' ); // edit term.
+
+/**
+ * Hide 'Parent' taxonomy term selector when adding or editing a sermon.
+ *
+ * We want hierachical-style selector, but without parent option.
+ * Alternative is tag-style (hierarchical false), but that is unfriendly.
+ *
+ * Hide only if no parent already selected. Otherwise, user cannot remove parent.
+ *
+ * Only for series, book and speaker (topic can have parent).
+ *
+ * @since 2.1.2
+ */
+function ctc_post_taxonomy_hide_parent() {
+
+    $screen = get_current_screen();
+
+	// Add/edit sermon post type only.
+	if ( 'post' !== $screen->base || ( isset( $screen->post_type ) && 'ctc_sermon' !== $screen->post_type ) ) {
+		return;
+	}
+
+	// Get taxonomy label names translated, for CSS to hide in Guteberg.
+	$taxonomy_selectors = array();
+	$taxonomies = get_object_taxonomies( 'ctc_sermon' );
+	foreach( $taxonomies as $taxonomy_name ) {
+
+		$taxonomy = get_taxonomy( $taxonomy_name );
+
+		if ( ! empty( $taxonomy->labels->name ) && in_array( $taxonomy_name, ctc_taxonomies_no_parent() ) ) {
+			$taxonomy_selectors[] = '.editor-post-taxonomies__hierarchical-terms-list[aria-label*="' . esc_html( $taxonomy->labels->name ) . '"] ~ form .components-base-control';
+		}
+
+	}
+
+	// Hide Parent for book, series and speaker (topic can have parent).
+    ?>
+
+    <style type="text/css">
+
+    /* Hide in Classic Editor */
+
+    #newctc_sermon_book_parent,
+    #newctc_sermon_series_parent,
+    #newctc_sermon_speaker_parent {
+    	display: none;
+    }
+
+    /* Hide in Block Editor */
+
+    <?php echo implode( ',' . PHP_EOL, $taxonomy_selectors ); ?> {
+		display: none;
+	}
+
+	</style>
+
+    <?php
+
+}
+
+add_action( 'admin_head-post.php', 'ctc_post_taxonomy_hide_parent' ); // edit post.
+add_action( 'admin_head-post-new.php', 'ctc_post_taxonomy_hide_parent' ); // add post.
 
 /**********************************
  * TAXONOMY HELPERS
