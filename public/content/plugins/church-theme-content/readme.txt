@@ -2,9 +2,9 @@
 Contributors: churchthemes, stevengliebe, galengidman
 Tags: church, churches, sermon, sermons, ministry, ministries, event, events, calendar, location, locations
 Requires at least: 3.6
-Tested up to: 5.1
+Tested up to: 5.2
 Requires PHP: 5.3
-Stable tag: 2.2
+Stable tag: 2.2.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -47,7 +47,7 @@ A compatible theme is required for presenting sermons, events, etc. added with t
 * Enhanced SEO (schema.org Structure Data using JSON-LD)
 * Location Memory (autofill and select previous event locations)
 * Wording Settings (e.g. rename "Sermons" to "Messages")
-* Agency Mode (simplify license mangement for clients)
+* Agency Mode (simplify license management for clients)
 
 = Developers =
 
