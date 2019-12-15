@@ -10,7 +10,7 @@ use Automattic\Jetpack\Sync\Functions;
 class Jetpack_AMP_Support {
 
 	/**
-	 * Apply custom AMP changes onthe frontend.
+	 * Apply custom AMP changes on the front-end.
 	 */
 	public static function init() {
 
@@ -397,7 +397,7 @@ class Jetpack_AMP_Support {
 			return $args;
 		}
 
-		$max_height = 1440; // See image size with the slug \AMP_Story_Post_Type::MAX_IMAGE_SIZE_SLUG.
+		$max_height = 1280; // See image size with the slug \AMP_Story_Post_Type::MAX_IMAGE_SIZE_SLUG.
 		$transform  = $details['transform_orig'];
 		$width      = $details['width_orig'];
 		$height     = $details['height_orig'];

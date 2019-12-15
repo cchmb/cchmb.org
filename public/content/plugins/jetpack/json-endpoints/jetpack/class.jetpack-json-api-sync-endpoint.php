@@ -178,16 +178,18 @@ class Jetpack_JSON_API_Sync_Now_Endpoint extends Jetpack_JSON_API_Sync_Endpoint 
 
 class Jetpack_JSON_API_Sync_Checkout_Endpoint extends Jetpack_JSON_API_Sync_Endpoint {
 	protected function result() {
-		$args = $this->input();
+		$args       = $this->input();
 		$queue_name = $this->validate_queue( $args['queue'] );
 
-		if ( is_wp_error( $queue_name ) ){
+		if ( is_wp_error( $queue_name ) ) {
 			return $queue_name;
 		}
 
-		if ( $args[ 'number_of_items' ] < 1 || $args[ 'number_of_items' ] > 100  ) {
+		if ( $args['number_of_items'] < 1 || $args['number_of_items'] > 100 ) {
 			return new WP_Error( 'invalid_number_of_items', 'Number of items needs to be an integer that is larger than 0 and less then 100', 400 );
 		}
+
+		$number_of_items = absint( $args['number_of_items'] );
 
 		$queue = new Queue( $queue_name );
 
@@ -197,17 +199,19 @@ class Jetpack_JSON_API_Sync_Checkout_Endpoint extends Jetpack_JSON_API_Sync_Endp
 
 		$sender = Sender::get_instance();
 
-		// try to give ourselves as much time as possible
+		// try to give ourselves as much time as possible.
 		set_time_limit( 0 );
 
-		// let's delete the checkin state
-		if ( $args['force'] ) {
-			$queue->unlock();
+		if ( $args['pop'] ) {
+			$buffer = new Queue_Buffer( 'pop', $queue->pop( $number_of_items ) );
+		} else {
+			// let's delete the checkin state.
+			if ( $args['force'] ) {
+				$queue->unlock();
+			}
+			$buffer = $this->get_buffer( $queue, $number_of_items );
 		}
-
-		$buffer = $this->get_buffer( $queue, $args[ 'number_of_items' ] );
-
-		// Check that the $buffer is not checkout out already
+		// Check that the $buffer is not checkout out already.
 		if ( is_wp_error( $buffer ) ) {
 			return new WP_Error( 'buffer_open', "We couldn't get the buffer it is currently checked out", 400 );
 		}
@@ -217,7 +221,7 @@ class Jetpack_JSON_API_Sync_Checkout_Endpoint extends Jetpack_JSON_API_Sync_Endp
 		}
 
 		Settings::set_is_syncing( true );
-		list( $items_to_send, $skipped_items_ids, $items ) = $sender->get_items_to_send( $buffer, $args['encode'] );
+		list( $items_to_send, $skipped_items_ids ) = $sender->get_items_to_send( $buffer, $args['encode'] );
 		Settings::set_is_syncing( false );
 
 		return array(
@@ -321,6 +325,39 @@ class Jetpack_JSON_API_Sync_Unlock_Endpoint extends Jetpack_JSON_API_Sync_Endpoi
 		$response = $queue->unlock();
 		return array(
 			'success' => $response
+		);
+	}
+}
+
+class Jetpack_JSON_API_Sync_Object_Id_Range extends Jetpack_JSON_API_Sync_Endpoint {
+	protected function result() {
+		$args = $this->query_args();
+
+		$module_name = $args['sync_module'];
+		$batch_size  = $args['batch_size'];
+
+		if ( ! $this->is_valid_sync_module( $module_name ) ) {
+			return new WP_Error( 'invalid_module', 'This sync module cannot be used to calculate a range.', 400 );
+		}
+
+		$module = Modules::get_module( $module_name );
+
+		return array(
+			'ranges' => $module->get_min_max_object_ids_for_batches( $batch_size ),
+		);
+	}
+
+	protected function is_valid_sync_module( $module_name ) {
+		return in_array(
+			$module_name,
+			array(
+				'comments',
+				'posts',
+				'terms',
+				'term_relationships',
+				'users',
+			),
+			true
 		);
 	}
 }
