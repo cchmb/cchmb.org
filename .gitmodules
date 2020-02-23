@@ -1,7 +1,3 @@
-[submodule "public/content/uploads"]
-	path = public/content/uploads
-	url = https://github.com/cchmb/uploads.git
-
 # WordPress Themes
 [submodule "public/content/themes/genesis"]
 	path = public/content/themes/genesis
