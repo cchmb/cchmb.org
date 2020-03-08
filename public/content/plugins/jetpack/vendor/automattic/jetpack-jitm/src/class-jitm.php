@@ -11,6 +11,7 @@ use Automattic\Jetpack\Assets;
 use Automattic\Jetpack\Connection\Manager as Jetpack_Connection;
 use Automattic\Jetpack\Connection\Client;
 use Automattic\Jetpack\Assets\Logo as Jetpack_Logo;
+use Automattic\Jetpack\Partner;
 use Automattic\Jetpack\Tracking;
 use Automattic\Jetpack\Connection\Manager;
 
@@ -31,6 +32,14 @@ class JITM {
 	 * @access private
 	 */
 	private $tracking;
+
+	/**
+	 * The configuration method that is called from the jetpack-config package.
+	 */
+	public static function configure() {
+		$jitm = new self();
+		$jitm->register();
+	}
 
 	/**
 	 * JITM constructor.
@@ -335,6 +344,7 @@ class JITM {
 		?>
 		<div class="jetpack-jitm-message"
 			data-nonce="<?php echo esc_attr( wp_create_nonce( 'wp_rest' ) ); ?>"
+			data-ajax-nonce="<?php echo esc_attr( wp_create_nonce( 'wp_ajax_action' ) ); ?>"
 			data-message-path="<?php echo esc_attr( $message_path ); ?>"
 			data-query="<?php echo urlencode_deep( $query_string ); ?>"
 			data-redirect="<?php echo urlencode_deep( $current_screen ); ?>"
@@ -534,10 +544,12 @@ class JITM {
 		 * Allow adding your own custom JITMs after a set of JITMs has been received.
 		 *
 		 * @since 6.9.0
+		 * @since 8.3.0 - Added Message path.
 		 *
-		 * @param array $envelopes array of existing JITMs.
+		 * @param array  $envelopes    array of existing JITMs.
+		 * @param string $message_path The message path to ask for.
 		 */
-		$envelopes = apply_filters( 'jetpack_jitm_received_envelopes', $envelopes );
+		$envelopes = apply_filters( 'jetpack_jitm_received_envelopes', $envelopes, $message_path );
 
 		foreach ( $envelopes as $idx => &$envelope ) {
 
@@ -564,11 +576,8 @@ class JITM {
 				'u'      => $user->ID,
 			);
 
-			if ( ! class_exists( 'Jetpack_Affiliate' ) ) {
-				require_once JETPACK__PLUGIN_DIR . 'class.jetpack-affiliate.php';
-			}
 			// Get affiliate code and add it to the array of URL parameters.
-			$aff = \Jetpack_Affiliate::init()->get_affiliate_code();
+			$aff = Partner::init()->get_partner_code( Partner::AFFILIATE_CODE );
 			if ( '' !== $aff ) {
 				$url_params['aff'] = $aff;
 			}

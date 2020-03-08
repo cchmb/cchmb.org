@@ -33,17 +33,19 @@ class Jetpack_Cxn_Tests extends Jetpack_Cxn_Test_Base {
 		 * Fires after loading default Jetpack Connection tests.
 		 *
 		 * @since 7.1.0
+		 * @since 8.3.0 Passes the Jetpack_Cxn_Tests instance.
 		 */
-		do_action( 'jetpack_connection_tests_loaded' );
+		do_action( 'jetpack_connection_tests_loaded', $this );
 
 		/**
 		 * Determines if the WP.com testing suite should be included.
 		 *
 		 * @since 7.1.0
+		 * @since 8.1.0 Default false.
 		 *
-		 * @param bool $run_test To run the WP.com testing suite. Default true.
+		 * @param bool $run_test To run the WP.com testing suite. Default false.
 		 */
-		if ( apply_filters( 'jetpack_debugger_run_self_test', true ) ) {
+		if ( apply_filters( 'jetpack_debugger_run_self_test', false ) ) {
 			/**
 			 * Intentionally added last as it checks for an existing failure state before attempting.
 			 * Generally, any failed location condition would result in the WP.com check to fail too, so
@@ -90,11 +92,40 @@ class Jetpack_Cxn_Tests extends Jetpack_Cxn_Test_Base {
 	protected function test__check_if_connected() {
 		$name = __FUNCTION__;
 		if ( $this->helper_is_jetpack_connected() ) {
-			$result = self::passing_test( $name );
+			$result = self::passing_test(
+				$name,
+				__( 'Test passed!', 'jetpack' ),
+				__( 'Your site is connected to Jetpack', 'jetpack' ),
+				sprintf(
+					'<p>%1$s</p>' .
+					'<p><span class="dashicons pass"><span class="screen-reader-text">%2$s</span></span> %3$s</p>',
+					__( 'A healthy connection ensures Jetpack essential services are provided to your WordPress site, such as Stats and Site Security.', 'jetpack' ),
+					/* translators: Screen reader text indicating a test has passed */
+					__( 'Passed', 'jetpack' ),
+					__( 'Your site is connected to Jetpack.', 'jetpack' )
+				)
+			);
 		} elseif ( ( new Status() )->is_development_mode() ) {
 			$result = self::skipped_test( $name, __( 'Jetpack is in Development Mode:', 'jetpack' ) . ' ' . Jetpack::development_mode_trigger_text(), __( 'Disable development mode.', 'jetpack' ) );
 		} else {
-			$result = self::failing_test( $name, __( 'Jetpack is not connected.', 'jetpack' ), 'cycle_connection' );
+			$result = self::failing_test(
+				$name,
+				__( 'Jetpack is not connected.', 'jetpack' ),
+				'connect_jetpack',
+				admin_url( 'admin.php?page=jetpack#/dashboard' ),
+				'critical',
+				__( 'Your site is not connected to Jetpack', 'jetpack' ),
+				__( 'Reconnect your site now', 'jetpack' ),
+				sprintf(
+					'<p>%1$s</p>' .
+					'<p><span class="dashicons fail"><span class="screen-reader-text">%2$s</span></span> %3$s<strong> %4$s</strong></p>',
+					__( 'A healthy connection ensures Jetpack essential services are provided to your WordPress site, such as Stats and Site Security.', 'jetpack' ),
+					/* translators: screen reader text indicating a test failed */
+					__( 'Error', 'jetpack' ),
+					__( 'Your site is not connected to Jetpack.', 'jetpack' ),
+					__( 'We recommend reconnecting Jetpack.', 'jetpack' )
+				)
+			);
 		}
 
 		return $result;
@@ -157,7 +188,7 @@ class Jetpack_Cxn_Tests extends Jetpack_Cxn_Test_Base {
 		if ( function_exists( 'xml_parser_create' ) ) {
 			$result = self::passing_test( $name );
 		} else {
-			$result = self::failing_test( $name, __( 'PHP XML manipluation libraries are not available.', 'jetpack' ), __( "Please ask your hosting provider to refer to our server requirements at https://jetpack.com/support/server-requirements/ and enable PHP's XML module.", 'jetpack' ) );
+			$result = self::failing_test( $name, __( 'PHP XML manipulation libraries are not available.', 'jetpack' ), __( "Please ask your hosting provider to refer to our server requirements at https://jetpack.com/support/server-requirements/ and enable PHP's XML module.", 'jetpack' ) );
 		}
 
 		return $result;
@@ -228,7 +259,7 @@ class Jetpack_Cxn_Tests extends Jetpack_Cxn_Test_Base {
 	}
 
 	/**
-	 * Tests connection status against wp.com's test-connection endpoint
+	 * Tests connection status against wp.com's test-connection endpoint.
 	 *
 	 * @todo: Compare with the wpcom_self_test. We only need one of these.
 	 *
@@ -237,7 +268,8 @@ class Jetpack_Cxn_Tests extends Jetpack_Cxn_Test_Base {
 	protected function test__wpcom_connection_test() {
 		$name = __FUNCTION__;
 
-		if ( ! Jetpack::is_active() || ( new Status() )->is_development_mode() || Jetpack::is_staging_site() || ! $this->pass ) {
+		$status = new Status();
+		if ( ! Jetpack::is_active() || $status->is_development_mode() || $status->is_staging_site() || ! $this->pass ) {
 			return self::skipped_test( $name );
 		}
 
@@ -343,7 +375,8 @@ class Jetpack_Cxn_Tests extends Jetpack_Cxn_Test_Base {
 	protected function last__wpcom_self_test() {
 		$name = 'test__wpcom_self_test';
 
-		if ( ! Jetpack::is_active() || ( new Status() )->is_development_mode() || Jetpack::is_staging_site() || ! $this->pass ) {
+		$status = new Status();
+		if ( ! Jetpack::is_active() || $status->is_development_mode() || $status->is_staging_site() || ! $this->pass ) {
 			return self::skipped_test( $name );
 		}
 
