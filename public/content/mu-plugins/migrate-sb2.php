@@ -347,12 +347,10 @@ function ctcx_migrate_sb2_process() {
 	$post_types = [
 		'mbsb_sermon' => [
 			'ctc_post_type' => 'ctc_sermon',
-			'fields' => [
-				// TODO: handle sermon media fields
-				//'_risen_multimedia_video_url'      => '_ctc_sermon_video',
-				//'_risen_multimedia_audio_url'      => '_ctc_sermon_audio',
-				//'_risen_multimedia_pdf_url'        => '_ctc_sermon_pdf',
-				//'_risen_multimedia_text'           => '_ctc_sermon_has_full_text',
+			'attachments' => [
+				'media.cchmb.org' => '_ctc_sermon_audio',
+				'youtube.com' => '_ctc_sermon_video',
+				'docs.google.com' => '_ctcx_sermon_slides',
 			],
 			'taxonomies' => [
 				'mbsb_series'                        => 'ctc_sermon_series',
@@ -536,7 +534,7 @@ function ctcx_migrate_sb2_duplicate_post( $original_post, $post_type_data, $term
 	$post = $original_post;
 	$post->post_type = $post_type_data['ctc_post_type']; // use new post type.
 	$post->ID = $post_id; // update if was already added so can run this tool again safely.
-	$post->meta_input = ctcx_migrate_sb2_meta_input( $original_post_id, $post_type_data['fields'] ); // copy post meta.
+	$post->meta_input = ctcx_migrate_sb2_attachments( $original_post_id, $post_type_data['attachments'] ); // copy post meta.
 	$post->tax_input = isset( $post_type_data['taxonomies'] ) ? ctcx_migrate_sb2_tax_input( $original_post_id, $post_type_data['taxonomies'], $terms_map ) : []; // set taxonomy terms.
 	unset( $post->guid ); // generate a new GUID.
 	$post_id = wp_insert_post( $post ); // add or update and get post ID if new.
@@ -584,62 +582,23 @@ function ctcx_migrate_sb2_duplicate_post( $original_post, $post_type_data, $term
  * @param array $keys Array of keys.
  * @return array $meta_input Custom fields as array (key / value pairs).
  */
-function ctcx_migrate_sb2_meta_input( $post_id, $keys ) {
+function ctcx_migrate_sb2_attachments( $post_id, $keys ) {
 
 	$meta_input = [];
 
-	// Upload dir.
-	$upload_dir = wp_upload_dir();
-
-	// Loop fields.
-	foreach ( $keys as $old_key => $new_key ) {
-
-		// Meta value.
-		$value = get_post_meta( $post_id, $old_key, true );
-
-		// Replace [upload_url] with actual URL whenever necessary.
-		$value = str_ireplace( '[upload_url]', $upload_dir['baseurl'], $value );
-
-		// Get email address from contacts options.
-		if ( in_array( $old_key, [ '_risen_staff_contact', '_risen_location_contact' ] ) ) {
-
-			$found_email = false;
-
-			// Have function for contacts.
-			if ( function_exists( 'risen_contacts' ) ) {
-
-				// Get contacts.
-				$contacts = risen_contacts();
-
-				// Loop contacts.
-				foreach ( $contacts as $name => $email ) {
-
-					// Match?
-					if ( $value === md5( $email ) ) {
-
-						// Set value as email.
-						$found_email = $email;
-
-						break;
-
-					}
-
-				}
-
+	$attachments = get_post_meta( $post_id, 'attachments', false );
+	foreach ($attachments as $attachment) {
+		$value = $attachment["url"];
+		foreach ( $keys as $host => $new_key ) {
+			if (strpos($value, $host) != false) {
+				$meta_input[ $new_key ] = $value;
 			}
-
-			// Set email if found.
-			if ( $found_email ) {
-				$value = $found_email;
-			} else { // empty if not (so doesn't use md5).
-				$value = '';
-			}
-
 		}
+	}
 
-		// Assign value.
-		$meta_input[ $new_key ] = $value;
-
+	$passages = new mbsb_passages(get_post_meta($post_id, 'passage_start'), get_post_meta($post_id, 'passage_end'));
+	if ($passages->present) {
+		$meta_input["_ctcx_sermon_passage"] = $passages->get_formatted();
 	}
 
 	return $meta_input;
