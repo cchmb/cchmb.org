@@ -263,6 +263,70 @@ function ctcx_migrate_sb2_submit() {
 add_action( 'load-tools_page_ctc-migrate-sb2', 'ctcx_migrate_sb2_submit' );
 
 /**
+ * Add hooks to make Sermon Browser series and preachers appear as taxonomies
+ * on sermons. In Sermon Browser, these are managed as custom post types, but
+ * making them look like taxonomies simplifies the migration process.
+ */
+function ctcx_migrate_sb2_prepare_taxonomies() {
+	register_taxonomy('mbsb_series', 'mbsb_sermon', [
+		'labels' => [
+			'name' => 'Sermon Series'
+		],
+		'hierarchical' => true
+	]);
+	register_taxonomy('mbsb_preacher', 'mbsb_sermon', [
+		'labels' => [
+			'name' => 'Preacher'
+		],
+		'hierarchical' => true
+	]);
+
+	// make series and preacher appear as taxonomies on sermon
+	add_filter('get_terms', function($terms, $taxonomies, $args, $query) {
+		if ( ! empty($query->query_vars['object_ids']) ) {
+			return $terms;
+		}
+		foreach($taxonomies as $taxonomy) {
+			if ($taxonomy == 'mbsb_series' OR $taxonomy == 'mbsb_preacher') {
+				$posts = get_posts( [
+					'posts_per_page'   => -1,
+					'post_type'       => $taxonomy,
+					'post_status'      => 'publish',
+				] );
+				foreach($posts as $post) {
+					$term = new WP_Term((object) [
+						'term_id' => ctcx_migrate_sb2_id($post->ID, $taxonomy),
+						'name' => $post->post_title,
+						'slug' => $post->post_name,
+						'taxonomy' => $taxonomy,
+					]);
+					$terms[] = $term;
+				}
+			}
+		}
+		return $terms;
+	}, 10, 4);
+
+	add_filter( 'get_object_terms', function($terms, $object_ids, $taxonomies, $args ) {
+		foreach($taxonomies as $taxonomy) {
+			if ($taxonomy == 'mbsb_series' OR $taxonomy == 'mbsb_preacher') {
+				$key = substr($taxonomy, 5);
+				$post_id = get_post_meta($object_ids[0], $key, true);
+				$post = get_post($post_id);
+				$term = new WP_Term((object) [
+					'term_id' => ctcx_migrate_sb2_id($post->ID, $taxonomy),
+					'name' => $post->post_title,
+					'slug' => $post->post_name,
+					'taxonomy' => $taxonomy,
+				]);
+				$terms[] = $term;
+			}
+		}
+		return $terms;
+	}, 10, 4);
+}
+
+/**
  * Process content conversion.
  *
  * @since 2.1
@@ -280,58 +344,24 @@ function ctcx_migrate_sb2_process() {
 	$results = '';
 
 	// Post types.
-	$post_types = array(
-		'risen_multimedia' => array(
+	$post_types = [
+		'mbsb_sermon' => [
 			'ctc_post_type' => 'ctc_sermon',
-			'fields' => array(
-				'_risen_multimedia_video_url'      => '_ctc_sermon_video',
-				'_risen_multimedia_audio_url'      => '_ctc_sermon_audio',
-				'_risen_multimedia_pdf_url'        => '_ctc_sermon_pdf',
-				'_risen_multimedia_text'           => '_ctc_sermon_has_full_text',
-			),
-			'taxonomies' => array(
-				'risen_multimedia_category'        => 'ctc_sermon_topic',
-				'risen_multimedia_speaker'         => 'ctc_sermon_speaker',
-				'risen_multimedia_tag'             => 'ctc_sermon_tag',
-			),
-		),
-		'risen_event' => array(
-			'ctc_post_type' => 'ctc_event',
-			'fields' => array(
-				'_risen_event_start_date'          => '_ctc_event_start_date',
-				'_risen_event_end_date'            => '_ctc_event_end_date',
-				'_risen_event_time'                => '_ctc_event_time',
-				'_risen_event_recurrence'          => '_ctc_event_recurrence',
-				'_risen_event_recurrence_end_date' => '_ctc_event_recurrence_end_date',
-				'_risen_event_venue'               => '_ctc_event_venue',
-				'_risen_event_address'             => '_ctc_event_address',
-				'_risen_event_map_lat'             => '_ctc_event_map_lat',
-				'_risen_event_map_lng'             => '_ctc_event_map_lng',
-				'_risen_event_map_type'            => '_ctc_event_map_type',
-				'_risen_event_map_zoom'            => '_ctc_event_map_zoom',
-			),
-		),
-		'risen_location' => array(
-			'ctc_post_type' => 'ctc_location',
-			'fields' => array(
-				'_risen_location_address'          => '_ctc_location_address',
-				'_risen_location_directions'       => '_ctc_location_show_directions_link',
-				'_risen_location_phone'            => '_ctc_location_phone',
-				'_risen_location_contact'          => '_ctc_location_email',
-				'_risen_location_map_lat'          => '_ctc_location_map_lat',
-				'_risen_location_map_lng'          => '_ctc_location_map_lng',
-				'_risen_location_map_type'         => '_ctc_location_map_type',
-				'_risen_location_map_zoom'         => '_ctc_location_map_zoom',
-			),
-		),
-		'risen_staff' => array(
-			'ctc_post_type' => 'ctc_person',
-			'fields' => array(
-				'_risen_staff_position'            => '_ctc_person_position',
-				'_risen_staff_contact'             => '_ctc_person_email',
-			),
-		),
-	);
+			'fields' => [
+				// TODO: handle sermon media fields
+				//'_risen_multimedia_video_url'      => '_ctc_sermon_video',
+				//'_risen_multimedia_audio_url'      => '_ctc_sermon_audio',
+				//'_risen_multimedia_pdf_url'        => '_ctc_sermon_pdf',
+				//'_risen_multimedia_text'           => '_ctc_sermon_has_full_text',
+			],
+			'taxonomies' => [
+				'mbsb_series'                        => 'ctc_sermon_series',
+				'mbsb_preacher'                      => 'ctc_sermon_speaker',
+			],
+		]
+	];
+
+	ctcx_migrate_sb2_prepare_taxonomies();
 
 	// Loop post types.
 	foreach ( $post_types as $post_type => $post_type_data ) {
@@ -651,7 +681,7 @@ function ctcx_migrate_sb2_tax_input( $original_post_id, $taxonomies, $terms_map 
 			elseif ( ! empty( $term->name ) ) {
 
 				// Add new term's name to array.
-				$tax_input[ $new_taxonomy ][] = $term->name;
+				$tax_input[ $new_taxonomy ] = $term->name;
 
 			}
 
@@ -660,5 +690,16 @@ function ctcx_migrate_sb2_tax_input( $original_post_id, $taxonomies, $terms_map 
 	}
 
 	return $tax_input;
+}
 
+// Manufacture IDs for our fake series and preacher taxonomies so that they
+// don't conflict with any real terms.
+function ctcx_migrate_sb2_id($id, $taxonomy) {
+	switch ($taxonomy) {
+		case 'mbsb_series':
+			return $id + 100000;
+		case 'mbsb_preacher':
+			return $id + 200000;
+	}
+	return $id;
 }
