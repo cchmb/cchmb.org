@@ -69,3 +69,8 @@ add_filter( 'ctc_field_supported', function( $supported, $feature, $field ) {
   }
   return $supported;
 }, 10, 3);
+
+add_filter( 'wp_term_image_get_taxonomies', function( $args ) {
+  $args["name"] = ("ctc_sermon_speaker" && "ctc_sermon_series");
+  return $args;
+}, 11);
