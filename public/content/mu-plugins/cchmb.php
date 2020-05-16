@@ -1,8 +1,5 @@
 <?php
 
-// add shortlink to admin bar
-add_action('admin_bar_menu', 'wp_admin_bar_shortlink_menu', 90);
-
 add_filter( 'genesis_footer_creds_text', 'cchmb_creds_text' );
 function cchmb_creds_text($text) {
   $text     = sprintf( '[footer_copyright after=" %s"]', 'Calvary Chapel Half Moon Bay' );
@@ -89,18 +86,5 @@ add_filter( 'opengraph_metadata', function( $metadata ) {
   return $metadata;
 });
 
-// Don't let photon downsample the mm-slide2.png image.
-add_filter( 'jetpack_photon_pre_args', function( $args, $url ) {
-  $mm = "mm-slide2.png";
-  if (substr_compare($url, $mm, strlen($url)-strlen($mm), strlen($mm)) === 0) {
-    if ( is_array($args) ) {
-      $args = array_merge(array('quality'=>100), $args);
-    } else {
-      $args = 'quality=100&' . $args;
-    }
-  }
-  return $args;
-}, 20, 2);
-
-// Use photon image proxy on https URLs.
-add_filter('jetpack_photon_reject_https', '__return_false');
+// Don't resize images inside of WordPress since Jetpack takes care of this for us.
+add_filter( 'intermediate_image_sizes_advanced', '__return_empty_array', 99 );
