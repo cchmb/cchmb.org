@@ -534,7 +534,7 @@ function ctcx_migrate_sb2_duplicate_post( $original_post, $post_type_data, $term
 	$post = $original_post;
 	$post->post_type = $post_type_data['ctc_post_type']; // use new post type.
 	$post->ID = $post_id; // update if was already added so can run this tool again safely.
-	$post->meta_input = ctcx_migrate_sb2_attachments( $original_post_id, $post_type_data['attachments'] ); // copy post meta.
+	$post->meta_input = ctcx_migrate_sb2_meta_input( $original_post_id, $post_type_data['attachments'] ); // copy post meta.
 	$post->tax_input = isset( $post_type_data['taxonomies'] ) ? ctcx_migrate_sb2_tax_input( $original_post_id, $post_type_data['taxonomies'], $terms_map ) : []; // set taxonomy terms.
 	unset( $post->guid ); // generate a new GUID.
 	$post_id = wp_insert_post( $post ); // add or update and get post ID if new.
@@ -579,17 +579,17 @@ function ctcx_migrate_sb2_duplicate_post( $original_post, $post_type_data, $term
  *
  * @since 2.1
  * @param int $post_id Post ID to get meta for.
- * @param array $keys Array of keys.
+ * @param array $attachment_keys Array of attachment keys.
  * @return array $meta_input Custom fields as array (key / value pairs).
  */
-function ctcx_migrate_sb2_attachments( $post_id, $keys ) {
+function ctcx_migrate_sb2_meta_input( $post_id, $attachment_keys ) {
 
 	$meta_input = [];
 
 	$attachments = get_post_meta( $post_id, 'attachments', false );
 	foreach ($attachments as $attachment) {
 		$value = $attachment["url"];
-		foreach ( $keys as $host => $new_key ) {
+		foreach ( $attachment_keys as $host => $new_key ) {
 			if (strpos($value, $host) != false) {
 				$meta_input[ $new_key ] = $value;
 			}
@@ -600,6 +600,8 @@ function ctcx_migrate_sb2_attachments( $post_id, $keys ) {
 	if ($passages->present) {
 		$meta_input["_ctcx_sermon_passage"] = $passages->get_formatted();
 	}
+
+	$meta_input["_original_post_id"] = $post_id;
 
 	return $meta_input;
 
