@@ -88,3 +88,17 @@ add_filter( 'opengraph_metadata', function( $metadata ) {
 
 // Don't resize images inside of WordPress since Jetpack takes care of this for us.
 add_filter( 'intermediate_image_sizes_advanced', '__return_empty_array', 99 );
+
+// If hum is unable to resolve a shortcode, try to lookup by the "_original_post_id" post meta field.
+add_filter( 'hum_redirect_b', function($url, $id) {
+  if ( empty($url) ) {
+    $original_id = get_post_meta($id, "_original_post_id", true);
+    if ( $original_id ) {
+      $permalink = get_permalink($original_id);
+      if ( $permalink ) {
+        $url = $permalink;
+      }
+    }
+  }
+  return $url;
+}, 10, 2);
