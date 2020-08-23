@@ -2,8 +2,8 @@
 Contributors: willnorris, pfefferle
 Tags: shortlink, whistle, diso
 Requires at least: 3.0
-Tested up to: 5.0.2
-Stable tag: 1.2.4
+Tested up to: 5.4.2
+Stable tag: 1.2.5
 License: MIT
 License URI: http://opensource.org/licenses/MIT
 
@@ -12,7 +12,8 @@ Personal URL shortener for WordPress
 
 == Description ==
 
-Hum is a personal URL shortener for WordPress, designed to provide short URLs to your personal content, both hosted on WordPress and elsewhere.  For example, rather than a long URL for a WordPress post such as <http://willnorris.com/2011/01/hum-personal-url-shortener-wordpress>, you could have a short URL like <http://willnorris.com/b/FJ>.  Additional, if you have a custom domain for short URLs, you can shorten things further like <http://wjn.me/b/FJ>.
+Hum is a personal URL shortener for WordPress, designed to provide short URLs to your personal content, both hosted on WordPress and elsewhere.  For example, rather than a long URL for a WordPress post such as <http://willnorris.com/2011/01/hum-personal-url-shortener-wordpress>, you could have a short URL like <http://willnorris.com/b/FJ>.  Additionally, if you have a custom domain for short URLs, you can shorten things further like <http://wjn.me/b/FJ>.  Once the plugin is enabled, the shortlink for a page or post can be found in the "Shortlink" item in the WordPress Admin Bar.
+
 
 WordPress post IDs are shortened using the [NewBase60][] encoding scheme which is specifically optimized for brevity and readability, with built-in error correction for commonly confused characters like '1', 'l', and 'I'.
 
@@ -106,6 +107,10 @@ You can redirect all traffic for a prefix using a single line of PHP my implemen
 == Changelog ==
 
 Project maintined on github at [willnorris/wordpress-hum](https://github.com/willnorris/wordpress-hum).
+
+= 1.2.5 =
+
+* add shortlink to post/page overview pages
 
 = 1.2.4 =
 
