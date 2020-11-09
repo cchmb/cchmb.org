@@ -12,6 +12,9 @@
 	url = https://github.com/willnorris/wordpress-analytics.git
 
 # WordPress Plugins
+[submodule "public/content/plugins/church-content-pro"]
+	path = public/content/plugins/church-content-pro
+	url = git@github.com:cchmb/church-content-pro.git
 [submodule "public/content/plugins/sermon-browser"]
 	path = public/content/plugins/sermon-browser
 	url = https://github.com/willnorris/sermon-browser.git
