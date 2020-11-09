@@ -21,3 +21,11 @@ add_filter( 'ctmb_fields-ctc_sermon_options', function( $fields ) {
 
   return $fields;
 }, 20);
+
+add_filter( 'ctfw_sermon_data', function( $data ) {
+  $data = array_merge($data,
+    ctfw_get_meta_data(array('slides', 'passage'), null, '_ctcx_sermon_')
+  );
+
+  return $data;
+}, 20);
