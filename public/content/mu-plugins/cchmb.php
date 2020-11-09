@@ -20,6 +20,15 @@ add_filter( 'genesis_get_image', function( $output, $args, $id ) {
     global $post;
     $type = get_post_type( $post->ID );
     switch ($type) {
+      case 'ctc_sermon':
+        $series = apply_filters('taxonomy-images-get-the-terms', '', ['post_id'=>$post->ID, 'taxonomy'=>'ctc_sermon_series']);
+        if ( $series && $series[0]->image_id ) {
+          $id = $series[0]->image_id;
+          if ( $id ) {
+            $html = wp_get_attachment_image($id, $args['size'], false, $args['attr']);
+            list( $url ) = wp_get_attachment_image_src($id, $args['size'], false, $args['attr']);
+          }
+        }
       case 'mbsb_sermon':
         // if a sermon doesn't have an image, use the image from the series
         $series_id = get_post_meta($post->ID, 'series', true);
