@@ -48,3 +48,12 @@ add_filter( 'hum_redirect_b', function($url, $id) {
   }
   return $url;
 }, 10, 2);
+
+// display more sermon info on admin screen
+add_filter('manage_ctc_sermon_posts_columns', function($columns) {
+  $insert_array = [];
+  if ( ctc_taxonomy_supported( 'sermons', 'ctc_sermon_series' ) ) $insert_array['ctc_sermon_series'] = esc_html_x( 'Series', 'sermons', 'church-theme-content' );
+  if ( ctc_taxonomy_supported( 'sermons', 'ctc_sermon_speaker' ) ) $insert_array['ctc_sermon_speakers'] = esc_html_x( 'Speaker', 'sermons', 'church-theme-content' );
+  $columns = ctc_array_merge_after_key( $columns, $insert_array, 'title' );
+  return $columns;
+});
