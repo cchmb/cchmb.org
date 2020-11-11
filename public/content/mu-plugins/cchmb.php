@@ -57,3 +57,11 @@ add_filter('manage_ctc_sermon_posts_columns', function($columns) {
   $columns = ctc_array_merge_after_key( $columns, $insert_array, 'title' );
   return $columns;
 });
+
+// rewrite sermon audio URLs to use media.cchmb.org hostname rather than storage.googleapis.com
+add_filter('sanitize_post_meta__ctc_sermon_audio', function($meta_value, $meta_key, $object_type) {
+  if ( $meta_value ) {
+    $meta_value = preg_replace('|^(https://)storage.googleapis.com/(media.cchmb.org/)|', "$1$2", $meta_value);
+  }
+  return $meta_value;
+}, 10, 5);
