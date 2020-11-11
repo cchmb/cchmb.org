@@ -7,11 +7,6 @@
 	url = https://github.com/cchmb/cc14.git
 
 # WordPress Must-Use Plugins
-[submodule "public/content/mu-plugins/analytics"]
-	path = public/content/mu-plugins/analytics
-	url = https://github.com/willnorris/wordpress-analytics.git
-
-# WordPress Plugins
 [submodule "public/content/plugins/church-content-pro"]
 	path = public/content/plugins/church-content-pro
 	url = git@github.com:cchmb/church-content-pro.git
