@@ -1,7 +1,7 @@
 # WordPress Themes
 [submodule "public/content/themes/genesis"]
 	path = public/content/themes/genesis
-	url = git@github.com:willnorris/genesis.git
+	url = git@github.com:cchmb/genesis.git
 [submodule "public/content/themes/cc14"]
 	path = public/content/themes/cc14
 	url = https://github.com/cchmb/cc14.git
