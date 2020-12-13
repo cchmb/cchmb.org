@@ -5,7 +5,7 @@
  * Description: Personal URL shortener for WordPress
  * Author: Will Norris
  * Author URI: https://willnorris.com/
- * Version: 1.2.5
+ * Version: 1.2.6
  * License: MIT
  * License URI: http://opensource.org/licenses/MIT
  * Text Domain: hum
@@ -42,8 +42,6 @@ class Hum {
 		add_filter( 'hum_legacy_id', array( $this, 'legacy_ftl_id' ), 10, 2 );
 		add_action( 'atom_entry', array( $this, 'shortlink_atom_entry' ) );
 
-		add_shortcode( 'shortlink', array( $this, 'shortcode' ) );
-
 		// Admin Settings
 		add_action( 'admin_init', array( $this, 'admin_init' ) );
 		add_action( 'admin_menu', array( $this, 'admin_menu' ) );
@@ -62,7 +60,7 @@ class Hum {
 	}
 
 	/**
-	 * Parse request for shortlink.	This is the main entry point for handling
+	 * Parse request for shortlink. This is the main entry point for handling
 	 * short URLs.
 	 *
 	 * @uses apply_filters() Calls 'hum_redirect' filter
@@ -77,7 +75,7 @@ class Hum {
 				list($type, $id) = explode( '/', $hum_path, 2 );
 			} else {
 				$type = $hum_path;
-				$id = null;
+				$id   = null;
 			}
 
 			$url = apply_filters( 'hum_redirect', null, $type, $id );
@@ -86,7 +84,7 @@ class Hum {
 			// punctuation that might appear after a URL in written text: . , )
 			if ( ! $url ) {
 				$clean_id = preg_replace( '/[\.,\)]+$/', '', $id );
-				if ( $id != $clean_id ) {
+				if ( $id !== $clean_id ) {
 					$url = apply_filters( 'hum_redirect', null, $type, $clean_id );
 				}
 			}
@@ -132,13 +130,13 @@ class Hum {
 	 * WordPress. The 'id' portion of these URLs is expected to be the
 	 * sexagesimal post ID.
 	 *
-	 * This also allows for simple redirect rules for shortlink prefixes.	Users
+	 * This also allows for simple redirect rules for shortlink prefixes. Users
 	 * can provide a filter to perform simple URL redirect for a given type
-	 * prefix.	For example, to redirect all /w/ shortlinks to your personal
+	 * prefix. For example, to redirect all /w/ shortlinks to your personal
 	 * PBworks wiki, you could use:
 	 *
-	 *	 add_filter('hum_redirect_base_w',
-	 *		 create_function('', 'return "http://willnorris.pbworks.com/";'));
+	 *     add_filter('hum_redirect_base_w',
+	 *         create_function('', 'return "http://willnorris.pbworks.com/";'));
 	 *
 	 * @uses apply_filters() Calls 'hum_redirect_{$type}' action
 	 * @uses apply_filters() Calls 'hum_redirect_base_{$type}' filter on redirect base URL
@@ -150,7 +148,7 @@ class Hum {
 	public function redirect_request( $url, $type, $id ) {
 		// locally hosted content
 		$local_types = $this->local_types();
-		if ( in_array( $type, $local_types ) ) {
+		if ( in_array( $type, $local_types, true ) ) {
 			$p = sxg_to_num( $id );
 			if ( $p ) {
 				$url = get_permalink( $p );
@@ -189,7 +187,7 @@ class Hum {
 				case 'i':
 				case 'isbn':
 					$amazon_domain = apply_filters( 'amazon_domain', 'www.amazon.com' );
-					$amazon_id = apply_filters( 'amazon_affiliate_id', false );
+					$amazon_id     = apply_filters( 'amazon_affiliate_id', false );
 					if ( $amazon_id ) {
 						// valid partner shortlink, checked by
 						// https://partnernet.amazon.de/gp/associates/network/tools/link-checker/main.html
@@ -220,7 +218,7 @@ class Hum {
 	}
 
 	/**
-	 * Get the base URL for hum shortlinks.	Defaults to the WordPress home url.
+	 * Get the base URL for hum shortlinks. Defaults to the WordPress home url.
 	 * Users can define HUM_SHORTLINK_BASE or provide a filter to use a custom
 	 * domain for shortlinks.
 	 *
@@ -259,21 +257,21 @@ class Hum {
 	 */
 	public function get_shortlink( $link, $id, $context, $allow_slugs ) {
 		$post_id = 0;
-		if ( 'query' == $context ) {
+		if ( 'query' === $context ) {
 			if ( is_front_page() ) {
 				$link = trailingslashit( $this->shortlink_base() );
 			} elseif ( is_singular() ) {
 				$post_id = get_queried_object_id();
 			}
-		} elseif ( 'post' == $context ) {
-			$post = get_post( $id );
+		} elseif ( 'post' === $context ) {
+			$post    = get_post( $id );
 			$post_id = $post->ID;
 		}
 
 		if ( ! empty( $post_id ) ) {
-			$type = $this->type_prefix( $post_id );
+			$type   = $this->type_prefix( $post_id );
 			$sxg_id = num_to_sxg( $post_id );
-			$link = trailingslashit( $this->shortlink_base() ) . $type . '/' . $sxg_id;
+			$link   = trailingslashit( $this->shortlink_base() ) . $type . '/' . $sxg_id;
 		}
 
 		return $link;
@@ -293,7 +291,7 @@ class Hum {
 
 		$post_type = get_post_type( $post );
 
-		if ( 'attachment' == $post_type ) {
+		if ( 'attachment' === $post_type ) {
 			// check if $post is a WP_Post or an ID
 			if ( is_numeric( $post ) ) {
 				$post_id = $post;
@@ -301,15 +299,17 @@ class Hum {
 				$post_id = $post->ID;
 			}
 
-			$mime_type = get_post_mime_type( $post_id );
+			$mime_type  = get_post_mime_type( $post_id );
 			$media_type = preg_replace( '/(\/[a-zA-Z]+)/i', '', $mime_type );
 
 			switch ( $media_type ) {
 				case 'audio':
 				case 'video':
-					$prefix = 'a'; break;
+					$prefix = 'a';
+					break;
 				case 'image':
-					$prefix = 'p'; break;
+					$prefix = 'p';
+					break;
 			}
 
 			// @todo add support for slides
@@ -319,14 +319,17 @@ class Hum {
 				case 'aside':
 				case 'status':
 				case 'link':
-					$prefix = 't'; break;
+					$prefix = 't';
+					break;
 				case 'audio':
 				case 'video':
-					$prefix = 'a'; break;
+					$prefix = 'a';
+					break;
 				case 'photo':
 				case 'gallery':
 				case 'image':
-					$prefix = 'p'; break;
+					$prefix = 'p';
+					break;
 			}
 		}
 
@@ -334,7 +337,7 @@ class Hum {
 	}
 
 	/**
-	 * Support redirects from legacy short URL schemes.	This allows users to migrate from other
+	 * Support redirects from legacy short URL schemes. This allows users to migrate from other
 	 * shortlink generaters, but still have hum support the old URLs.
 	 *
 	 * @uses do_action() Calls 'hum_legacy_id' with the post ID and shortlink path.
@@ -367,8 +370,8 @@ class Hum {
 		if ( is_numeric( $path ) ) {
 			$post = get_post( $path );
 		} else {
-			$post_id = base_convert( $path, 32, 10 );
-			$post = get_post( $post_id );
+			$post_id = base_convert( preg_replace( '/[^0-9a-fA-F]/', '', $path ), 32, 10 );
+			$post    = get_post( $post_id );
 		}
 
 		if ( $post ) {
@@ -399,7 +402,7 @@ class Hum {
 	 * Admin UI for setting the shortlink base URL.
 	 */
 	public function admin_shortlink_base() {
-	?>
+		?>
 		<input name="hum_shortlink_base" type="text" id="hum_shortlink_base"
 				value="<?php form_option( 'hum_shortlink_base' ); ?>"
 				<?php disabled( defined( 'HUM_SHORTLINK_BASE' ) ); ?>
@@ -412,7 +415,7 @@ class Hum {
 			// move adjacent to other URL properties
 			jQuery('input#hum_shortlink_base').parents('tr').insertAfter( jQuery('input#home').parents('tr') );
 		</script>
-	<?php
+		<?php
 	}
 
 	/**
@@ -452,10 +455,6 @@ class Hum {
 		if ( 'shortlink' === $column_name ) {
 			printf( '<small>%s</small>', wp_get_shortlink( $post_id ) );
 		}
-	}
-
-	public function shortcode( $atts ) {
-		return wp_get_shortlink();
 	}
 }
 
